@@ -1,0 +1,4 @@
+.env
+
+# Django / python related files
+*.pyc

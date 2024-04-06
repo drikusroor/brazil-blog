@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: brazil-blog
+    build: .
+    command: bash -c "python manage.py migrate && python manage.py bootstrap && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+      - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+    volumes:
+      - ./src:/code
+    ports:
+      - 8000:8000

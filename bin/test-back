@@ -1,0 +1,3 @@
+#!/bin/bash
+docker-compose run --rm brazil-blog bash -c "python manage.py test $@"
+
