@@ -2,3 +2,6 @@
 
 # Django / python related files
 *.pyc
+
+# SQLite
+*.sqlite3
