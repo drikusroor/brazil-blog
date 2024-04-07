@@ -12,6 +12,12 @@ A blog about our trip to Brazil in October 2024. This project runs on Django + W
 
 ### Docker
 
+First, create a `.env` file, based on the `.env.example` file:
+
+```bash
+cp .env.example .env
+```
+
 To run the project:
 
 ```bash
@@ -20,6 +26,10 @@ docker-compose up -d
 # Or, to rebuild the image:
 docker-compose up -d --build
 ```
+
+The project will be available at [http://localhost:8000](http://localhost:8000).
+
+The admin panel will be available at [http://localhost:8000/admin](http://localhost:8000/admin).
 
 To stop the project:
 
