@@ -15,7 +15,9 @@ Delete the line below if you're just getting started and want to remove the welc
 {% block content %}
 
 <div>
-    <h1>{{ page.title }}</h1>
+    <h1 class="bold text-4xl mt-8 mb-4">
+        {{ page.title }}
+    </h1>
     {% image page.image fill-480x320 %}
     <p>{{ page.hero_text }}</p>
     {% if page.hero_cta_link %}
@@ -25,6 +27,8 @@ Delete the line below if you're just getting started and want to remove the welc
     {% endif %}
 </div>
 
-{{ page.body|richtext }}
+<article class="prose">
+    {{ page.body|richtext }}
+</article>
 
 {% endblock content %}

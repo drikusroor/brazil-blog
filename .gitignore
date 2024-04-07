@@ -7,3 +7,6 @@
 *.sqlite3
 *.sqlite
 src/media/
+
+# Node related files
+node_modules/
