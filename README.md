@@ -1,5 +1,7 @@
 # Brazil Blog
 
+A blog about our trip to Brazil in October 2024. This project runs on Django + Wagtail in a Docker container. The styling is done with Tailwind CSS.
+
 ## Getting Started
 
 ### Pre-requisites
