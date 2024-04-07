@@ -33,12 +33,15 @@
 
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
-
+    
         {% block content %}{% endblock %}
-
+    
+        {# Add this to the file: #}
+        {% include "includes/footer.html" %}
+    
         {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/brazil_blog.js' %}"></script>
-
+        <script type="text/javascript" src="{% static 'js/mysite.js' %}"></script>
+    
         {% block extra_js %}
         {# Override this in templates to add extra javascript #}
         {% endblock %}
