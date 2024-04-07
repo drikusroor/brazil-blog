@@ -3,5 +3,7 @@
 # Django / python related files
 *.pyc
 
-# SQLite
+# Wagtail related files
 *.sqlite3
+*.sqlite
+src/media/
