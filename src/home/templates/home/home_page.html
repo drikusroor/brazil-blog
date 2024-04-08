@@ -15,23 +15,31 @@ Delete the line below if you're just getting started and want to remove the welc
 {% block content %}
 
 <div class="bg-green-700 py-8">
-    <div class="max-w-3xl md:max-w-5xl mx-auto bg-white rounded-xl relative overflow-hidden drop-shadow">
-        {% picture page.image format-{webp,avif,jpeg} fill-1024x320 bgcolor-3730a3 %}
-        <div class="h-80 absolute top-0 p-4 w-full flex items-end bg-gradient-to-t to-transparent from-black">
-            <h1 class="bold text-4xl mt-8 mb-4 text-white drop-shadow">
-                {{ page.title }}
-            </h1>
-        </div>
-        <p>{{ page.hero_text }}</p>
-        {% if page.hero_cta_link %}
-        <a href="{% pageurl page.hero_cta_link %}">
-            {% firstof page.hero_cta page.hero_cta_link.title %}
-        </a>
-        {% endif %}
+    <div class="max-w-3xl md:max-w-5xl mx-auto p-4">
+        <div class="bg-white rounded-xl overflow-hidden drop-shadow">
+            <div class="relative aspect-w-16 aspect-h-4">
+            {% if page.image %}
+                {% picture page.image format-{webp,avif,jpeg} fill-1024x320 bgcolor-3730a3 %}
+            {% else %}
+                <div class="h-80 bg-gray-300"></div>
+            {% endif %}
+                <div class="h-full absolute top-0 p-4 w-full flex items-end bg-gradient-to-t to-transparent from-yellow-500">
+                    <h1 class="bold text-4xl mt-8 mb-4 text-black drop-shadow">
+                        {{ page.title }}
+                    </h1>
+                </div>
+            </div>
+            <p>{{ page.hero_text }}</p>
+            {% if page.hero_cta_link %}
+            <a href="{% pageurl page.hero_cta_link %}">
+                {% firstof page.hero_cta page.hero_cta_link.title %}
+            </a>
+            {% endif %}
 
-        <article class="prose p-4">
-            {{ page.body|richtext }}
-        </article>
+            <article class="prose p-4">
+                {{ page.body|richtext }}
+            </article>
+        </div>
     </div>
 </div>
 
