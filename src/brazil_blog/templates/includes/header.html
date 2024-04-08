@@ -1,6 +1,11 @@
-<header class="bg-yellow-500 font-bold">
-    <div class="max-w-3xl md:max-w-5xl px-4 py-4 mx-auto">
-        <h1 class="font-bold">{{ site_name }}</h1>
-        <p class="font-bold">Built with Wagtail &copy; {{ year }} {{ site_name }}</p>
-    </div>
-</header>
+{% load static %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% with site_name=settings.base.NavigationSettings.site_name site_logo=settings.base.NavigationSettings.site_logo %}
+    <header class="bg-yellow-500 font-bold">
+        <div class="max-w-3xl md:max-w-5xl px-4 py-4 mx-auto flex items-center gap-3">
+            {% picture site_logo format-{webp,avif,jpeg} fill-64x64 bgcolor-3730a3 class="inline-block rounded-full" %}
+            <h1 class="text-3xl font-bold">{{ site_name }}</h1>
+        </div>
+    </header>
+{% endwith %}
