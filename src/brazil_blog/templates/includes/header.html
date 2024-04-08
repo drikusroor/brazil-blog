@@ -1,11 +1,25 @@
 {% load static %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags %}
 
+{% get_site_root as site_root %}
 {% with site_name=settings.base.NavigationSettings.site_name site_logo=settings.base.NavigationSettings.site_logo %}
     <header class="bg-yellow-500 font-bold">
-        <div class="max-w-3xl md:max-w-5xl px-4 py-4 mx-auto flex items-center gap-3">
-            {% picture site_logo format-{webp,avif,jpeg} fill-64x64 bgcolor-3730a3 class="inline-block rounded-full" %}
-            <h1 class="text-3xl font-bold">{{ site_name }}</h1>
+        <div class="max-w-3xl md:max-w-5xl px-4 py-4 mx-auto flex flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <a href="{% pageurl site_root %}" class="inline-block">
+                    {% picture site_logo format-{webp,avif,jpeg} fill-64x64 bgcolor-3730a3 class="inline-block rounded-full" %}
+                </a>
+                <h1 class="text-3xl font-bold">{{ site_name }}</h1>
+            </div>
+            <ul class="flex items-center gap-3">
+                {% for menuitem in site_root.get_children.live.in_menu %}
+                    <li>
+                        <a href="{% pageurl menuitem %}" class="text-blue-800 hover:text-white transition-colors">
+                            {{ menuitem.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
     </header>
 {% endwith %}
