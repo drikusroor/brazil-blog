@@ -1113,6 +1113,10 @@ video {
   max-width: 48rem;
 }
 
+.max-w-none {
+  max-width: none;
+}
+
 .flex-row {
   flex-direction: row;
 }
