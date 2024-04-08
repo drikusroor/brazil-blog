@@ -9,10 +9,8 @@ html {
 }
 
 body {
-    max-width: 960px;
     min-height: 100vh;
     margin: 0 auto;
-    padding: 0 15px;
     color: #231f20;
     font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
     line-height: 1.25;
@@ -147,12 +145,6 @@ svg:not(:root) {
     color: #231f20;
     font-size: 15px;
     font-weight: 300;
-}
-
-@media (max-width: 996px) {
-    body {
-        max-width: 780px;
-    }
 }
 
 @media (max-width: 767px) {
