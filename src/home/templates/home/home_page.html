@@ -23,18 +23,20 @@ Delete the line below if you're just getting started and want to remove the welc
             {% else %}
                 <div class="h-80 bg-gray-300"></div>
             {% endif %}
-                <div class="h-full absolute top-0 p-4 w-full flex items-end bg-gradient-to-t to-transparent from-yellow-500">
-                    <h1 class="bold text-4xl mt-8 mb-4 text-black drop-shadow">
+                <div class="h-full absolute top-0 p-4 w-full flex flex-col-reverse md:flex-row items-start md:items-end justify-between bg-gradient-to-t to-transparent from-yellow-500">
+                    <h1 class="bold text-4xl mb-0 text-black drop-shadow">
                         {{ page.title }}
                     </h1>
+                    <div class="flex ml-auto items-center gap-4">
+                        <p>{{ page.hero_text }}</p>
+                        {% if page.hero_cta_link %}
+                        <a href="{% pageurl page.hero_cta_link %}" class="bg-blue-700 text-white px-4 py-2 rounded-lg no-underline hover:text-amber-300 transition-colors drop-shadow">
+                            {% firstof page.hero_cta page.hero_cta_link.title %}
+                        </a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-            <p>{{ page.hero_text }}</p>
-            {% if page.hero_cta_link %}
-            <a href="{% pageurl page.hero_cta_link %}">
-                {% firstof page.hero_cta page.hero_cta_link.title %}
-            </a>
-            {% endif %}
 
             <article class="prose w-full max-w-none p-4">
                 {{ page.body|richtext }}
