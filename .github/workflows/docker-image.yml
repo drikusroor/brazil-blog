@@ -19,6 +19,8 @@ jobs:
 
   deploy:
 
+    environment: Develop
+
     runs-on: ubuntu-latest
 
     # if: github.ref == 'refs/heads/main' # Uncomment this line if you want to deploy only from the main branch
