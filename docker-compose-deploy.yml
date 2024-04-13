@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  brazil-blog-web:
+    container_name: brazil-blog
+    build: .
+    command: bash -c "python manage.py migrate && python manage.py bootstrap && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+      - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+    volumes:
+      - ./src:/code
+    ports:
+      - 8000:8000
+      
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - brazil-blog-web
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+volumes:
+  redis_data:
