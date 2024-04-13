@@ -1378,12 +1378,20 @@ select {
   max-width: none;
 }
 
+.flex-grow {
+  flex-grow: 1;
+}
+
 .list-none {
   list-style-type: none;
 }
 
 .flex-row {
   flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
 }
 
 .flex-col-reverse {
