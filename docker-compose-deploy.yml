@@ -13,8 +13,20 @@ services:
       - ./src:/code
     ports:
       - 8000:8000
+      
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - brazil-blog-web
 
   redis:
     image: redis:latest
     ports:
       - "6379:6379"
+
+volumes:
+  redis_data:
