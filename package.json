@@ -7,6 +7,7 @@
     "tailwindcss:watch": "tailwindcss build -i src/brazil_blog/static/css/brazil_blog.css -o src/brazil_blog/static/css/brazil_blog_compiled.css --watch"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.12",
     "@types/bun": "latest",
     "tailwindcss": "^3.4.3"

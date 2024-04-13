@@ -1,0 +1,57 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% block head_title %}
+            {% endblock head_title %}
+        </title>
+        {% block extra_head %}
+        {# Global stylesheets #}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/brazil_blog_compiled.css' %}">
+        {% endblock extra_head %}
+    </head>
+    <body class="bg-green-700">
+        {% block body %}
+            <div class="p-4 sm:py-8">
+                <div class="bg-white rounded-xl w-full block drop-shadow p-4 mx-auto prose">
+                    
+            {% if messages %}
+                <div>
+                    <strong>{% trans "Messages:" %}</strong>
+                    <ul>
+                        {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div>
+                <strong>{% trans "Menu:" %}</strong>
+                <ul class="list-none pl-0 mt-0 flex flex-row gap-3">
+                    {% if user.is_authenticated %}
+                        <li class="pl-0">
+                            <a class="inline-block text-blue-500 hover:text-blue-700 transition-colors" href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
+                        </li>
+                        <li class="pl-0">
+                            <a class="inline-block text-blue-500 hover:text-blue-700 transition-colors" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
+                        </li>
+                    {% else %}
+                        <li class="pl-0">
+                            <a class="inline-block text-blue-500 hover:text-blue-700 transition-colors" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                        </li>
+                        <li class="pl-0">
+                            <a class="inline-block text-blue-500 hover:text-blue-700 transition-colors" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% block content %}
+            {% endblock content %}
+    </div>
+</div>
+        {% endblock body %}
+        {% block extra_body %}
+        {% endblock extra_body %}
+    </body>
+</html>
