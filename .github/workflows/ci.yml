@@ -19,6 +19,9 @@ jobs:
 
   deploy:
 
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+
     environment: Develop
 
     runs-on: ubuntu-latest
