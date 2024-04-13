@@ -1,4 +1,4 @@
-{% load static %}
+{% load i18n static %}
 {% load wagtailcore_tags wagtailimages_tags navigation_tags %}
 
 {% get_site_root as site_root %}
@@ -21,6 +21,23 @@
                         </a>
                     </li>
                 {% endfor %}
+            </ul>
+            <ul class="list-none pl-0 mt-0 flex flex-row gap-3">
+                {% if user.is_authenticated %}
+                    <li class="pl-0">
+                        <a class="text-blue-800 hover:text-white transition-colors" href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
+                    </li>
+                    <li class="pl-0">
+                        <a class="text-blue-800 hover:text-white transition-colors" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
+                    </li>
+                {% else %}
+                    <li class="pl-0">
+                        <a class="text-blue-800 hover:text-white transition-colors" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                    </li>
+                    <li class="pl-0">
+                        <a class="text-blue-800 hover:text-white transition-colors" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </header>
