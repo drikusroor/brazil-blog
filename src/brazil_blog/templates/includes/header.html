@@ -32,6 +32,13 @@
                 </div>
 
                 <ul class="list-none pl-0 mt-0 absolute -top-2 -right-2 w-48 z-0 pt-2 pb-5 bg-white rounded-3xl block opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
+                    {% if user.is_staff %}
+                        <li class="pl-4 mt-2">
+                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'wagtailadmin_home' %}">
+                                {% trans "Admin" %}
+                            </a>
+                        </li>
+                    {% endif %}
                     {% if user.is_authenticated %}
                         <li class="pl-4 mt-2">
                             <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
