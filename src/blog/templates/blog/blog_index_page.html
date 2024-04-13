@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load i18n static wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block content %}
+
+<div class="bg-green-700 py-8 flex-grow">
+
+    <div class="max-w-3xl md:max-w-5xl mx-auto p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        {% for post in page.get_children %}
+            <a href="{% pageurl post %}" class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
+                <div class="relative aspect-square">
+                    {% if post.specific.image %}
+                        {% picture post.specific.image format-{webp,avif,jpeg} fill-512x512 bgcolor-3730a3 %}
+                    {% else %}
+                        <div class="h-80 bg-gray-300"></div>
+                    {% endif %}
+                    <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
+                        <h2 class="bold text-4xl mb-0 text-black group-hover:underline hover:underline decoration-wavy">
+                            {{ post.title }}
+                        </h2>
+                        <p class="text-sm">{{ post.specific.date|date:"F j, Y" }}</p>
+                        <p class="text-sm">
+                            {% if post.specific.intro %}
+                                {{ post.specific.intro }}
+                            {% else %}
+                                {{ post.specific.body|richtext|slice:":500" }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

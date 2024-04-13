@@ -8,7 +8,7 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 
 
 class HomePage(Page):
-    
+
     # add the Hero section of HomePage:
     image = models.ForeignKey(
         "wagtailimages.Image",

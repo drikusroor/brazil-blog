@@ -1,15 +1,8 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags %}
 
-{% block body_class %}template-homepage{% endblock %}
+{% load i18n static wagtailcore_tags wagtailimages_tags %}
 
-{% block extra_css %}
-
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-<link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
-{% endblock extra_css %}
+{% block body_class %}template-blogpage{% endblock %}
 
 {% block content %}
 
@@ -22,10 +15,13 @@ Delete the line below if you're just getting started and want to remove the welc
             {% else %}
                 <div class="h-80 bg-gray-300"></div>
             {% endif %}
-                <div class="h-full absolute top-0 p-4 w-full flex flex-col-reverse md:flex-row items-start md:items-end justify-between bg-gradient-to-t to-transparent from-yellow-500">
-                    <h1 class="bold text-4xl mb-0 text-black drop-shadow">
+                <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
+                    <h1 class="bold text-4xl mb-0 text-black">
                         {{ page.title }}
                     </h1>
+                    <div class="flex items-center gap-4">
+                        <p>{{ page.specific.date|date:"F j, Y" }}</p>
+                    </div>
                     <div class="flex ml-auto items-center gap-4">
                         <p>{{ page.hero_text }}</p>
                         {% if page.hero_cta_link %}
@@ -40,9 +36,12 @@ Delete the line below if you're just getting started and want to remove the welc
             <article class="prose w-full max-w-none p-4">
                 {{ page.body|richtext }}
             </article>
+
+            <a href="{{ page.get_parent.url }}" class="inline-block w-full p-4 bg-gray-100 text-center hover:bg-gray-200 transition-colors" title="{% trans "Return to blog" %}">
+                🔙 {% trans "Return to blog" %}
+            </a>
         </div>
     </div>
 </div>
 
-
-{% endblock content %}
+{% endblock %}
