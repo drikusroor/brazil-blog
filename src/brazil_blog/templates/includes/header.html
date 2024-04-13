@@ -32,6 +32,7 @@
                 </div>
 
                 <ul class="list-none pl-0 mt-0 absolute -top-2 -right-2 w-48 z-0 pt-2 pb-5 bg-white rounded-3xl block opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
+                    <h3 class="pl-4 mt-3 font-bold">{% trans "Hello" %} {{ user.username|default:"" }}!</h3>
                     {% if user.is_staff %}
                         <li class="pl-4 mt-2">
                             <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'wagtailadmin_home' %}">
