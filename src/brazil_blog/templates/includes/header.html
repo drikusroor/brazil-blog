@@ -1,10 +1,11 @@
-{% load i18n static %}
+{% load i18n static cache %}
 {% load wagtailcore_tags wagtailimages_tags navigation_tags %}
 
 {% get_site_root as site_root %}
 {% with site_name=settings.base.NavigationSettings.site_name site_logo=settings.base.NavigationSettings.site_logo %}
     <header class="bg-yellow-500 font-bold">
         <div class="max-w-3xl md:max-w-5xl px-4 py-4 mx-auto flex flex-row justify-between items-center gap-3">
+            {% cache 500 static_header %}
             <div class="flex items-center gap-3">
                 <a href="{% pageurl site_root %}" class="inline-block">
                     {% picture site_logo format-{webp,avif,jpeg} fill-64x64 bgcolor-3730a3 class="inline-block rounded-full" %}
@@ -22,6 +23,7 @@
                     </li>
                 {% endfor %}
             </ul>
+            {% endcache %}
             <div class="group relative z-10">
                 <div class="rounded-full bg-blue-800 text-white w-12 h-12 flex items-center justify-center relative z-10 cursor-pointer">
                     {% if user.is_authenticated %}
