@@ -23,5 +23,6 @@ services:
       - ./nginx:/etc/nginx/conf.d  # Your Nginx configuration files
       - /etc/letsencrypt:/etc/letsencrypt  # SSL certificates
       - /var/www/certbot:/var/www/certbot  # Let's Encrypt challenge responses
+      - ./src/brazil_blog/static:/usr/share/nginx/html/static  # Static files
     depends_on:
       - brazil-blog-web
