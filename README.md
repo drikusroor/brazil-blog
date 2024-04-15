@@ -1,6 +1,12 @@
 # Brazil Blog
 
+[![CI](https://github.com/drikusroor/brazil-blog/actions/workflows/ci.yml/badge.svg)](https://github.com/drikusroor/brazil-blog/actions/workflows/ci.yml)
+
+<img src="logo.webp" style="float: left; margin-top: .5rem; margin-right: 1rem; border-radius: 64px;" alt="Logo" width="64" height="64" />
+
 A blog about our trip to Brazil in October 2024. This project runs on Django + Wagtail in a Docker container. The styling is done with Tailwind CSS.
+
+Currently hosted at [https://brazil.kokokoding.nl](https://brazil.kokokoding.nl).
 
 ## Getting Started
 
