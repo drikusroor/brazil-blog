@@ -18,8 +18,11 @@ services:
     image: nginx:latest
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ./nginx:/etc/nginx/conf.d  # Your Nginx configuration files
+      - /etc/letsencrypt:/etc/letsencrypt  # SSL certificates
+      - /var/www/certbot:/var/www/certbot  # Let's Encrypt challenge responses
     depends_on:
       - brazil-blog-web
 
