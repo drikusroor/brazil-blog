@@ -10,3 +10,6 @@ src/media/
 
 # Node related files
 node_modules/
+
+# Static assets
+src/static/

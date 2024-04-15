@@ -4,7 +4,7 @@ services:
   brazil-blog-web:
     container_name: brazil-blog
     build: .
-    command: bash -c "python manage.py migrate && python manage.py bootstrap && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py migrate && python manage.py bootstrap && python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
     environment:
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
@@ -23,6 +23,6 @@ services:
       - ./nginx:/etc/nginx/conf.d  # Your Nginx configuration files
       - /etc/letsencrypt:/etc/letsencrypt  # SSL certificates
       - /var/www/certbot:/var/www/certbot  # Let's Encrypt challenge responses
-      - ./src/brazil_blog/static:/usr/share/nginx/html/static  # Static files
+      - ./src/static:/usr/share/nginx/html/static  # Static files
     depends_on:
       - brazil-blog-web
