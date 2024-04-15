@@ -147,12 +147,7 @@ STATICFILES_FINDERS = [
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, "static"),
-]
-
-# Ignore some of the static files, like brazil_blog.css
-STATICFILES_IGNORE_PATTERNS = [
-    "brazil_blog.css",
-]   
+] 
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"

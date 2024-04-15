@@ -4,7 +4,7 @@ services:
   brazil-blog-web:
     container_name: brazil-blog
     build: .
-    command: bash -c "python manage.py migrate && python manage.py bootstrap && python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py migrate && python manage.py bootstrap && python manage.py collectstatic --noinput --ignore brazil_blog.css && python manage.py runserver 0.0.0.0:8000"
     environment:
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
