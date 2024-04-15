@@ -197,4 +197,4 @@ WAGTAILSEARCH_BACKENDS = {
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 WAGTAILADMIN_BASE_URL = "https://brazil.kokokoding.nl"
 
-CSRF_TRUSTED_ORIGINS=["brazil.kokokoding.nl"]
+CSRF_TRUSTED_ORIGINS=["https://brazil.kokokoding.nl"]
