@@ -1,4 +1,3 @@
 Django
 wagtail>=6.0
 django-allauth
-django-redis
