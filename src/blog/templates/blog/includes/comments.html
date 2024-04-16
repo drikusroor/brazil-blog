@@ -23,13 +23,14 @@
                 id="body"
                 class="p-4 bg-gray-100 rounded-lg"
                 rows="4"
+                required
             ></textarea>
         </div>
 
         <div class="flex flex-col gap-4">
             <button
                 type="submit"
-                class="bg-blue-700 text-white px-4 py-2 rounded-lg no-underline hover:text-amber-300 transition-colors drop-shadow"
+                class="bg-blue-700 text-white px-4 py-2 mt-4 rounded-lg no-underline hover:text-amber-300 transition-colors drop-shadow"
             >
                 Submit
             </button>
@@ -111,25 +112,38 @@
         });
     }
 
+    const onCommentFormSubmit = function (event) {
+        event.preventDefault();
+        const form = document.getElementById("commentForm");
+        const formData = new FormData(form);
+        fetch("/blog/api/comments/", {
+            method: "POST",
+            body: formData,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                fetchComments().then(renderComments).then(() => {
+                    document.getElementById("body").value = "";
+                });
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    };
+
     document.addEventListener("DOMContentLoaded", function () {
         fetchComments().then(renderComments);
     });
 
     document
         .getElementById("commentForm")
-        .addEventListener("submit", function (event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            fetch("/blog/api/comments/", {
-                method: "POST",
-                body: formData,
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    fetchComments().then(renderComments);
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
+        .addEventListener("submit", onCommentFormSubmit);
+
+    document
+        .getElementById("body")
+        .addEventListener("keydown", function (event) {
+            if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                onCommentFormSubmit(event);
+            }
         });
 </script>
