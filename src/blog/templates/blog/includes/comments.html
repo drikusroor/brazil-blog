@@ -7,7 +7,7 @@
         <li class="bg-slate-300 p-4 rounded-lg h-12 mt-4 animate-pulse"></li>
     </ul>
 
-    <form id="commentForm" class="mt-8" method="post">
+    <form id="commentForm" class="mt-8 hidden" method="post">
         <input
             type="hidden"
             name="csrfmiddlewaretoken"
@@ -36,6 +36,13 @@
             </button>
         </div>
     </form>
+
+    <div class="mt-8 hidden" id="commentFormLogin">
+        <p class="text-lg">You need to be logged in to comment.</p>
+        <a href="{% url 'account_login' %}" class="text-blue-800 hover:text-blue-900 transition-colors hover:underline" >Login</a >
+        <a href="{% url 'account_signup' %}" class="text-blue-800 hover:text-blue-900 transition-colors hover:underline ml-2" >Register</a >
+    </div>
+    
 </div>
 
 <script type="text/javascript">
@@ -120,7 +127,13 @@
             method: "POST",
             body: formData,
         })
-            .then((response) => response.json())
+            .then(async (response) => {
+                if (response.status >= 400) {
+                    const message = await response.json();
+                    throw new Error(message.detail);
+                }
+                return response.json();
+            })
             .then((data) => {
                 fetchComments().then(renderComments).then(() => {
                     document.getElementById("body").value = "";
@@ -128,11 +141,28 @@
             })
             .catch((error) => {
                 console.error("Error:", error);
+                const errorMessage = error || "An error occurred. Please try again.";
+                alert(errorMessage);
             });
     };
 
     document.addEventListener("DOMContentLoaded", function () {
         fetchComments().then(renderComments);
+
+        // Check if the user is authenticated from cookie
+        const user = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("user="));
+
+        if (!user) {
+            document.getElementById("commentForm").classList.add("hidden");
+            document.getElementById("commentFormLogin").classList.remove("hidden");
+        } else {
+            document.getElementById("commentForm").classList.remove("hidden");
+            document.getElementById("commentFormLogin").classList.add("hidden");
+        }
+
+
     });
 
     document

@@ -3,7 +3,7 @@ from .models import Comment
 from .serializers import CommentSerializer
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 
 # Create your views here.
 
@@ -11,7 +11,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         """
@@ -23,3 +23,10 @@ class CommentViewSet(viewsets.ModelViewSet):
         if post_id is not None:
             queryset = queryset.filter(post_id=post_id)
         return queryset
+    
+    def perform_create(self, serializer):
+
+        if not self.request.user.is_authenticated:
+            raise PermissionDenied("You must be authenticated to create a comment.")
+
+        serializer.save(author=self.request.user)
