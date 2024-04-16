@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "blog",
     "home",
     "search",
+    "rest_framework",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.contrib.settings",
@@ -195,3 +196,12 @@ WAGTAILSEARCH_BACKENDS = {
 WAGTAILADMIN_BASE_URL = "https://brazil.kokokoding.nl"
 
 CSRF_TRUSTED_ORIGINS=["https://brazil.kokokoding.nl"]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}

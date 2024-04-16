@@ -1,3 +1,4 @@
 Django
 wagtail>=6.0
 django-allauth
+djangorestframework
