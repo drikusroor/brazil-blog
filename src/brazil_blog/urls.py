@@ -7,13 +7,15 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
+from blog import urls as blog_urls
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
-    path('accounts/', include('allauth.urls')),
+    path("accounts/", include("allauth.urls")),
+    path("blog/", include(blog_urls)),
 ]
 
 

@@ -37,6 +37,8 @@
                 {{ page.body|richtext }}
             </article>
 
+            {% include "blog/includes/comments.html" with page=page %}
+
             <a href="{{ page.get_parent.url }}" class="inline-block w-full p-4 bg-gray-100 text-center hover:bg-gray-200 transition-colors" title="{% trans "Return to blog" %}">
                 🔙 {% trans "Return to blog" %}
             </a>
