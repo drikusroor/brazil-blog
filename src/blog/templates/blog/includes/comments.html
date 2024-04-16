@@ -7,7 +7,9 @@
         <li class="bg-slate-300 p-4 rounded-lg h-12 mt-4 animate-pulse"></li>
     </ul>
 
-    <form id="commentForm" class="mt-8 hidden" method="post">
+    {% if user.is_authenticated %}
+
+    <form id="commentForm" class="mt-8" method="post">
         <input
             type="hidden"
             name="csrfmiddlewaretoken"
@@ -37,11 +39,15 @@
         </div>
     </form>
 
-    <div class="mt-8 hidden" id="commentFormLogin">
+    {% else %}
+
+    <div class="mt-8" id="commentFormLogin">
         <p class="text-lg">You need to be logged in to comment.</p>
         <a href="{% url 'account_login' %}" class="text-blue-800 hover:text-blue-900 transition-colors hover:underline" >Login</a >
         <a href="{% url 'account_signup' %}" class="text-blue-800 hover:text-blue-900 transition-colors hover:underline ml-2" >Register</a >
     </div>
+
+    {% endif %}
     
 </div>
 
@@ -148,21 +154,6 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         fetchComments().then(renderComments);
-
-        // Check if the user is authenticated from cookie
-        const user = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("user="));
-
-        if (!user) {
-            document.getElementById("commentForm").classList.add("hidden");
-            document.getElementById("commentFormLogin").classList.remove("hidden");
-        } else {
-            document.getElementById("commentForm").classList.remove("hidden");
-            document.getElementById("commentFormLogin").classList.add("hidden");
-        }
-
-
     });
 
     document
