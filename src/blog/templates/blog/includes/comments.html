@@ -43,8 +43,8 @@
 
     <div class="mt-8" id="commentFormLogin">
         <p class="text-lg">You need to be logged in to comment.</p>
-        <a href="{% url 'account_login' %}" class="text-blue-800 hover:text-blue-900 transition-colors hover:underline" >Login</a >
-        <a href="{% url 'account_signup' %}" class="text-blue-800 hover:text-blue-900 transition-colors hover:underline ml-2" >Register</a >
+        <a href="{% url 'account_login' %}?next={{request.path}}" class="text-blue-800 hover:text-blue-900 transition-colors hover:underline" >Login</a >
+        <a href="{% url 'account_signup' %}?next={{request.path}}" class="text-blue-800 hover:text-blue-900 transition-colors hover:underline ml-2" >Register</a >
     </div>
 
     {% endif %}

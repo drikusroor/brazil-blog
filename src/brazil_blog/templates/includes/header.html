@@ -47,14 +47,14 @@
                             <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
                         </li>
                         <li class="pl-4 mt-2">
-                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
+                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_logout' %}?next={{request.path}}">{% trans "Sign Out" %}</a>
                         </li>
                     {% else %}
                         <li class="pl-4 mt-2">
-                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_login' %}?next={{request.path}}">{% trans "Sign In" %}</a>
                         </li>
                         <li class="pl-4 mt-2">
-                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_signup' %}?next={{request.path}}">{% trans "Sign Up" %}</a>
                         </li>
                     {% endif %}
                 </ul>
