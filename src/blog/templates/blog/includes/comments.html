@@ -39,7 +39,7 @@
 
 <script type="text/javascript">
     function fetchComments() {
-        return fetch("/blog/api/comments/?page_id={{ page.id }}").then(
+        return fetch("/blog/api/comments/?post={{ page.id }}").then(
             (response) => response.json(),
         );
     }
