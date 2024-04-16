@@ -39,3 +39,18 @@ class BlogPage(Page):
         FieldPanel('intro'),
         FieldPanel('body'),
     ]
+
+class Comment(models.Model):
+    post = models.ForeignKey(BlogPage, on_delete=models.CASCADE, related_name='comments')
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    body = models.TextField()
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+
+    class Meta:
+        ordering = ['created_date']
+
+    def __str__(self):
+        return self.body
