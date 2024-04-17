@@ -12,7 +12,7 @@ def advanced_image(image, args=''):
     defaults = {
         'fill': '512x512',
         'bgcolor': 'transparent',  # Default to black or any other color
-        'format': 'jpeg',  # Default format
+        'format': 'webp',  # Default format
         'quality': '10'  # Default quality
     }
 
