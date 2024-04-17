@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load i18n static wagtailcore_tags wagtailimages_tags %}
+{% load i18n static wagtailcore_tags wagtailimages_tags custom_image_tags %}
 
 {% block body_class %}template-blogindexpage{% endblock %}
 
@@ -14,7 +14,13 @@
             <a href="{% pageurl post %}" class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
                 <div class="relative aspect-square">
                     {% if post.specific.image %}
-                        {% picture post.specific.image format-{webp,avif,jpeg} fill-512x512 bgcolor-3730a3 %}
+                        <!-- {% picture post.specific.image format-{webp,avif,jpeg} fill-512x512 bgcolor-3730a3 %} -->
+                        <img 
+                            src="{{ post.specific.image|advanced_image:'fill-512x512,bgcolor-eab308' }}"
+                            data-src="{{ post.specific.image|advanced_image:'fill-512x512,quality-90' }}"
+                            class="lazyload blur w-full h-full object-cover object-center transition bg-yellow-500 scale-105"
+                            alt="{{ post.specific.image.alt }}"
+                        />
                     {% else %}
                         <div class="h-80 bg-gray-300"></div>
                     {% endif %}
