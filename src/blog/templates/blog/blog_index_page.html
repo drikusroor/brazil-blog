@@ -10,7 +10,7 @@
 
     <div class="max-w-3xl md:max-w-5xl mx-auto p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-        {% for post in page.get_children %}
+        {% for post in blogpages %}
             <a href="{% pageurl post %}" class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
                 <div class="relative aspect-square">
                     {% if post.specific.image %}
