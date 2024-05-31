@@ -1,8 +1,11 @@
 from django.db import models
+from django import forms
+from wagtail.snippets.models import register_snippet
 
+from modelcluster.fields import ParentalManyToManyField
 from wagtail.models import Page
 from wagtail.fields import RichTextField
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 
 from wagtail.search import index
 
@@ -23,6 +26,7 @@ class BlogIndexPage(Page):
 
 class BlogPage(Page):
     date = models.DateField("Post date")
+    authors = ParentalManyToManyField('blog.Author', blank=True)
     image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -40,6 +44,10 @@ class BlogPage(Page):
     ]
 
     content_panels = Page.content_panels + [
+        MultiFieldPanel([
+            FieldPanel('date'),
+            FieldPanel('authors', widget=forms.CheckboxSelectMultiple),
+        ], heading="Blog information"),
         FieldPanel('date'),
         FieldPanel('image'),
         FieldPanel('intro'),
@@ -60,3 +68,22 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.body
+
+@register_snippet
+class Author(models.Model):
+    name = models.CharField(max_length=255)
+    author_image = models.ForeignKey(
+        'wagtailimages.Image', null=True, blank=True,
+        on_delete=models.SET_NULL, related_name='+'
+    )
+
+    panels = [
+        FieldPanel('name'),
+        FieldPanel('author_image'),
+    ]
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'Authors'

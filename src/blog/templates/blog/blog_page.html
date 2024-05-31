@@ -19,8 +19,22 @@
                     <h1 class="bold text-4xl mb-0 text-black">
                         {{ page.title }}
                     </h1>
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center justify-between gap-4">
                         <p>{{ page.specific.date|date:"F j, Y" }}</p>
+
+                        {% with authors=page.authors.all %}
+                            {% if authors %}
+                                <ul class="flex gap-3">
+                                    {% for author in authors %}
+                                        <li class="flex flex-row items-center gap-3">
+                                            {{ author.name }}
+                                            {% image author.author_image fill-40x40 style="vertical-align: middle; border-radius: 9999px" %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+
                     </div>
                     <div class="flex ml-auto items-center gap-4">
                         <p>{{ page.hero_text }}</p>
