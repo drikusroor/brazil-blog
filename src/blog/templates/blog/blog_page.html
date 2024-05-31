@@ -37,12 +37,14 @@
                 {{ page.body|richtext }}
             </article>
 
+            <div class="flex flex-row flex-wrap p-4">
                 {% for item in page.gallery_images.all %}
-                <div style="float: inline-start; margin: 10px">
-                {% image item.image fill-320x240 %}
-                    <p>{{ item.caption }}</p>
-                </div>
-            {% endfor %}   
+                    <div class="flex-col p-2">
+                        {% image item.image fill-320x240 %}
+                        <p>{{ item.caption }}</p>
+                    </div>
+                {% endfor %}    
+            </div>
 
             <div class="inline-block w-full">
                 {% include "blog/includes/comments.html" with page=page %}
