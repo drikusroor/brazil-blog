@@ -37,9 +37,9 @@
                 {{ page.body|richtext }}
             </article>
 
-            <div class="flex flex-row flex-wrap p-4">
+            <div class="flex flex-row flex-wrap p-1">
                 {% for item in page.gallery_images.all %}
-                    <div class="flex-col p-2">
+                    <div class="flex-col p-1">
                         {% image item.image fill-320x240 %}
                         <p>{{ item.caption }}</p>
                     </div>
