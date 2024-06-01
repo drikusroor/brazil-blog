@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 
 from wagtail.models import Page
@@ -12,7 +13,14 @@ class BlogIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        blogpages = self.get_children().live().order_by('-blogpage__date').specific()
+        now = timezone.now()
+        blogpages = (
+            self.get_children()
+                .live()
+                .filter(blogpage__date__lte=now)
+                .order_by('-blogpage__date')
+                .specific()
+        )
         context['blogpages'] = blogpages
         return context
 
