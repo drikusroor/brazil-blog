@@ -24,8 +24,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Test the Django / Wagtail project
-      run: bin/test
-
+      run: bin/manage test
+      
   deploy:
 
     concurrency:
