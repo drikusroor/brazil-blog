@@ -16,8 +16,6 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag brazil-blog-web:$(date +%s)
-    - name: Collect static files
-      run: bin/manage collectstatic --noinput --ignore brazil_blog.css
 
   test:
     runs-on: ubuntu-latest
@@ -25,6 +23,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Collect static files
+      run: bin/manage collectstatic --noinput --ignore brazil_blog.css
     - name: Test the Django / Wagtail project
       run: bin/manage test
 
