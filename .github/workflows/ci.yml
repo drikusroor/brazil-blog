@@ -24,8 +24,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Test the Django / Wagtail project
-      run: docker run --rm my-image-name:$(date +%s) bin/manage test
-
+      run: bin/test
 
   deploy:
 
