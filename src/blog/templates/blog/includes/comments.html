@@ -10,30 +10,18 @@
     {% if user.is_authenticated %}
 
     <form id="commentForm" class="mt-8" method="post">
-        <input
-            type="hidden"
-            name="csrfmiddlewaretoken"
-            value="{{ csrf_token }}"
-        />
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
 
         <input type="hidden" name="post" value="{{ page.id }}" />
 
         <div class="flex flex-col gap-4">
             <label for="body" class="text-lg">Comment</label>
-            <textarea
-                name="body"
-                id="body"
-                class="p-4 bg-gray-100 rounded-lg"
-                rows="4"
-                required
-            ></textarea>
+            <textarea name="body" id="commentBody" class="p-4 bg-gray-100 rounded-lg" rows="4" required></textarea>
         </div>
 
         <div class="flex flex-col gap-4">
-            <button
-                type="submit"
-                class="bg-blue-700 text-white px-4 py-2 mt-4 rounded-lg no-underline hover:text-amber-300 transition-colors drop-shadow"
-            >
+            <button type="submit"
+                class="bg-blue-700 text-white px-4 py-2 mt-4 rounded-lg no-underline hover:text-amber-300 transition-colors drop-shadow">
                 Submit
             </button>
         </div>
@@ -43,12 +31,14 @@
 
     <div class="mt-8" id="commentFormLogin">
         <p class="text-lg">You need to be logged in to comment.</p>
-        <a href="{% url 'account_login' %}?next={{request.path}}" class="text-blue-800 hover:text-blue-900 transition-colors hover:underline" >Login</a >
-        <a href="{% url 'account_signup' %}?next={{request.path}}" class="text-blue-800 hover:text-blue-900 transition-colors hover:underline ml-2" >Register</a >
+        <a href="{% url 'account_login' %}?next={{request.path}}"
+            class="text-blue-800 hover:text-blue-900 transition-colors hover:underline">Login</a>
+        <a href="{% url 'account_signup' %}?next={{request.path}}"
+            class="text-blue-800 hover:text-blue-900 transition-colors hover:underline ml-2">Register</a>
     </div>
 
     {% endif %}
-    
+
 </div>
 
 <script type="text/javascript">
@@ -142,7 +132,7 @@
             })
             .then((data) => {
                 fetchComments().then(renderComments).then(() => {
-                    document.getElementById("body").value = "";
+                    document.getElementById("commentBody").value = "";
                 });
             })
             .catch((error) => {
@@ -154,17 +144,21 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         fetchComments().then(renderComments);
+
+        const commentForm = document.getElementById("commentForm")
+
+        if (commentForm) {
+            commentForm.addEventListener("submit", onCommentFormSubmit);
+
+            document
+                .getElementById("commentBody")
+                .addEventListener("keydown", function (event) {
+                    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                        onCommentFormSubmit(event);
+                    }
+                });
+        }
+
     });
 
-    document
-        .getElementById("commentForm")
-        .addEventListener("submit", onCommentFormSubmit);
-
-    document
-        .getElementById("body")
-        .addEventListener("keydown", function (event) {
-            if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
-                onCommentFormSubmit(event);
-            }
-        });
 </script>
