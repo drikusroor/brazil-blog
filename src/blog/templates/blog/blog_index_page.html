@@ -38,9 +38,9 @@
                                     {% endif %}
                                 </p>
                             </div>
-                            <div class="flex flex-col justify-end">
-                                <img src="{{ post.owner.wagtail_userprofile.avatar.url }}" alt="{{ request.user.get_full_name }}" class="rounded-full" style="width: 40px; height: 40px">
-                                <p> {{post.owner.first_name}} </p>                          
+                            <div class="flex flex-col justify-end items-center">
+                                <img src="{{ post.owner.wagtail_userprofile.avatar.url }}" alt="{{ request.user.get_full_name }}" class="rounded-full" style="width: 30px; height: 30px">
+                                <p class="text-sm"> {{post.owner.first_name}} </p>                          
                             </div>
                         </div>
 
