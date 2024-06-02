@@ -50,3 +50,29 @@ jobs:
     - name: Deploy to the server
       run: |
         ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd brazil-blog && git pull && docker compose -f docker-compose-deploy.yml up -d --build"
+
+  smoketests:
+    runs-on: ubuntu-latest
+
+    env:
+      CYPRESS_BASE_URL: "https://brazil.kokokoding.nl"
+
+    services:
+      web:
+        image: nginx:latest
+        ports:
+          - 80:80
+        options: >-
+          --mount type=bind,source=${{ github.workspace }},target=/usr/share/nginx/html
+          
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run smoketests with Cypress
+        run: bunx cypress run

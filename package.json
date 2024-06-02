@@ -1,11 +1,6 @@
 {
   "name": "brazil-blog",
   "module": "index.ts",
-  "type": "module",
-  "scripts": {
-    "tailwindcss:build": "tailwindcss build -i src/brazil_blog/static/css/brazil_blog.css -o src/brazil_blog/static/css/brazil_blog_compiled.css",
-    "tailwindcss:watch": "tailwindcss build -i src/brazil_blog/static/css/brazil_blog.css -o src/brazil_blog/static/css/brazil_blog_compiled.css --watch"
-  },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.12",
@@ -14,5 +9,11 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
-  }
+  },
+  "scripts": {
+    "tailwindcss:build": "tailwindcss build -i src/brazil_blog/static/css/brazil_blog.css -o src/brazil_blog/static/css/brazil_blog_compiled.css",
+    "tailwindcss:watch": "tailwindcss build -i src/brazil_blog/static/css/brazil_blog.css -o src/brazil_blog/static/css/brazil_blog_compiled.css --watch"
+  },
+  "type": "module",
+  "dependencies": { "cypress": "^13.10.0" }
 }
