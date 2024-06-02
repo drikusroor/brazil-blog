@@ -1,9 +1,10 @@
 from django.utils import timezone
 from django.db import models
+from modelcluster.fields import ParentalKey
 
-from wagtail.models import Page
+from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, InlinePanel
 
 from wagtail.search import index
 
@@ -52,6 +53,7 @@ class BlogPage(Page):
         FieldPanel('image'),
         FieldPanel('intro'),
         FieldPanel('body'),
+        InlinePanel('gallery_images', label="Gallery images"),
     ]
 
 class Comment(models.Model):
@@ -68,3 +70,15 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.body
+
+class BlogPageGalleryImage(Orderable):
+    page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name='gallery_images')
+    image = models.ForeignKey(
+        'wagtailimages.Image', on_delete=models.CASCADE, related_name='+'
+    )
+    caption = models.CharField(blank=True, max_length=250)
+
+    panels = [
+        FieldPanel('image'),
+        FieldPanel('caption'),
+    ]

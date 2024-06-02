@@ -37,7 +37,18 @@
                 {{ page.body|richtext }}
             </article>
 
-            {% include "blog/includes/comments.html" with page=page %}
+            <div class="p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for item in page.gallery_images.all %}
+                <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
+                    {% image item.image fill-1920x1080 %}
+                    <p class="p-2">{{ item.caption }}</p>
+                </div>
+            {% endfor %}   
+            </div>
+
+            <div class="inline-block w-full">
+                {% include "blog/includes/comments.html" with page=page %}
+            </div>
 
             <a href="{{ page.get_parent.url }}" class="inline-block w-full p-4 bg-gray-100 text-center hover:bg-gray-200 transition-colors" title="{% trans "Return to blog" %}">
                 🔙 {% trans "Return to blog" %}
