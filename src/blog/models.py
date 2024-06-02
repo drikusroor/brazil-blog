@@ -57,7 +57,6 @@ class BlogPage(Page):
             FieldPanel('date'),
             FieldPanel('authors', widget=forms.CheckboxSelectMultiple),
         ], heading="Blog information"),
-        FieldPanel('date'),
         FieldPanel('image'),
         FieldPanel('intro'),
         FieldPanel('body'),
