@@ -19,8 +19,12 @@
                     <h1 class="bold text-4xl mb-0 text-black">
                         {{ page.title }}
                     </h1>
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center justify-between gap-4">
                         <p>{{ page.specific.date|date:"F j, Y" }}</p>
+                        <div class="flex flex-row items-center gap-4">
+                            <p> {{page.owner.first_name}} {{page.owner.last_name}} </p>
+                            <img src="{{ request.user.wagtail_userprofile.avatar.url }}" alt="{{ request.user.get_full_name }}" class="w-10 h-10 rounded-full" style="width: 40px; height: 40px">
+                        </div>
                     </div>
                     <div class="flex ml-auto items-center gap-4">
                         <p>{{ page.hero_text }}</p>
