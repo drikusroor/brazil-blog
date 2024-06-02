@@ -27,14 +27,23 @@
                         <h2 class="bold text-4xl mb-0 text-black group-hover:underline hover:underline decoration-wavy">
                             {{ post.title }}
                         </h2>
-                        <p class="text-sm">{{ post.specific.date|date:"F j, Y" }}</p>
-                        <p class="text-sm">
-                            {% if post.specific.intro %}
-                                {{ post.specific.intro }}
-                            {% else %}
-                                {{ post.specific.body|richtext|slice:":500" }}
-                            {% endif %}
-                        </p>
+                        <div class="flex justify-between gap-4">
+                            <div class="flex flex-col flex-wrap">
+                                <p class="text-sm">{{ post.specific.date|date:"F j, Y" }}</p>
+                                <p class="text-sm">
+                                    {% if post.specific.intro %}
+                                        {{ post.specific.intro }}
+                                    {% else %}
+                                        {{ post.specific.body|richtext|slice:":500" }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="flex flex-col self-end" style="align-self: flex-end;">
+                                <p> {{post.owner.first_name}} </p>                          
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </a>
