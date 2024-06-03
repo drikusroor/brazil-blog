@@ -31,7 +31,7 @@ class BlogIndexPage(Page):
 
 
 class BlogPage(Page):
-    date = models.DateField("Post date")
+    date = models.DateTimeField("Post date", default=timezone.now)
     image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
