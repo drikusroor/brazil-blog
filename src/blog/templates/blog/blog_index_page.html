@@ -29,7 +29,7 @@
                         </h2>
                         <div class="flex justify-between gap-4">
                             <div class="flex flex-col flex-wrap">
-                                <p class="text-sm">{{ post.specific.date | date:"F j, Y | H:i" }}</p>
+                                <p class="text-sm">{{ post.specific.date | date:"d-m-Y H:i" }}</p>
                                 <p class="text-sm">
                                     {% if post.specific.intro %}
                                         {{ post.specific.intro }}
