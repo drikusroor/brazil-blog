@@ -1,0 +1,40 @@
+<audio id="cuica1" src="/static/audio/cuica-course/cuica-low-1.mp3"></audio>
+<audio id="cuica2" src="/static/audio/cuica-course/cuica-low-2.mp3"></audio>
+<audio id="cuica3" src="/static/audio/cuica-course/cuica-low-3.mp3"></audio>
+<audio id="cuica4" src="/static/audio/cuica-course/cuica-high-1.mp3"></audio>
+<audio id="cuica5" src="/static/audio/cuica-course/cuica-high-2.mp3"></audio>
+<audio id="cuica6" src="/static/audio/cuica-course/cuica-high-3.mp3"></audio>
+
+<script>
+    // script.js
+    document.addEventListener("DOMContentLoaded", function () {
+        const cuicaSounds = [
+            document.getElementById('cuica1'),
+            document.getElementById('cuica2'),
+            document.getElementById('cuica3'),
+            document.getElementById('cuica4'),
+            document.getElementById('cuica5'),
+            document.getElementById('cuica6')
+        ];
+
+        // Set volume to 50% for all cuica sounds
+        cuicaSounds.forEach(sound => {
+            sound.volume = 0.3;
+        });
+
+        let lastPlayedIndex = -1;
+
+        function playRandomCuicaSound() {
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * cuicaSounds.length);
+            } while (randomIndex === lastPlayedIndex);
+
+            lastPlayedIndex = randomIndex;
+            cuicaSounds[randomIndex].play();
+        }
+
+        document.getElementById('commentBody').addEventListener('keydown', playRandomCuicaSound);
+    });
+
+</script>
