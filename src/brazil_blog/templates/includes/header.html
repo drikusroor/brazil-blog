@@ -3,62 +3,74 @@
 
 {% get_site_root as site_root %}
 {% with site_name=settings.base.NavigationSettings.site_name site_logo=settings.base.NavigationSettings.site_logo %}
-    <header class="bg-yellow-500 font-bold">
-        <div class="max-w-3xl md:max-w-5xl px-4 py-4 mx-auto flex flex-row justify-between items-center gap-3">
-            {% cache 500 static_header %}
-            <div class="flex items-center gap-3">
-                <a href="{% pageurl site_root %}" class="inline-block">
-                    {% picture site_logo format-{webp,avif,jpeg} fill-64x64 bgcolor-3730a3 class="inline-block rounded-full" %}
+<header class="bg-yellow-500 font-bold">
+    <div class="max-w-3xl md:max-w-5xl px-4 py-4 mx-auto flex flex-row justify-between items-center gap-3">
+        {% cache 500 static_header %}
+        <div class="flex items-center gap-3">
+            <a href="{% pageurl site_root %}" class="inline-block">
+                {% picture site_logo format-{webp,avif,jpeg} fill-64x64 bgcolor-3730a3 class="inline-block rounded-full"
+                %}
+            </a>
+            <a href="/"
+                class="text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
+                <h1 class="text-3xl font-bold">{{ site_name }}</h1>
+            </a>
+        </div>
+        <ul class="flex items-center gap-3">
+            {% for menuitem in site_root.get_children.live.in_menu %}
+            <li>
+                <a href="{% pageurl menuitem %}" class="text-blue-800 hover:text-white transition-colors">
+                    {{ menuitem.title }}
                 </a>
-                <a href="/" class="text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
-                    <h1 class="text-3xl font-bold">{{ site_name }}</h1>
-                </a>
-            </div>
-            <ul class="flex items-center gap-3">
-                {% for menuitem in site_root.get_children.live.in_menu %}
-                    <li>
-                        <a href="{% pageurl menuitem %}" class="text-blue-800 hover:text-white transition-colors">
-                            {{ menuitem.title }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-            {% endcache %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endcache %}
+        <div class="flex flex-row items-center gap-4">
+            {% include "includes/opt-out.html" %}
             <div class="group relative z-10">
-                <div class="rounded-full bg-blue-800 text-white w-12 h-12 flex items-center justify-center relative z-10 cursor-pointer">
+                <div
+                    class="rounded-full bg-blue-800 text-white w-12 h-12 flex items-center justify-center relative z-10 cursor-pointer">
                     {% if user.is_authenticated %}
-                        <span>{{ user.username|first|upper }}</span>
+                    <span>{{ user.username|first|upper }}</span>
                     {% else %}
-                        <span>?</span>
+                    <span>?</span>
                     {% endif %}
                 </div>
 
-                <ul class="list-none pl-0 mt-0 absolute -top-2 -right-2 w-48 z-0 pt-2 pb-5 bg-white rounded-3xl block opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
+                <ul
+                    class="list-none pl-0 mt-0 absolute -top-2 -right-2 w-48 z-0 pt-2 pb-5 bg-white rounded-3xl block opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
                     <h3 class="pl-4 mt-3 font-bold">{% trans "Hello" %} {{ user.username|default:"" }}!</h3>
                     {% if user.is_staff %}
-                        <li class="pl-4 mt-2">
-                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'wagtailadmin_home' %}">
-                                {% trans "Admin" %}
-                            </a>
-                        </li>
+                    <li class="pl-4 mt-2">
+                        <a class="text-blue-800 hover:text-blue-900 transition-colors"
+                            href="{% url 'wagtailadmin_home' %}">
+                            {% trans "Admin" %}
+                        </a>
+                    </li>
                     {% endif %}
                     {% if user.is_authenticated %}
-                        <li class="pl-4 mt-2">
-                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
-                        </li>
-                        <li class="pl-4 mt-2">
-                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_logout' %}?next={{request.path}}">{% trans "Sign Out" %}</a>
-                        </li>
+                    <li class="pl-4 mt-2">
+                        <a class="text-blue-800 hover:text-blue-900 transition-colors"
+                            href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
+                    </li>
+                    <li class="pl-4 mt-2">
+                        <a class="text-blue-800 hover:text-blue-900 transition-colors"
+                            href="{% url 'account_logout' %}?next={{request.path}}">{% trans "Sign Out" %}</a>
+                    </li>
                     {% else %}
-                        <li class="pl-4 mt-2">
-                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_login' %}?next={{request.path}}">{% trans "Sign In" %}</a>
-                        </li>
-                        <li class="pl-4 mt-2">
-                            <a class="text-blue-800 hover:text-blue-900 transition-colors" href="{% url 'account_signup' %}?next={{request.path}}">{% trans "Sign Up" %}</a>
-                        </li>
+                    <li class="pl-4 mt-2">
+                        <a class="text-blue-800 hover:text-blue-900 transition-colors"
+                            href="{% url 'account_login' %}?next={{request.path}}">{% trans "Sign In" %}</a>
+                    </li>
+                    <li class="pl-4 mt-2">
+                        <a class="text-blue-800 hover:text-blue-900 transition-colors"
+                            href="{% url 'account_signup' %}?next={{request.path}}">{% trans "Sign Up" %}</a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 {% endwith %}

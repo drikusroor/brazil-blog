@@ -1,0 +1,43 @@
+<div id="opt-out">
+    <img src="/static/images/opt-out/opt-in.webp" alt="Opt Out" id="opt-out-icon"
+        class="cursor-pointer hidden opacity-0 transition hover:drop-shadow" width="48" height="48"
+        title="Opt out of audio and animations" />
+</div>
+
+<script>
+    // Initialize the opt-out setting from localStorage
+    let optOut = JSON.parse(localStorage.getItem('optOut')) || false;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const optOutIcon = document.getElementById('opt-out-icon');
+        if (optOut) {
+            optOutIcon.src = '/static/images/opt-out/opt-out.webp';
+        } else {
+            optOutIcon.src = '/static/images/opt-out/opt-in.webp';
+        }
+
+        // on load image, set the opacity to 1
+        optOutIcon.addEventListener('load', function () {
+            optOutIcon.classList.remove('hidden', 'opacity-0');
+
+            if (optOut) {
+                optOutIcon.classList.add('opacity-50');
+            } else {
+                optOutIcon.classList.add('opacity-100');
+            }
+        });
+
+        optOutIcon.addEventListener('click', function () {
+            optOut = !optOut;
+            localStorage.setItem('optOut', JSON.stringify(optOut));
+            this.classList.remove('opacity-50', 'opacity-100');
+            if (optOut) {
+                this.src = '/static/images/opt-out/opt-out.webp';
+                this.classList.add('opacity-50');
+            } else {
+                this.src = '/static/images/opt-out/opt-in.webp';
+                this.classList.add('opacity-100');
+            }
+        });
+    });
+</script>

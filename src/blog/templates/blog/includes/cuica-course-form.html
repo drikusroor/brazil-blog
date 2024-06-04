@@ -25,6 +25,11 @@
         let lastPlayedIndex = -1;
 
         function playRandomCuicaSound() {
+
+            if (optOut) {
+                return;
+            }
+
             let randomIndex;
             do {
                 randomIndex = Math.floor(Math.random() * cuicaSounds.length);
