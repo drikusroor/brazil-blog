@@ -1,0 +1,129 @@
+<div id="tukan-container">
+    <div class="tukan-inner">
+        <img id="tukan-normal" src="/static/images/tukanchamon/tukanchamon-normal.webp" alt="Tukan">
+        <img id="tukan-blink" src="/static/images/tukanchamon/tukanchamon-eyes-closed.webp" alt="Tukan Blinking">
+        <img id="tukan-open" src="/static/images/tukanchamon/tukanchamon-beak-open.webp" alt="Tukan Beak Open">
+    </div>
+</div>
+<audio id="tukan-sound" src="/static/audio/tukanchamon/tukanchamon-simple.mp3"></audio>
+
+<script>
+
+    let projectTukanchamonInitialized = false;
+
+    // use keyevent to trigger the tukan
+    document.addEventListener("keydown", function (event) {
+        initProjectTukanchamon();
+    });
+
+    // use scroll event to trigger the tukan
+    document.addEventListener("scroll", function (event) {
+        initProjectTukanchamon();
+    });
+
+    // use mousemove event to trigger the tukan
+    document.addEventListener("mousemove", function (event) {
+        initProjectTukanchamon();
+    });
+
+
+
+    function initProjectTukanchamon() {
+        if (projectTukanchamonInitialized) {
+            return;
+        }
+
+        projectTukanchamonInitialized = true;
+
+        const tukanContainer = document.getElementById('tukan-container');
+        const tukanNormal = document.getElementById('tukan-normal');
+        const tukanBlink = document.getElementById('tukan-blink');
+        const tukanOpen = document.getElementById('tukan-open');
+        const tukanSound = document.getElementById('tukan-sound');
+
+        async function showTukan() {
+
+            // random number 0 or 1
+            const fromLeft = Math.floor(Math.random() * 2) === 0;
+
+            const verticalPosition = Math.floor(Math.random() * 100);
+
+            // Set the vertical position as a percentage (%)
+            tukanContainer.style.bottom = `${verticalPosition}%`;
+            const hiddenPosition = fromLeft ? '-100px' : 'calc(100% + 100px)';
+            const visiblePosition = fromLeft ? '0px' : 'calc(100% - 100px)';
+            tukanContainer.style.transition = 'none';
+            tukanContainer.style.left = hiddenPosition;
+            await new Promise((resolve) => setTimeout(resolve, 0));
+
+            // Slide in from the left or right
+            // and flip the image horizontally if coming from the left
+            if (fromLeft) {
+                tukanContainer.style.transform = 'scaleX(-1)';
+            } else {
+                tukanContainer.style.transform = 'scaleX(1)';
+            }
+
+            tukanContainer.style.transition = 'left 1s ease-in-out';
+            tukanContainer.style.left = visiblePosition;
+            tukanNormal.classList.add('show');
+
+            setTimeout(() => {
+                tukanBlink.classList.add('show');
+            }, 1000); // Blink after 1 second
+
+            setTimeout(() => {
+                tukanBlink.classList.remove('show');
+            }, 1100); // Blink duration
+
+            setTimeout(() => {
+                tukanNormal.classList.remove('show');
+                tukanOpen.classList.add('show');
+                tukanSound.play();
+            }, 2000); // Open beak after 2 seconds
+
+            setTimeout(() => {
+                tukanOpen.classList.remove('show');
+                tukanNormal.classList.add('show');
+                tukanContainer.style.left = hiddenPosition;
+                tukanSound.pause();
+                tukanSound.currentTime = 0;
+            }, 3000); // Close beak after 3 seconds
+
+
+        }
+
+        setInterval(showTukan, 30000);
+    }
+
+</script>
+
+<style>
+    /* styles.css */
+    #tukan-container {
+        position: fixed;
+        left: -100px;
+        /* Adjust as needed */
+        width: 100px;
+        height: 100px;
+        z-index: 1000;
+        filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+    }
+
+    #tukan-container .tukan-inner {
+        position: relative;
+    }
+
+    #tukan-container img {
+        display: none;
+        width: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        /* Adjust size as needed */
+    }
+
+    #tukan-container img.show {
+        display: block;
+    }
+</style>
