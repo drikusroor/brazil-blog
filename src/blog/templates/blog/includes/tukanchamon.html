@@ -43,6 +43,10 @@
 
         async function showTukan() {
 
+            if (optOut) {
+                return;
+            }
+
             // random number 0 or 1
             const fromLeft = Math.floor(Math.random() * 2) === 0;
 
