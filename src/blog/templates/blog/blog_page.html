@@ -20,7 +20,7 @@
                         {{ page.title }}
                     </h1>
                     <div class="flex items-center justify-between gap-4">
-                        <p>{{ page.specific.date|date:"F j, Y" }}</p>
+                        <p>{{ page.specific.date | date:"d-m-Y H:i" }}</p>
                         <div class="flex flex-row items-center gap-4">
                             {% if page.owner.first_name and page.owner.last_name %}
                                 <p> {{page.owner.first_name}} {{page.owner.last_name}} </p>
