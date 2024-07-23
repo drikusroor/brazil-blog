@@ -122,11 +122,7 @@ class AuthorPage(Page):
         context['posts'] = self.user.blog_posts.live().order_by('-first_published_at')
         return context
 
-    @classmethod
-    def can_create_at(cls, parent):
-        # You can only create one author page under the author index page
-        return super(AuthorPage, cls).can_create_at(parent) \
-               and not parent.get_children().type(cls)
+    parent_page_types = ['AuthorIndexPage']
 
 class AuthorIndexPage(Page):
     intro = RichTextField(blank=True)
