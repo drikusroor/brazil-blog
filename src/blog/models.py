@@ -133,8 +133,8 @@ class AuthorIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        # Fetch all users who have authored at least one blog post
-        authors = User.objects.filter(blog_posts__isnull=False).distinct()
+        # Fetch all users who have the role of "Authors"
+        authors = User.objects.filter(groups__name='Authors')
         context['authors'] = authors
         return context
 
