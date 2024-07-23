@@ -83,7 +83,17 @@
 
             const date = document.createElement("p");
             date.classList.add("text-sm", "text-gray-500");
-            date.textContent = Date(comment.created_at).toLocaleString();
+            // format locale-agnostic but without seconds
+            date.textContent = new Date(comment.created_date).toLocaleString(
+                undefined,
+                {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                },
+            );
             li.appendChild(date);
 
             const body = document.createElement("p");
