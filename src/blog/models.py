@@ -133,8 +133,8 @@ class AuthorIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        editor_group = Group.objects.get(name='Editors')
-        authors = editor_group.user_set.filter(blog_posts__isnull=False).distinct()
+        # Fetch all users who have authored at least one blog post
+        authors = User.objects.filter(blog_posts__isnull=False).distinct()
         context['authors'] = authors
         return context
 
