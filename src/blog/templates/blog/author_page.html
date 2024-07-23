@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="bg-green-700 py-8 flex-grow">
+    <div class="max-w-3xl md:max-w-5xl mx-auto p-4">
+        <div class="bg-white rounded-xl overflow-hidden drop-shadow">
+            <div class="p-8">
+                <h1 class="text-4xl font-bold mb-4 text-black">{{ page.title }}</h1>
+                
+                <div class="flex items-center mb-8">
+                    {% if page.user.wagtail_userprofile.avatar %}
+                        <img src="{{ page.user.wagtail_userprofile.avatar.url }}" alt="{{ page.title }}" class="w-24 h-24 rounded-full mr-4">
+                    {% endif %}
+                    <div class="bio text-gray-700">
+                        {{ page.bio|richtext }}
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-semibold mb-4 text-black">Posts by {{ page.title }}</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for post in page.user.blog_posts.all %}
+                        <a href="{% pageurl post %}" class="bg-yellow-500 rounded-xl overflow-hidden drop-shadow group hover:rotate-1 transition-transform">
+                            <div class="relative aspect-square">
+                                {% if post.image %}
+                                    {% image post.image fill-512x512 as img %}
+                                    <img src="{{ img.url }}" alt="{{ post.title }}" class="w-full h-full object-cover object-center">
+                                {% else %}
+                                    <div class="h-full bg-gray-300"></div>
+                                {% endif %}
+                                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-yellow-500 to-transparent">
+                                    <h3 class="text-xl font-semibold text-black group-hover:underline">{{ post.title }}</h3>
+                                    <p class="text-sm text-gray-800">{{ post.date|date:"d-m-Y" }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <p class="text-gray-700">No posts yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
