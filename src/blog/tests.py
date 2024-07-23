@@ -26,14 +26,16 @@ class BlogIndexPageTests(WagtailPageTestCase):
         future_date = now + datetime.timedelta(days=1)
 
         past_post = BlogPage(
-            title="Past Post", 
+            title="Past Post",
+            author=User.objects.create_user(username='testuser', password='password'),
             slug="past-post", 
             date=past_date, 
             intro="Past intro", 
             body="Past body"
         )
         future_post = BlogPage(
-            title="Future Post", 
+            title="Future Post",
+            author=User.objects.create_user(username='testusertwo', password='password'),
             slug="future-post", 
             date=future_date, 
             intro="Future intro", 
@@ -60,6 +62,7 @@ class BlogPageTests(TestCase):
         self.blog_index_page.save()
 
         self.blog_page = BlogPage(
+            author=User.objects.create_user(username='testuser', password='password'),
             title="Test Post",
             slug="test-post",
             date=timezone.now(),
@@ -81,6 +84,7 @@ class CommentTests(TestCase):
         self.blog_index_page.save()
 
         self.blog_page = BlogPage(
+            author=User.objects.create_user(username='testuser', password='password'),
             title="Test Post",
             slug="test-post",
             date=timezone.now(),
@@ -90,7 +94,7 @@ class CommentTests(TestCase):
         self.blog_index_page.add_child(instance=self.blog_page)
         self.blog_page.save()
 
-        self.user = User.objects.create_user(username='testuser', password='password')
+        self.user = User.objects.create_user(username='testusertwo', password='password')
 
     def test_comment_creation(self):
         comment = Comment.objects.create(
