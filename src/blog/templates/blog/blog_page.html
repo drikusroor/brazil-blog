@@ -1,74 +1,49 @@
 {% extends "base.html" %}
-
-{% load i18n static wagtailcore_tags wagtailimages_tags %}
-
+{% load i18n static wagtailcore_tags wagtailimages_tags user_tags %}
 {% block body_class %}template-blogpage{% endblock %}
-
 {% block content %}
 
 <div class="bg-green-700 py-8 flex-grow">
     <div class="max-w-3xl md:max-w-5xl mx-auto p-4">
         <div class="bg-white rounded-xl overflow-hidden drop-shadow">
             <div class="relative aspect-w-16 aspect-h-4">
-            {% if page.image %}
-                {% picture page.image format-{webp,avif,jpeg} fill-1024x320 bgcolor-3730a3 %}
-            {% else %}
-                <div class="h-80 bg-gray-300"></div>
-            {% endif %}
+                {% if page.image %}
+                    {% picture page.image format-{webp,avif,jpeg} fill-1024x320 bgcolor-3730a3 %}
+                {% else %}
+                    <div class="h-80 bg-gray-300"></div>
+                {% endif %}
                 <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
-                    <h1 class="bold text-4xl mb-0 text-black">
-                        {{ page.title }}
-                    </h1>
+                    <h1 class="bold text-4xl mb-0 text-black">{{ page.title }}</h1>
                     <div class="flex items-center justify-between gap-4">
-                        <p>{{ page.specific.date | date:"d-m-Y H:i" }}</p>
+                        {{ page.specific.date | date:"d-m-Y H:i" }}
                         <div class="flex flex-row items-center gap-4">
-
-                            <p> 
-                                {% if page.author.first_name and page.author.last_name %}
-                                    {{page.author.first_name}} {{page.author.last_name}}
-                                {% elif page.author %}
-                                    {{page.author }}
-                                {% elif page.owner.first_name and page.owner.last_name %}
-                                    {{page.owner.first_name}} {{page.owner.last_name}}
-                                {% else %}
-                                    {{page.owner }}
-                                {% endif %}
-                            </p>
-
-                            {% if page.owner.wagtail_userprofile.avatar %}
-                                <img src="{{ page.owner.wagtail_userprofile.avatar.url }}" alt="{{ request.user.get_full_name }}" class="rounded-full" style="width: 40px; height: 40px">
-                            {% endif %}
+                            <p class="text-sm">{% user_display_name page %}</p>
+                            {% user_avatar page %}
                         </div>
                     </div>
                     <div class="flex ml-auto items-center gap-4">
-                        <p>{{ page.hero_text }}</p>
+                        {{ page.hero_text }}
                         {% if page.hero_cta_link %}
-                        <a href="{% pageurl page.hero_cta_link %}" class="bg-blue-700 text-white px-4 py-2 rounded-lg no-underline hover:text-amber-300 transition-colors drop-shadow">
-                            {% firstof page.hero_cta page.hero_cta_link.title %}
-                        </a>
+                            <a href="{% pageurl page.hero_cta_link %}" class="bg-blue-700 text-white px-4 py-2 rounded-lg no-underline hover:text-amber-300 transition-colors drop-shadow">
+                                {% firstof page.hero_cta page.hero_cta_link.title %}
+                            </a>
                         {% endif %}
                     </div>
                 </div>
             </div>
-
-            <article class="prose w-full max-w-none p-4">
-                {{ page.body|richtext }}
-            </article>
-
+            {{ page.body|richtext }}
             <div class="p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {% for item in page.gallery_images.all %}
-                <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
-                    {% image item.image fill-1920x1080 %}
-                    <p class="p-2">{{ item.caption }}</p>
-                </div>
-            {% endfor %}   
+                    <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
+                        {% image item.image fill-1920x1080 %}
+                        {{ item.caption }}
+                    </div>
+                {% endfor %}
             </div>
-
             <div class="inline-block w-full">
                 {% include "blog/includes/comments.html" with page=page %}
             </div>
-
-            <a href="{{ page.get_parent.url }}" class="inline-block w-full p-4 bg-gray-100 text-center hover:bg-gray-200 transition-colors" title="{% trans "Return to blog" %}">
+            <a href="{{ page.get_parent.url }}" class="inline-block w-full p-4 bg-gray-100 text-center hover:bg-gray-200 transition-colors">
                 🔙 {% trans "Return to blog" %}
             </a>
         </div>
@@ -77,5 +52,4 @@
 
 {% include "blog/includes/tukanchamon.html" %}
 {% include "blog/includes/cuica-course-form.html" %}
-
 {% endblock %}

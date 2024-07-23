@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags user_tags %}
 
 {% block content %}
 <div class="bg-green-700 py-8 flex-grow">
@@ -20,10 +20,8 @@
                     {% for author in authors %}
                         <a href="{% pageurl author.author_page %}" class="bg-yellow-500 rounded-xl overflow-hidden drop-shadow group hover:rotate-1 transition-transform">
                             <div class="p-4">
-                                <h3 class="text-xl font-semibold text-black group-hover:underline">{{ author }}</h3>
-                                {% if author.wagtail_userprofile.avatar %}
-                                    <img src="{{ author.wagtail_userprofile.avatar.url }}" alt="{{ author }}" class="w-16 h-16 rounded-full mt-2">
-                                {% endif %}
+                                <h3 class="text-xl font-semibold text-black group-hover:underline">{% user_display_name post %}</h3>
+                                {% user_avatar post %}
                             </div>
                         </a>
                     {% empty %}
