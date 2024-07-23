@@ -42,16 +42,20 @@
                                 {% if post.owner.wagtail_userprofile.avatar %}
                                     <img src="{{ post.owner.wagtail_userprofile.avatar.url }}" alt="{{ request.user.get_full_name }}" class="rounded-full" style="width: 30px; height: 30px">
                                 {% endif %}
-                                {% if post.owner.first_name and page.owner.last_name %}
-                                    <p class="text-sm"> {{post.owner.first_name}} </p>
-                                {% else %}   
-                                    <p class="text-sm"> {{post.owner}} </p>
-                                {% endif %}
-     
+
+                                <p class="text-sm"> 
+                                    {% if page.author.first_name and page.author.last_name %}
+                                        {{page.author.first_name}} {{page.author.last_name}}
+                                    {% elif page.author %}
+                                        {{page.author }}
+                                    {% elif page.owner.first_name and page.owner.last_name %}
+                                        {{page.owner.first_name}} {{page.owner.last_name}}
+                                    {% else %}
+                                        {{page.owner }}
+                                    {% endif %}
+                                </p>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </a>

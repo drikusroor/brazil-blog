@@ -22,11 +22,18 @@
                     <div class="flex items-center justify-between gap-4">
                         <p>{{ page.specific.date | date:"d-m-Y H:i" }}</p>
                         <div class="flex flex-row items-center gap-4">
-                            {% if page.owner.first_name and page.owner.last_name %}
-                                <p> {{page.owner.first_name}} {{page.owner.last_name}} </p>
-                            {% else %}
-                                <p> {{page.owner }} </p>
-                            {% endif %}
+
+                            <p> 
+                                {% if page.author.first_name and page.author.last_name %}
+                                    {{page.author.first_name}} {{page.author.last_name}}
+                                {% elif page.author %}
+                                    {{page.author }}
+                                {% elif page.owner.first_name and page.owner.last_name %}
+                                    {{page.owner.first_name}} {{page.owner.last_name}}
+                                {% else %}
+                                    {{page.owner }}
+                                {% endif %}
+                            </p>
 
                             {% if page.owner.wagtail_userprofile.avatar %}
                                 <img src="{{ page.owner.wagtail_userprofile.avatar.url }}" alt="{{ request.user.get_full_name }}" class="rounded-full" style="width: 40px; height: 40px">
