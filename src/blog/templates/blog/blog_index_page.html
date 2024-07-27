@@ -1,65 +1,43 @@
 {% extends "base.html" %}
-
-{% load i18n static wagtailcore_tags wagtailimages_tags custom_image_tags %}
-
+{% load i18n static wagtailcore_tags wagtailimages_tags custom_image_tags user_tags %}
 {% block body_class %}template-blogindexpage{% endblock %}
-
 {% block content %}
 
 <div class="bg-green-700 py-8 flex-grow">
-
     <div class="max-w-3xl md:max-w-5xl mx-auto p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-
         {% for post in blogpages %}
             <a href="{% pageurl post %}" class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
                 <div class="relative aspect-square">
                     {% if post.specific.image %}
-                        <img 
-                            src="{{ post.specific.image|advanced_image:'fill-64x64,format-jpeg,bgcolor-eab308' }}"
-                            data-src="{{ post.specific.image|advanced_image:'fill-512x512,quality-90' }}"
-                            class="lazyload blur w-full h-full object-cover object-center transition bg-yellow-500 scale-105 duration-150"
-                            alt="{{ post.specific.image.alt }}"
-                        />
+                        <img src="{{ post.specific.image|advanced_image:'fill-64x64,format-jpeg,bgcolor-eab308' }}"
+                             class="lazyload blur w-full h-full object-cover object-center transition bg-yellow-500 scale-105 duration-150"
+                             data-src="{{ post.specific.image|advanced_image:'fill-512x512,quality-90' }}"
+                             alt="{{ post.specific.image.alt }}">
                     {% else %}
                         <div class="h-80 bg-gray-300"></div>
                     {% endif %}
                     <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
-                        <h2 class="bold text-4xl mb-0 text-black group-hover:underline hover:underline decoration-wavy">
-                            {{ post.title }}
-                        </h2>
+                        <h2 class="bold text-4xl mb-0 text-black group-hover:underline hover:underline decoration-wavy">{{ post.title }}</h2>
                         <div class="flex justify-between gap-4">
                             <div class="flex flex-col flex-wrap">
-                                <p class="text-sm">{{ post.specific.date | date:"d-m-Y H:i" }}</p>
-                                <p class="text-sm">
-                                    {% if post.specific.intro %}
-                                        {{ post.specific.intro }}
-                                    {% else %}
-                                        {{ post.specific.body|richtext|slice:":500" }}
-                                    {% endif %}
-                                </p>
+                                {{ post.specific.date | date:"d-m-Y H:i" }}
+                                {% if post.specific.intro %}
+                                    {{ post.specific.intro }}
+                                {% else %}
+                                    {{ post.specific.body|richtext|slice:":500" }}
+                                {% endif %}
                             </div>
                             <div class="flex flex-col justify-end items-center">
-                                {% if post.owner.wagtail_userprofile.avatar %}
-                                    <img src="{{ post.owner.wagtail_userprofile.avatar.url }}" alt="{{ request.user.get_full_name }}" class="rounded-full" style="width: 30px; height: 30px">
-                                {% endif %}
-                                {% if post.owner.first_name and page.owner.last_name %}
-                                    <p class="text-sm"> {{post.owner.first_name}} </p>
-                                {% else %}   
-                                    <p class="text-sm"> {{post.owner}} </p>
-                                {% endif %}
-     
+                                {% post_user_avatar post 'w-8 h-8 rounded-full object-cover' %}
+                                <p class="text-sm">{% post_user_display_name post %}</p>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </a>
         {% endfor %}
     </div>
-
     {% include "blog/includes/tukanchamon.html" %}
-
 </div>
 
 {% endblock %}
