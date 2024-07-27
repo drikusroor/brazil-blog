@@ -8,16 +8,18 @@
             <div class="p-8">
                 <h1 class="text-4xl font-bold mb-4 text-black">{{ page.title }}</h1>
                 
-                <div class="flex items-center mb-8">
-                    {% if page.user.wagtail_userprofile.avatar %}
-                        <img src="{{ page.user.wagtail_userprofile.avatar.url }}" alt="{{ page.title }}" class="w-24 h-24 rounded-full mr-4">
-                    {% endif %}
-                    <div class="bio text-gray-700">
+                <div class="mb-8 clear-both">
+                    <div class="float-start">
+                        {% user_avatar user %}
+                    </div>
+                    <div class="bio text-gray-700 ml-4">
                         {{ page.bio|richtext }}
                     </div>
                 </div>
 
-                <h2 class="text-2xl font-semibold mb-4 text-black">Posts by {{ page.title }}</h2>
+                <div class="clear-both"></div>
+
+                <h2 class="text-2xl font-semibold my-4 text-black">Posts by {{ page.title }}</h2>
                 
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {% for post in page.user.blog_posts.all %}

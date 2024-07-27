@@ -31,6 +31,12 @@ def post_user_display_name(post: BlogPage):
     return user_display_name(user)
 
 @register.simple_tag
+def get_user_avatar_url(user: User) -> str:
+    if hasattr(user, 'wagtail_userprofile') and user.wagtail_userprofile.avatar:
+        return user.wagtail_userprofile.avatar.url
+    return ''
+
+@register.simple_tag
 def user_avatar(user: User, classes: str = 'rounded-full w-16 h-16 object-cover') -> str:
     if hasattr(user, 'wagtail_userprofile') and user.wagtail_userprofile.avatar:
         return format_html('<img src="{}" alt="{}" class="{}">', 
