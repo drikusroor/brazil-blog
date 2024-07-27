@@ -35,7 +35,7 @@ def user_avatar(user: User, classes: str = 'rounded-full w-16 h-16 object-cover'
     if hasattr(user, 'wagtail_userprofile') and user.wagtail_userprofile.avatar:
         return format_html('<img src="{}" alt="{}" class="{}">', 
                            user.wagtail_userprofile.avatar.url, 
-                           post_user_display_name(post), 
+                           user_display_name(user), 
                            classes, 
                            )
     return ''
