@@ -17,8 +17,8 @@
                     <div class="flex items-center justify-between gap-4">
                         {{ page.specific.date | date:"d-m-Y H:i" }}
                         <div class="flex flex-row items-center gap-4">
-                            <p class="text-sm">{% user_display_name page %}</p>
-                            {% user_avatar page %}
+                            <p class="text-sm">{% post_user_display_name page %}</p>
+                            {% post_user_avatar page %}
                         </div>
                     </div>
                     <div class="flex ml-auto items-center gap-4">
