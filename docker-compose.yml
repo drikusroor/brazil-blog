@@ -13,3 +13,4 @@ services:
       - ./src:/code
     ports:
       - 8000:8000
+    restart: always
