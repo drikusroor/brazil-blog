@@ -54,7 +54,7 @@ jobs:
   smoketests:
     runs-on: ubuntu-latest
 
-    if: github.ref == 'refs/heads/main'
+    needs: deploy
 
     env:
       CYPRESS_BASE_URL: "https://brazil.kokokoding.nl"
