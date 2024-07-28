@@ -38,11 +38,15 @@ def get_user_avatar_url(user: User) -> str:
 
 @register.simple_tag
 def user_avatar(user: User, classes: str = 'rounded-full w-16 h-16 object-cover') -> str:
+
+    name = user_display_name(user)
+
     if hasattr(user, 'wagtail_userprofile') and user.wagtail_userprofile.avatar:
-        return format_html('<img src="{}" alt="{}" class="{}">', 
+        return format_html('<img src="{}" alt="{}" class="{}" title="{}">',
                            user.wagtail_userprofile.avatar.url, 
-                           user_display_name(user), 
+                           name,
                            classes, 
+                           name
                            )
     return ''
     
