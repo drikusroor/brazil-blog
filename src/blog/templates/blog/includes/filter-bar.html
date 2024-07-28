@@ -1,0 +1,25 @@
+{% load wagtailcore_tags wagtailimages_tags user_tags %}
+
+<form method="get" action="" class="bg-blue-800 p-4 mb-8 rounded-lg">
+    <h3 class="text-lg font-semibold mb-4">Filter by Author</h3>
+    <div class="flex flex-wrap gap-2 mb-4">
+        {% for author in authors %}
+            <button type="submit" name="author" value="{{ author.username }}" class="flex bg-white justify-center items-center border-4 aspect-square rounded-full {% if request.GET.author == author.username %} border-yellow-500 {% else %} border-transparent {% endif %}">
+                {% if author.wagtail_userprofile.avatar %}
+                    {% user_avatar author 'aspect-square w-8 h-8 rounded-full object-cover' %}
+                {% else %}
+                    <svg class="w-8 h-8 rounded-full object-cover" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13a3 3 0 100-6 3 3 0 000 6z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"></path>
+                    </svg>
+                {% endif %}
+                <span class="sr-only">{{ author.get_full_name|default:author.username }}</span>
+            </button>
+        {% endfor %}
+    </div>
+    
+    <div class="flex justify-between items-center">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">Apply Filters</button>
+        <a href="{% pageurl page %}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors">Reset Filters</a>
+    </div>
+</form>

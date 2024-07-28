@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.utils import timezone
 from django.db import models
+from django.db.models import Q
 from modelcluster.fields import ParentalKey
 
 from wagtail.models import Page, Orderable
@@ -28,6 +29,15 @@ class BlogIndexPage(Page):
                 .specific()
         )
         context['blogpages'] = blogpages
+    
+        # Author filter
+        author_username = request.GET.get('author')
+        if author_username:
+            blogpages = blogpages.filter(Q(blogpage__author__username=author_username))
+
+        context['blogpages'] = blogpages
+        context['authors'] = User.objects.filter(blog_posts__isnull=False).distinct()
+
         return context
 
     content_panels = Page.content_panels + [
