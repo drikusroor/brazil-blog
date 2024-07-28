@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.utils import timezone
+from django.utils.dateparse import parse_date
 from django.db import models
 from django.db.models import Q
 from modelcluster.fields import ParentalKey
@@ -35,8 +36,23 @@ class BlogIndexPage(Page):
         if author_username:
             blogpages = blogpages.filter(Q(blogpage__author__username=author_username))
 
+        # Date filter
+        date_from = request.GET.get('date_from')
+        date_to = request.GET.get('date_to')
+
+        if date_from:
+            date_from = parse_date(date_from)
+            if date_from:
+                blogpages = blogpages.filter(blogpage__date__gte=date_from)
+
+        if date_to:
+            date_to = parse_date(date_to)
+            if date_to:
+                blogpages = blogpages.filter(blogpage__date__lte=date_to)
+
         context['blogpages'] = blogpages
         context['authors'] = User.objects.filter(blog_posts__isnull=False).distinct()
+        context['page'] = self  # Add this line for the reset button
 
         return context
 
