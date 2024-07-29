@@ -10,7 +10,7 @@
                 <label for="author" class="block text-sm font-medium text-white mb-1">Author:</label>
                 <div class="flex flex-wrap gap-2">
                     {% for author in authors %}
-                    <button type="submit" name="author" value="{{ author.username }}" title="{% user_display_name author %}" class="flex bg-white justify-center items-center border-4 aspect-square rounded-full shadow-sm {% if request.GET.author == author.username %} border-yellow-500 {% else %} border-transparent {% endif %}">
+                    <button type="button" name="author" value="{{ author.username }}" title="{% user_display_name author %}" class="flex bg-white justify-center items-center border-4 aspect-square rounded-full shadow-sm {% if request.GET.author == author.username %} border-yellow-500 {% else %} border-transparent {% endif %}">
                         {% if author.wagtail_userprofile.avatar %}
                             {% user_avatar author 'aspect-square w-8 h-8 rounded-full object-cover' %}
                         {% else %}
@@ -97,8 +97,24 @@
                     url.searchParams.set('author', button.value);
                     window.location.href = url;
                 }
-                
             });
         });
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = new URL(window.location.href);
+            const formData = new FormData(form);
+
+            for (const [key, value] of formData) {
+                if (value) {
+                    url.searchParams.set(key, value);
+                } else {
+                    url.searchParams.delete(key);
+                }
+            }
+
+            window.location.href = url;
+        });
+
     });
 </script>
