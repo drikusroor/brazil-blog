@@ -1613,6 +1613,10 @@ select {
   height: 100%;
 }
 
+.min-h-16 {
+  min-height: 4rem;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -1677,6 +1681,10 @@ select {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -1709,6 +1717,10 @@ select {
   align-items: flex-start;
 }
 
+.items-end {
+  align-items: flex-end;
+}
+
 .items-center {
   align-items: center;
 }
@@ -1735,6 +1747,10 @@ select {
 
 .gap-4 {
   gap: 1rem;
+}
+
+.self-end {
+  align-self: flex-end;
 }
 
 .overflow-hidden {
