@@ -1613,6 +1613,10 @@ select {
   height: 100%;
 }
 
+.h-10 {
+  height: 2.5rem;
+}
+
 .min-h-16 {
   min-height: 4rem;
 }

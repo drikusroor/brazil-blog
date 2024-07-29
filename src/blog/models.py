@@ -23,18 +23,18 @@ class BlogIndexPage(Page):
         context = super().get_context(request)
         now = timezone.now()
         blogpages = (
-            self.get_children()
-                .live()
-                .filter(blogpage__date__lte=now)
-                .order_by('-blogpage__date')
-                .specific()
+            BlogPage.objects
+            .child_of(self)
+            .live()
+            .filter(date__lte=now)
+            .order_by('-date')
         )
         context['blogpages'] = blogpages
     
         # Author filter
         author_username = request.GET.get('author')
         if author_username:
-            blogpages = blogpages.filter(Q(blogpage__author__username=author_username))
+            blogpages = blogpages.filter(Q(author__username=author_username))
 
         # Date filter
         date_from = request.GET.get('date_from')
@@ -43,20 +43,22 @@ class BlogIndexPage(Page):
         if date_from:
             date_from = parse_date(date_from)
             if date_from:
-                blogpages = blogpages.filter(blogpage__date__gte=date_from)
+                blogpages = blogpages.filter(date__gte=date_from)
 
         if date_to:
             date_to = parse_date(date_to)
             if date_to:
-                blogpages = blogpages.filter(blogpage__date__lte=date_to)
+                blogpages = blogpages.filter(date__lte=date_to)
+
+        query = request.GET.get('query')
+        if query:
+            blogpages = blogpages.search(query, fields=['title', 'body'])
 
         context['blogpages'] = blogpages
         context['authors'] = User.objects.filter(blog_posts__isnull=False).distinct()
         context['page'] = self  # Add this line for the reset button
 
         context['active_filters'] = any([author_username, date_from, date_to])
-
-        print(context)
 
         return context
 
@@ -90,8 +92,11 @@ class BlogPage(Page):
     body = RichTextField(blank=True)
 
     search_fields = Page.search_fields + [
+        index.SearchField('title'),
         index.SearchField('intro'),
         index.SearchField('body'),
+        index.FilterField('username'),
+        index.FilterField('date'),
     ]
 
     content_panels = Page.content_panels + [
