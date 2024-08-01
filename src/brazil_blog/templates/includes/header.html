@@ -1,5 +1,5 @@
 {% load i18n static cache %}
-{% load wagtailcore_tags wagtailimages_tags navigation_tags %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags brazil_time %}
 
 {% get_site_root as site_root %}
 {% with site_name=settings.base.NavigationSettings.site_name site_logo=settings.base.NavigationSettings.site_logo %}
@@ -10,10 +10,15 @@
             <a href="{% pageurl site_root %}" class="inline-block">
                 {% picture site_logo format-{webp,avif,jpeg} fill-64x64 bgcolor-3730a3 class="inline-block rounded-full" %}
             </a>
-            <a href="/"
-                class="hidden md:inline-block text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
-                <h1 class="text-3xl font-bold">{{ site_name }}</h1>
-            </a>
+            
+            <div>
+                <a href="/" class="hidden md:inline-block text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
+                    <h1 class="text-3xl font-bold">{{ site_name }}</h1>
+                </a>
+                <span class="p-1 rounded text-xs bg-gray-700 text-gray-100">
+                    {% display_brazil_time %}
+                </span>
+            </div>
         </div>
         <ul class="flex items-center gap-3">
             {% for menuitem in site_root.get_children.live.in_menu %}
