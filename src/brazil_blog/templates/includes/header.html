@@ -15,9 +15,7 @@
                 <a href="/" class="hidden md:inline-block text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
                     <h1 class="text-3xl font-bold">{{ site_name }}</h1>
                 </a>
-                <span class="p-1 rounded text-xs bg-gray-700 text-gray-100">
-                    {% display_brazil_time %}
-                </span>
+                {% include "blog/includes/brazil-time.html" %}
             </div>
         </div>
         <ul class="flex items-center gap-3">
