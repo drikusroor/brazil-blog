@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.utils import timezone
+from django.utils.dateparse import parse_date
 from django.db import models
+from django.db.models import Q
 from modelcluster.fields import ParentalKey
 
 from wagtail.models import Page, Orderable
@@ -28,6 +30,30 @@ class BlogIndexPage(Page):
                 .specific()
         )
         context['blogpages'] = blogpages
+    
+        # Author filter
+        author_username = request.GET.get('author')
+        if author_username:
+            blogpages = blogpages.filter(Q(blogpage__author__username=author_username))
+
+        # Date filter
+        date_from = request.GET.get('date_from')
+        date_to = request.GET.get('date_to')
+
+        if date_from:
+            date_from = parse_date(date_from)
+            if date_from:
+                blogpages = blogpages.filter(blogpage__date__gte=date_from)
+
+        if date_to:
+            date_to = parse_date(date_to)
+            if date_to:
+                blogpages = blogpages.filter(blogpage__date__lte=date_to)
+
+        context['blogpages'] = blogpages
+        context['authors'] = User.objects.filter(blog_posts__isnull=False).distinct()
+        context['page'] = self  # Add this line for the reset button
+
         return context
 
     content_panels = Page.content_panels + [
@@ -135,8 +161,8 @@ class AuthorIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        # Fetch all users who have authored at least one blog post
-        authors = User.objects.filter(blog_posts__isnull=False).distinct()
+        # Fetch all users who have the role of "Authors"
+        authors = User.objects.filter(groups__name='Authors')
         context['authors'] = authors
         return context
 

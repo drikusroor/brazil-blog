@@ -4,6 +4,8 @@
 {% block content %}
 
 <div class="bg-green-700 py-8 flex-grow">
+    {% include "blog/includes/filter-bar.html" %}
+    
     <div class="max-w-3xl md:max-w-5xl mx-auto p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {% for post in blogpages %}
             <a href="{% pageurl post %}" class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
@@ -17,19 +19,18 @@
                         <div class="h-80 bg-gray-300"></div>
                     {% endif %}
                     <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
-                        <h2 class="bold text-4xl mb-0 text-black group-hover:underline hover:underline decoration-wavy">{{ post.title }}</h2>
-                        <div class="flex justify-between gap-4">
-                            <div class="flex flex-col flex-wrap">
+                        <h2 class="bold text-4xl mb-2 text-black group-hover:underline hover:underline decoration-wavy">{{ post.title }}</h2>
+                        <div class="flex flex-col justify-between gap-2 text-sm">
+                            <div class="flex flex-row items-center flex-wrap gap-2">
+                                {% post_user_avatar post 'w-8 h-8 rounded-full object-cover' %}
                                 {{ post.specific.date | date:"d-m-Y H:i" }}
+                            </div>
+                            <div>
                                 {% if post.specific.intro %}
                                     {{ post.specific.intro }}
                                 {% else %}
                                     {{ post.specific.body|richtext|slice:":500" }}
                                 {% endif %}
-                            </div>
-                            <div class="flex flex-col justify-end items-center">
-                                {% post_user_avatar post 'w-8 h-8 rounded-full object-cover' %}
-                                <p class="text-sm">{% post_user_display_name post %}</p>
                             </div>
                         </div>
                     </div>
