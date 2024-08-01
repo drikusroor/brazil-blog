@@ -1,5 +1,12 @@
 {
     "recommendations": [
-        "charliermarsh.ruff"
+        "charliermarsh.ruff",
+        "akamud.vscode-theme-onedark",
+        "oven.bun-vscode",
+        "mhutchie.git-graph",
+        "github.vscode-pull-request-github",
+        "ms-python.python",
+        "robbowen.synthwave-vscode",
+        "bradlc.vscode-tailwindcss"
     ]
 }
