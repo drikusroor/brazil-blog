@@ -25,6 +25,7 @@
                                     {{ post.specific.intro }}
                                 {% else %}
                                     {{ post.specific.body|richtext|slice:":500" }}
+                                    {{ post.video }}
                                 {% endif %}
                             </div>
                             <div class="flex flex-col justify-end items-center">

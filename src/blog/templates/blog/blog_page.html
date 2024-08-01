@@ -33,6 +33,7 @@
             </div>
             <div class="p-4">
                 {{ page.body|richtext }}
+                {{ page.video }}
             </div>
             <div class="p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {% for item in page.gallery_images.all %}

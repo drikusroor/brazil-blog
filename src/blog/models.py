@@ -58,6 +58,7 @@ class BlogPage(Page):
     )
     intro = models.CharField(max_length=250)
     body = RichTextField(blank=True)
+    video = models.URLField(null=True)
 
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
@@ -70,6 +71,7 @@ class BlogPage(Page):
         FieldPanel('image'),
         FieldPanel('intro'),
         FieldPanel('body'),
+        FieldPanel('video'),
         InlinePanel('gallery_images', label="Gallery images"),
     ]
 
