@@ -41,6 +41,9 @@
             <div class="p-4 flex-grow">
                 <div class="mb-4"> {{ page.body|richtext }} </div>
                 <div class="bg-slate-300 aspect-video">
+                    Hardcoded google drive sharing URL: https://drive.google.com/file/d/1AgJMiA1FSVQW75SLn8RFCOjHeERYkd_9/view?usp=sharing
+                    <iframe id="videoFrame"></iframe>
+                    page.video url: {{page.video}}
                     <iframe 
                         src="{{page.video}}" 
                         title="Video player"
@@ -70,6 +73,58 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    //TODO: Use page.video instead of the hardcoded url
+    window.onload = function() {
+        url = "https://drive.google.com/file/d/1AgJMiA1FSVQW75SLn8RFCOjHeERYkd_9/view?usp=sharing"
+        formattedUrl = ""
+
+        const videoID = extractVideoID(url);
+        const isDriveUrl = url.includes('drive.google')
+
+        if (isDriveUrl) {
+            formattedUrl = `https://drive.google.com/file/d/${videoID}/preview`
+        } else {
+            formattedUrl = `https://www.youtube.com/embed/${videoID}`
+        }
+        document.getElementById("videoFrame").src = formattedUrl
+    }
+
+    function extractVideoID(url) {
+        // YouTube's short URL
+        let regex = /^https?:\/\/youtu.be\/([a-zA-Z0-9_-]{11})/
+        let result = regex.exec(url)
+
+        // YouTube's regular URL
+        if (!result) {
+            regex = /^https?:\/\/(?:www\.)?youtube.com\/.*[?&]v=([^&]+)/i
+            result = regex.exec(url)
+        }
+
+        // YouTube's embed URL
+        if (!result) {
+            regex = /^https?:\/\/(?:www\.)?youtube.com\/embed\/([a-zA-Z0-9_-]{11})/
+            result = regex.exec(url)
+        }
+
+        // YouTube's user URL
+        if (!result) {
+            regex =
+            /^https?:\/\/(?:www\.)?youtube.com\/user\/[^/]+#p\/u\/\d+\/([a-zA-Z0-9_-]{11})/
+            result = regex.exec(url)
+        }
+
+        // Google Drive's URL
+        if (!result) {
+            regex =
+            /^https?:\/\/(?:www\.)?drive.google.com\/file\/d\/([a-zA-Z0-9_-]{33})/
+            result = regex.exec(url)
+        }
+
+        return result && result[1] ? result[1] : null
+    }
+</script>
 
 {% include "blog/includes/tukanchamon.html" %}
 {% include "blog/includes/cuica-course-form.html" %}
