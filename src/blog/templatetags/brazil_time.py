@@ -14,7 +14,7 @@ def display_brazil_time():
     sao_paulo_time = datetime.now(pytz.utc).astimezone(sao_paulo_tz)
     
     # Format the time as a string
-    formatted_time = sao_paulo_time.strftime('%Y-%m-%d %H:%M:%S')
+    formatted_time = sao_paulo_time.strftime('%Y-%m-%d %H:%M')
     
     # Determine if it's day or night
     hour = sao_paulo_time.hour
@@ -24,4 +24,4 @@ def display_brazil_time():
         emoji = '🌙'  # Moon emoji for night time
     
     # Return the formatted time with the appropriate emoji
-    return format_html(f"{formatted_time} {emoji}")
+    return format_html(f"🇧🇷 {formatted_time} {emoji}")

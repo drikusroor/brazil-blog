@@ -1,37 +1,21 @@
 {% load brazil_time %}
 
 <span id="brazilTime" class="p-1 rounded text-xs bg-gray-700 text-gray-100">
-  {% display_brazil_time %}
+    {% display_brazil_time %}
 </span>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    let lastUpdateTime;
-
-    function updateTime() {
-        const brazilTimeElement = document.getElementById("brazilTime");
-        const currentTime = brazilTimeElement.innerText;
-        
-        // Parse the current time
-        const [datePart, timePart] = currentTime.split(' ');
-        const [year, month, day] = datePart.split('-').map(Number);
-        const [hours, minutes, seconds] = timePart.split(':').map(Number);
-        
-        // Create a new Date object or use the existing one
-        if (!lastUpdateTime) {
-            lastUpdateTime = new Date(year, month - 1, day, hours, minutes, seconds);
-        } else {
-            lastUpdateTime.setSeconds(lastUpdateTime.getSeconds() + 1);
-        }
-        
-        // Format the new time
-        const newBrazilTime = lastUpdateTime.toISOString().replace('T', ' ').slice(0, 19);
-        
-        // Update the element
-        // brazilTimeElement.innerText = newBrazilTime;
+    function updateBrazilTime() {
+        fetch('/blog/api/brazil_time/')
+            .then(response => response.text())
+            .then(time => {
+                document.getElementById('brazilTime').innerHTML = time;
+            })
+            .catch(error => console.error('Error fetching Brazil time:', error));
     }
 
-    // Update time every second
-    setInterval(updateTime, 1000);
+    // Update time every minute
+    setInterval(updateBrazilTime, 60000);
 });
 </script>
