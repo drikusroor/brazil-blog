@@ -1525,10 +1525,6 @@ select {
   margin-top: 1rem;
 }
 
-.mt-5 {
-  margin-top: 1.25rem;
-}
-
 .mt-8 {
   margin-top: 2rem;
 }
@@ -1745,10 +1741,6 @@ select {
   justify-content: space-between;
 }
 
-.gap-10 {
-  gap: 2.5rem;
-}
-
 .gap-2 {
   gap: 0.5rem;
 }
@@ -1759,6 +1751,10 @@ select {
 
 .gap-4 {
   gap: 1rem;
+}
+
+.self-end {
+  align-self: flex-end;
 }
 
 .overflow-hidden {
@@ -2298,10 +2294,6 @@ select {
 }
 
 @media (min-width: 768px) {
-  .md\:ml-auto {
-    margin-left: auto;
-  }
-
   .md\:mt-0 {
     margin-top: 0px;
   }
@@ -2328,10 +2320,6 @@ select {
 
   .md\:gap-2 {
     gap: 0.5rem;
-  }
-
-  .md\:self-end {
-    align-self: flex-end;
   }
 }
 
