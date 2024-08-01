@@ -15,6 +15,7 @@ from wagtail.search import index
 
 User = get_user_model()
 
+
 class BlogIndexPage(Page):
     intro = RichTextField(blank=True)
 
@@ -28,16 +29,16 @@ class BlogIndexPage(Page):
             .filter(date__lte=now)
             .order_by('-date')
         )
-        context['blogpages'] = blogpages
-    
+        context["blogpages"] = blogpages
+
         # Author filter
-        author_username = request.GET.get('author')
+        author_username = request.GET.get("author")
         if author_username:
             blogpages = blogpages.filter(Q(author__username=author_username))
 
         # Date filter
-        date_from = request.GET.get('date_from')
-        date_to = request.GET.get('date_to')
+        date_from = request.GET.get("date_from")
+        date_to = request.GET.get("date_to")
 
         if date_from:
             date_from = parse_date(date_from)
@@ -53,30 +54,27 @@ class BlogIndexPage(Page):
         if query:
             blogpages = blogpages.search(query, fields=['title', 'body'])
 
-        context['blogpages'] = blogpages
-        context['authors'] = User.objects.filter(blog_posts__isnull=False).distinct()
-        context['page'] = self  # Add this line for the reset button
+        context["blogpages"] = blogpages
+        context["authors"] = User.objects.filter(blog_posts__isnull=False).distinct()
+        context["page"] = self  # Add this line for the reset button
 
         context['active_filters'] = any([author_username, query, date_from, date_to])
 
         return context
 
-    content_panels = Page.content_panels + [
-        FieldPanel('intro')
-    ]
+    content_panels = Page.content_panels + [FieldPanel("intro")]
+
 
 class BlogPageForm(WagtailAdminPageForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance._state.adding:
-            self.initial['author'] = self.for_user.pk
+            self.initial["author"] = self.for_user.pk
+
 
 class BlogPage(Page):
     author = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='blog_posts'
+        User, on_delete=models.SET_NULL, null=True, related_name="blog_posts"
     )
     date = models.DateTimeField("Post date", default=timezone.now)
     image = models.ForeignKey(
@@ -99,77 +97,88 @@ class BlogPage(Page):
     ]
 
     content_panels = Page.content_panels + [
-        FieldPanel('author'),
-        FieldPanel('date'),
-        FieldPanel('image'),
-        FieldPanel('intro'),
-        FieldPanel('body'),
-        InlinePanel('gallery_images', label="Gallery images"),
+        FieldPanel("author"),
+        FieldPanel("date"),
+        FieldPanel("image"),
+        FieldPanel("intro"),
+        FieldPanel("body"),
+        InlinePanel("gallery_images", label="Gallery images"),
     ]
 
-    edit_handler = TabbedInterface([
-        ObjectList(content_panels, heading='Content'),
-        ObjectList(Page.promote_panels, heading='Promote'),
-    ])
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(content_panels, heading="Content"),
+            ObjectList(Page.promote_panels, heading="Promote"),
+        ]
+    )
 
     base_form_class = BlogPageForm
 
+
 class Comment(models.Model):
-    post = models.ForeignKey(BlogPage, on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(
+        BlogPage, on_delete=models.CASCADE, related_name="comments"
+    )
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    author = models.ForeignKey("auth.User", on_delete=models.CASCADE)
     body = models.TextField()
-    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    parent_comment = models.ForeignKey(
+        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies"
+    )
 
     class Meta:
-        ordering = ['created_date']
+        ordering = ["created_date"]
 
     def __str__(self):
         return self.body
 
+
 class BlogPageGalleryImage(Orderable):
-    page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name='gallery_images')
+    page = ParentalKey(
+        BlogPage, on_delete=models.CASCADE, related_name="gallery_images"
+    )
     image = models.ForeignKey(
-        'wagtailimages.Image', on_delete=models.CASCADE, related_name='+'
+        "wagtailimages.Image", on_delete=models.CASCADE, related_name="+"
     )
     caption = models.CharField(blank=True, max_length=250)
 
     panels = [
-        FieldPanel('image'),
-        FieldPanel('caption'),
+        FieldPanel("image"),
+        FieldPanel("caption"),
     ]
 
 
 class AuthorPage(Page):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author_page')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="author_page"
+    )
     bio = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [
-        FieldPanel('user'),
-        FieldPanel('bio'),
+        FieldPanel("user"),
+        FieldPanel("bio"),
     ]
 
     def get_context(self, request):
         context = super().get_context(request)
-        context['posts'] = self.user.blog_posts.live().order_by('-first_published_at')
+        context["posts"] = self.user.blog_posts.live().order_by("-first_published_at")
         return context
 
-    parent_page_types = ['AuthorIndexPage']
+    parent_page_types = ["AuthorIndexPage"]
+
 
 class AuthorIndexPage(Page):
     intro = RichTextField(blank=True)
 
-    content_panels = Page.content_panels + [
-        FieldPanel('intro')
-    ]
+    content_panels = Page.content_panels + [FieldPanel("intro")]
 
     def get_context(self, request):
         context = super().get_context(request)
         # Fetch all users who have the role of "Authors"
-        authors = User.objects.filter(groups__name='Authors')
-        context['authors'] = authors
+        authors = User.objects.filter(groups__name="Authors")
+        context["authors"] = authors
         return context
 
-    subpage_types = ['AuthorPage']
+    subpage_types = ["AuthorPage"]

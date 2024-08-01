@@ -5,6 +5,6 @@
         "editor.defaultFormatter": "charliermarsh.ruff"
     },
     "ruff.enable": true,
-    "ruff.lint.args": ["--config", "ruff.toml"],
-    "ruff.format.args": ["--config", "ruff.toml"],
+    "ruff.lint.args": ["--config", "src/ruff.toml"],
+    "ruff.format.args": ["--config", "src/ruff.toml"],
 }
