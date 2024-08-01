@@ -4,7 +4,7 @@
 
     <div class="transition p-4 rounded-lg relative min-h-16">
     
-        <form id="filterForm" method="get" action="" class="flex flex-row gap-2 items-end">
+        <form id="filterForm" method="get" action="" class="flex flex-col lg:flex-row gap-2 lg:items-end">
             <div>
                 <h3 class="sr-only">Filter by Author</h3>
                 <label for="author" class="block text-sm font-medium text-white mb-1">Author:</label>
@@ -45,7 +45,7 @@
                 <input type="query" id="query" name="query" placecholder="Search query" value="{{ request.GET.query }}" class="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
             </div>
 
-            <div class="flex self-end ml-auto items-center gap-2">
+            <div class="flex self-end ml-auto items-center gap-2 mt-5 lg:mt-0">
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded transition opacity-50 cursor-not-allowed" id="submitButton" disabled="false">
                     Search
                     <span>&rarr;</span>
