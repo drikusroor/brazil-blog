@@ -69,13 +69,20 @@
         const submitButton = document.getElementById('submitButton');
         const resetButton = document.getElementById('resetButton');
 
+        function enableSubmitButton() {
+            submitButton.disabled = false;
+            submitButton.classList.remove('cursor-not-allowed', 'opacity-50');
+            submitButton.classList.add('hover:bg-blue-600');
+        }
+
         // if the form values change, enable the submit button
         document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('change', function() {
-                submitButton.disabled = false;
-                submitButton.classList.remove('cursor-not-allowed', 'opacity-50');
-                submitButton.classList.add('hover:bg-blue-600');
-            });
+            
+            if (input.type === 'text') {
+                input.addEventListener('input', enableSubmitButton);
+            }
+
+            input.addEventListener('change', enableSubmitButton);
         });
 
         const authorButtons = document.querySelectorAll('button[name="author"]');
