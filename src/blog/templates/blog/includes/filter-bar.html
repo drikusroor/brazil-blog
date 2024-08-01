@@ -67,6 +67,7 @@
         
         const form = document.getElementById('filterForm');
         const submitButton = document.getElementById('submitButton');
+        const resetButton = document.getElementById('resetButton');
 
         // if the form values change, enable the submit button
         document.querySelectorAll('input').forEach(input => {
@@ -114,6 +115,12 @@
             }
 
             window.location.href = url;
+        });
+
+        resetButton.addEventListener('click', function(event) {
+            if (resetButton.classList.contains('cursor-not-allowed')) {
+                event.preventDefault();
+            }
         });
 
     });
