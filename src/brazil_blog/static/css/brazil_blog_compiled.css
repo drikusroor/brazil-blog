@@ -2270,6 +2270,10 @@ select {
 }
 
 @media (min-width: 768px) {
+  .md\:inline-block {
+    display: inline-block;
+  }
+
   .md\:max-w-5xl {
     max-width: 64rem;
   }
