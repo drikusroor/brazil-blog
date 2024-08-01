@@ -108,6 +108,19 @@ class BlogPage(Page):
 
     base_form_class = BlogPageForm
 
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        preview_url = self.video
+
+        # Transform google drive share url to preview url for embedding
+        if 'drive.google' in self.video :
+            preview_url = (self.video.replace("view?usp=sharing","preview"))
+
+        context['preview_url'] = preview_url
+
+        return context
+
 class Comment(models.Model):
     post = models.ForeignKey(BlogPage, on_delete=models.CASCADE, related_name='comments')
     created_date = models.DateTimeField(auto_now_add=True)
