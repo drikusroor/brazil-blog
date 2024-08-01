@@ -58,7 +58,7 @@ class BlogIndexPage(Page):
         context['authors'] = User.objects.filter(blog_posts__isnull=False).distinct()
         context['page'] = self  # Add this line for the reset button
 
-        context['active_filters'] = any([author_username, date_from, date_to])
+        context['active_filters'] = any([author_username, query, date_from, date_to])
 
         return context
 
