@@ -1525,12 +1525,12 @@ select {
   margin-top: 1rem;
 }
 
-.mt-8 {
-  margin-top: 2rem;
-}
-
 .mt-5 {
   margin-top: 1.25rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
 }
 
 .block {
@@ -1725,10 +1725,6 @@ select {
   align-items: flex-start;
 }
 
-.items-end {
-  align-items: flex-end;
-}
-
 .items-center {
   align-items: center;
 }
@@ -1757,8 +1753,8 @@ select {
   gap: 1rem;
 }
 
-.self-end {
-  align-self: flex-end;
+.gap-5 {
+  gap: 1.25rem;
 }
 
 .overflow-hidden {
@@ -2312,6 +2308,10 @@ select {
 }
 
 @media (min-width: 1024px) {
+  .lg\:ml-auto {
+    margin-left: auto;
+  }
+
   .lg\:mt-0 {
     margin-top: 0px;
   }
@@ -2326,5 +2326,13 @@ select {
 
   .lg\:items-end {
     align-items: flex-end;
+  }
+
+  .lg\:gap-2 {
+    gap: 0.5rem;
+  }
+
+  .lg\:self-end {
+    align-self: flex-end;
   }
 }
