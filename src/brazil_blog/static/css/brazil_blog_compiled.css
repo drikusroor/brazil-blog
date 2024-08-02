@@ -1593,6 +1593,10 @@ select {
   height: 0.25rem;
 }
 
+.h-10 {
+  height: 2.5rem;
+}
+
 .h-12 {
   height: 3rem;
 }
@@ -1611,6 +1615,10 @@ select {
 
 .h-full {
   height: 100%;
+}
+
+.min-h-16 {
+  min-height: 4rem;
 }
 
 .min-h-screen {
@@ -1645,6 +1653,10 @@ select {
   max-width: none;
 }
 
+.max-w-xs {
+  max-width: 20rem;
+}
+
 .flex-shrink {
   flex-shrink: 1;
 }
@@ -1675,6 +1687,10 @@ select {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
 }
 
 .cursor-pointer {
@@ -1735,6 +1751,10 @@ select {
 
 .gap-4 {
   gap: 1rem;
+}
+
+.self-end {
+  align-self: flex-end;
 }
 
 .overflow-hidden {
@@ -2172,9 +2192,9 @@ select {
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-gray-400:hover {
+.hover\:bg-slate-200:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
+  background-color: rgb(226 232 240 / var(--tw-bg-opacity));
 }
 
 .hover\:text-amber-300:hover {
@@ -2263,6 +2283,10 @@ select {
 }
 
 @media (min-width: 640px) {
+  .sm\:flex-row {
+    flex-direction: row;
+  }
+
   .sm\:py-8 {
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -2270,6 +2294,14 @@ select {
 }
 
 @media (min-width: 768px) {
+  .md\:mt-0 {
+    margin-top: 0px;
+  }
+
+  .md\:w-auto {
+    width: auto;
+  }
+
   .md\:max-w-5xl {
     max-width: 64rem;
   }
@@ -2284,6 +2316,10 @@ select {
 
   .md\:items-end {
     align-items: flex-end;
+  }
+
+  .md\:gap-2 {
+    gap: 0.5rem;
   }
 }
 

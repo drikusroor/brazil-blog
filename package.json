@@ -13,7 +13,7 @@
   "scripts": {
     "tailwindcss:build": "tailwindcss build -i src/brazil_blog/static/css/brazil_blog.css -o src/brazil_blog/static/css/brazil_blog_compiled.css",
     "tailwindcss:watch": "tailwindcss build -i src/brazil_blog/static/css/brazil_blog.css -o src/brazil_blog/static/css/brazil_blog_compiled.css --watch",
-    "tailwindcss:dev": "bun run tailwindcss:build && bun run tailwindcss:watch"
+    "tailwindcss:dev": "bun run tailwindcss:watch"
   },
   "type": "module",
   "dependencies": { "cypress": "^13.10.0" }
