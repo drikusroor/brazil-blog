@@ -11,7 +11,7 @@
                 {% picture site_logo format-{webp,avif,jpeg} fill-64x64 bgcolor-3730a3 class="inline-block rounded-full" %}
             </a>
             <a href="/"
-                class="text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
+                class="hidden md:inline-block text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
                 <h1 class="text-3xl font-bold">{{ site_name }}</h1>
             </a>
         </div>
@@ -19,7 +19,7 @@
             {% for menuitem in site_root.get_children.live.in_menu %}
             <li>
                 <a href="{% pageurl menuitem %}" class="text-white hover:text-blue-800 transition-colors">
-                    {{ menuitem.title }}
+                    <span class="text-sm md:text-base"> {{ menuitem.title }} </span>
                 </a>
             </li>
             {% endfor %}

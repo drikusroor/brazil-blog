@@ -2302,6 +2302,10 @@ select {
     width: auto;
   }
 
+  .md\:inline-block {
+    display: inline-block;
+  }
+
   .md\:max-w-5xl {
     max-width: 64rem;
   }
@@ -2316,6 +2320,11 @@ select {
 
   .md\:items-end {
     align-items: flex-end;
+  }
+
+  .md\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 
   .md\:gap-2 {
