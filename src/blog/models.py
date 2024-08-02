@@ -90,7 +90,8 @@ class BlogPage(Page):
     )
     intro = models.CharField(max_length=250)
     body = RichTextField(blank=True)
-    video = models.URLField(null=True, blank=True)
+    video = models.URLField(null=True, blank=True, help_text="Google drive share link",
+)
 
     search_fields = Page.search_fields + [
         index.SearchField('title'),
