@@ -6,6 +6,8 @@
 <div class="bg-green-700 py-8 flex-grow">
     <div class="max-w-3xl md:max-w-5xl mx-auto p-4">
         <div class="bg-white rounded-xl overflow-hidden drop-shadow">
+
+            <!-- Header -->
             <div class="relative aspect-w-16 aspect-h-4">
                 {% if page.image %}
                     {% picture page.image format-{webp,avif,jpeg} fill-1024x320 bgcolor-3730a3 %}
@@ -38,21 +40,26 @@
                     </div>
                 </div>
             </div>
-            <div class="p-4 flex-grow">
-                <div class="mb-4"> {{ page.body|richtext }} </div>
-                <div class="bg-slate-300 aspect-video">
-                    <iframe 
-                        src="{{preview_url}}" 
-                        title="Video player"
-                        class="h-full w-full"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                        loading="lazy"
-                    ></iframe>
-                </div>
+
+            <!-- Body -->
+            <div class="p-4">
+                {{ page.body|richtext }}
             </div>
 
+            <!-- Google drive video -->
+            <div class="p-4 aspect-video">
+                <iframe 
+                    src="{{preview_url}}" 
+                    title="Video player"
+                    class="h-full w-full bg-slate-300 rounded-xl"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    loading="lazy"
+                ></iframe>
+            </div>
+
+            <!-- Image Gallery -->
             <div class="p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {% for item in page.gallery_images.all %}
                     <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform" data-url="{{page.video}}">
@@ -61,9 +68,13 @@
                     </div>
                 {% endfor %}
             </div>
+            
+            <!-- Comments -->
             <div class="inline-block w-full">
                 {% include "blog/includes/comments.html" with page=page %}
             </div>
+
+            <!-- Return to blog button -->
             <a href="{{ page.get_parent.url }}" class="inline-block w-full p-4 bg-gray-100 text-center hover:bg-gray-200 transition-colors">
                 🔙 {% trans "Return to blog" %}
             </a>
