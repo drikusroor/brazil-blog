@@ -1,2 +1,2 @@
 #!/bin/bash
-docker-compose run --rm brazil-blog-web bash -c "ruff format $@"
+docker compose run --rm brazil-blog-web bash -c "ruff format $@"
