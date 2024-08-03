@@ -12,10 +12,12 @@
             </a>
             
             <div>
-                <a href="/" class="hidden md:inline-block text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
-                    <h1 class="text-3xl font-bold">{{ site_name }}</h1>
+                <a href="/" class="block text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
+                    <h1 class="text-lg sm:text-3xl font-bold">{{ site_name }}</h1>
                 </a>
-                {% include "blog/includes/brazil-time.html" %}
+                <div class="hidden sm:block">
+                    {% include "blog/includes/brazil-time.html" %}
+                </div>
             </div>
         </div>
         <ul class="flex items-center gap-3">

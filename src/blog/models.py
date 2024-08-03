@@ -23,11 +23,10 @@ class BlogIndexPage(Page):
         context = super().get_context(request)
         now = timezone.now()
         blogpages = (
-            BlogPage.objects
-            .child_of(self)
+            BlogPage.objects.child_of(self)
             .live()
             .filter(date__lte=now)
-            .order_by('-date')
+            .order_by("-date")
         )
         context["blogpages"] = blogpages
 
@@ -50,15 +49,15 @@ class BlogIndexPage(Page):
             if date_to:
                 blogpages = blogpages.filter(date__lte=date_to)
 
-        query = request.GET.get('query')
+        query = request.GET.get("query")
         if query:
-            blogpages = blogpages.search(query, fields=['title', 'body'])
+            blogpages = blogpages.search(query, fields=["title", "body"])
 
         context["blogpages"] = blogpages
         context["authors"] = User.objects.filter(blog_posts__isnull=False).distinct()
         context["page"] = self  # Add this line for the reset button
 
-        context['active_filters'] = any([author_username, query, date_from, date_to])
+        context["active_filters"] = any([author_username, query, date_from, date_to])
 
         return context
 
@@ -89,11 +88,11 @@ class BlogPage(Page):
     body = RichTextField(blank=True)
 
     search_fields = Page.search_fields + [
-        index.SearchField('title'),
-        index.SearchField('intro'),
-        index.SearchField('body'),
-        index.FilterField('username'),
-        index.FilterField('date'),
+        index.SearchField("title"),
+        index.SearchField("intro"),
+        index.SearchField("body"),
+        index.FilterField("username"),
+        index.FilterField("date"),
     ]
 
     content_panels = Page.content_panels + [
