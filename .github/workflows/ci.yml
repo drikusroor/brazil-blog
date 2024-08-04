@@ -55,7 +55,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Deploy to the server
         run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd brazil-blog && git pull && docker compose -f docker compose-deploy.yml up -d --build"
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd brazil-blog && git pull && docker compose -f docker-compose-deploy.yml up -d --build"
 
   smoketests:
     runs-on: ubuntu-latest
