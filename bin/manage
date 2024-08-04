@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # This script executes Django management commands through Docker.
-docker-compose run --rm brazil-blog-web python manage.py $@
+docker compose run --rm brazil-blog-web python manage.py $@

@@ -169,14 +169,6 @@ STORAGES = {
     },
 }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": "unique-snowflake"
-    }
-}
-
-
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "brazil_blog"

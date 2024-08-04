@@ -27,10 +27,10 @@ cp .env.example .env
 To run the project:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 
 # Or, to rebuild the image:
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 The project will be available at [http://localhost:8000](http://localhost:8000).
@@ -40,7 +40,7 @@ The admin panel will be available at [http://localhost:8000/admin](http://localh
 To stop the project:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ### Tailwind CSS

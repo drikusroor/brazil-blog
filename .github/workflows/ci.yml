@@ -2,34 +2,40 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag brazil-blog-web:$(date +%s)
+      - uses: actions/checkout@v4
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag brazil-blog-web:$(date +%s)
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint the Python code
+        run: bin/lint-back
 
   test:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Collect static files
-      run: bin/manage collectstatic --noinput --ignore brazil_blog.css
-    - name: Test the Django / Wagtail project
-      run: bin/manage test
+      - uses: actions/checkout@v4
+      - name: Collect static files
+        run: bin/manage collectstatic --noinput --ignore brazil_blog.css
+      - name: Test the Django / Wagtail project
+        run: bin/manage test
 
   deploy:
-
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
 
@@ -42,14 +48,14 @@ jobs:
     needs: build
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    - name: Deploy to the server
-      run: |
-        ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd brazil-blog && git pull && docker compose -f docker-compose-deploy.yml up -d --build"
+      - uses: actions/checkout@v4
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Deploy to the server
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd brazil-blog && git pull && docker compose -f docker compose-deploy.yml up -d --build"
 
   smoketests:
     runs-on: ubuntu-latest
@@ -66,7 +72,7 @@ jobs:
           - 80:80
         options: >-
           --mount type=bind,source=${{ github.workspace }},target=/usr/share/nginx/html
-          
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
