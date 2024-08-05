@@ -13,9 +13,11 @@
                     <div class="h-80 bg-gray-300"></div>
                 {% endif %}
                 <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
-                    <h1 class="bold text-4xl mb-0 text-black">{{ page.title }}</h1>
                     <div class="flex items-center justify-between gap-4">
-                        {{ page.specific.date | date:"d-m-Y H:i" }}
+                        <div>
+                            <h1 class="flex-wrap bold text-4xl mb-0 text-black">{{ page.title }}</h1>
+                            <div class="text-sm italic">{{ page.specific.date | date:"d-m-Y H:i" }}</div>
+                        </div>
                         {% if page.author.author_page %}
                             <a href="{{ page.author.author_page.url }}" class="flex flex-row items-center gap-4 hover:underline">
                                 <p class="text-sm italic">{% post_user_display_name page %}</p>
@@ -38,17 +40,23 @@
                     </div>
                 </div>
             </div>
-            <div class="p-4">
-                {{ page.body|richtext }}
+            <div class="flex flex-col p-4 gap-4">
+                <div class="font-medium">
+                    {{ page.intro }}
+                </div>
+                <div>
+                    {{ page.body|richtext }}
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for item in page.gallery_images.all %}
+                        <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
+                            {% image item.image fill-1920x1080 %}
+                            {{ item.caption }}
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {% for item in page.gallery_images.all %}
-                    <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
-                        {% image item.image fill-1920x1080 %}
-                        {{ item.caption }}
-                    </div>
-                {% endfor %}
-            </div>
+
             <div class="inline-block w-full">
                 {% include "blog/includes/comments.html" with page=page %}
             </div>
