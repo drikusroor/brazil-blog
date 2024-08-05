@@ -1656,6 +1656,10 @@ select {
   width: 100%;
 }
 
+.w-10 {
+  width: 2.5rem;
+}
+
 .max-w-3xl {
   max-width: 48rem;
 }
@@ -2315,6 +2319,14 @@ select {
     display: flex;
   }
 
+  .sm\:h-16 {
+    height: 4rem;
+  }
+
+  .sm\:w-16 {
+    width: 4rem;
+  }
+
   .sm\:flex-row {
     flex-direction: row;
   }
@@ -2335,8 +2347,24 @@ select {
     margin-top: 0px;
   }
 
+  .md\:h-16 {
+    height: 4rem;
+  }
+
+  .md\:h-10 {
+    height: 2.5rem;
+  }
+
   .md\:w-auto {
     width: auto;
+  }
+
+  .md\:w-16 {
+    width: 4rem;
+  }
+
+  .md\:w-10 {
+    width: 2.5rem;
   }
 
   .md\:max-w-5xl {
@@ -2357,6 +2385,15 @@ select {
 
   .md\:gap-2 {
     gap: 0.5rem;
+  }
+
+  .md\:rounded-full {
+    border-radius: 9999px;
+  }
+
+  .md\:object-cover {
+    -o-object-fit: cover;
+       object-fit: cover;
   }
 
   .md\:text-base {
