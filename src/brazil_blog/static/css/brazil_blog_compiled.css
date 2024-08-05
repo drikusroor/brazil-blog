@@ -1529,13 +1529,6 @@ select {
   margin-top: 2rem;
 }
 
-.line-clamp-1 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-}
-
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -1647,6 +1640,10 @@ select {
   width: 4rem;
 }
 
+.w-4\/5 {
+  width: 80%;
+}
+
 .w-48 {
   width: 12rem;
 }
@@ -1735,10 +1732,6 @@ select {
   flex-wrap: wrap;
 }
 
-.content-end {
-  align-content: flex-end;
-}
-
 .items-start {
   align-items: flex-start;
 }
@@ -1781,18 +1774,6 @@ select {
 
 .overflow-hidden {
   overflow: hidden;
-}
-
-.overflow-visible {
-  overflow: visible;
-}
-
-.overflow-x-hidden {
-  overflow-x: hidden;
-}
-
-.overflow-y-hidden {
-  overflow-y: hidden;
 }
 
 .truncate {
@@ -2330,6 +2311,10 @@ select {
     display: block;
   }
 
+  .sm\:flex {
+    display: flex;
+  }
+
   .sm\:flex-row {
     flex-direction: row;
   }
@@ -2348,13 +2333,6 @@ select {
 @media (min-width: 768px) {
   .md\:mt-0 {
     margin-top: 0px;
-  }
-
-  .md\:line-clamp-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
   }
 
   .md\:w-auto {
@@ -2379,12 +2357,6 @@ select {
 
   .md\:gap-2 {
     gap: 0.5rem;
-  }
-
-  .md\:truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .md\:text-base {
