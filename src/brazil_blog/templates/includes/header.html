@@ -11,11 +11,11 @@
                 {% picture site_logo format-{webp,avif,jpeg} fill-64x64 bgcolor-3730a3 class="inline-block rounded-full" %}
             </a>
             
-            <div>
-                <a href="/" class="block text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
-                    <h1 class="text-lg sm:text-3xl font-bold">{{ site_name }}</h1>
+            <div class="hidden sm:block">
+                <a href="/" class="text-black hover:text-black no-underline hover:underline decoration-4 underline-offset-4 decoration-wavy">
+                    <h1 class="text-xl md:text-3xl font-bold">{{ site_name }}</h1>
                 </a>
-                <div class="hidden sm:block">
+                <div>
                     {% include "blog/includes/brazil-time.html" %}
                 </div>
             </div>
