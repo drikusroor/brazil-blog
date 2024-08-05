@@ -8,9 +8,9 @@ from wagtail.contrib.settings.models import (
     register_setting,
 )
 
+
 @register_setting
 class NavigationSettings(BaseGenericSetting):
-
     site_name = models.CharField(max_length=255, blank=True)
     site_description = models.TextField(blank=True)
     site_logo = models.ForeignKey(

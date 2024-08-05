@@ -2,3 +2,9 @@ Django
 wagtail>=6.0
 django-allauth
 djangorestframework
+
+# pytz for timezone support
+pytz
+
+# Ruff for linting and formatting
+ruff

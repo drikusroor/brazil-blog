@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   brazil-blog-web:
     container_name: brazil-blog
