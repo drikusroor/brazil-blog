@@ -119,13 +119,14 @@ class BlogPage(Page):
     def get_context(self, request):
         context = super().get_context(request)
 
-        preview_url = self.video
+        if self.video :
+            preview_url = self.video
 
-        # Transform google drive share url to preview url for embedding
-        if 'drive.google' in self.video :
-            preview_url = (self.video.replace("view?usp=sharing","preview"))
+            # Transform google drive share url to preview url for embedding
+            if 'drive.google' in self.video :
+                preview_url = (self.video.replace("view?usp=sharing","preview"))
 
-        context['preview_url'] = preview_url
+            context['preview_url'] = preview_url
 
         return context
 

@@ -47,22 +47,25 @@
             </div>
 
             <!-- Google drive video -->
-            <div class="p-4 aspect-video">
-                <iframe 
-                    src="{{preview_url}}" 
-                    title="Video player"
-                    class="h-full w-full bg-slate-300 rounded-xl"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    loading="lazy"
-                ></iframe>
-            </div>
+            {% if preview_url %}
+                <div class="p-4 aspect-video">
+                    <iframe 
+                        src="{{preview_url}}" 
+                        title="Video player"
+                        class="h-full w-full bg-slate-300 rounded-xl"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            {% endif %}
+
 
             <!-- Image Gallery -->
             <div class="p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {% for item in page.gallery_images.all %}
-                    <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform" data-url="{{page.video}}">
+                    <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
                         {% image item.image fill-1920x1080 %}
                         {{ item.caption }}
                     </div>
