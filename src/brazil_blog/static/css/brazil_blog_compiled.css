@@ -1463,10 +1463,6 @@ select {
   margin: 0.25rem;
 }
 
-.m-2 {
-  margin: 0.5rem;
-}
-
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -1540,6 +1536,13 @@ select {
   -webkit-line-clamp: 2;
 }
 
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
 .block {
   display: block;
 }
@@ -1596,8 +1599,17 @@ select {
   display: none;
 }
 
+.aspect-\[16\/9\] {
+  aspect-ratio: 16/9;
+}
+
 .aspect-square {
   aspect-ratio: 1 / 1;
+}
+
+.size-full {
+  width: 100%;
+  height: 100%;
 }
 
 .h-1 {
@@ -1636,6 +1648,10 @@ select {
   min-height: 100vh;
 }
 
+.w-10 {
+  width: 2.5rem;
+}
+
 .w-12 {
   width: 3rem;
 }
@@ -1658,10 +1674,6 @@ select {
 
 .w-full {
   width: 100%;
-}
-
-.w-10 {
-  width: 2.5rem;
 }
 
 .max-w-3xl {
@@ -1788,22 +1800,10 @@ select {
   overflow: scroll;
 }
 
-.overflow-x-hidden {
-  overflow-x: hidden;
-}
-
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.text-ellipsis {
-  text-overflow: ellipsis;
-}
-
-.whitespace-normal {
-  white-space: normal;
 }
 
 .whitespace-nowrap {
@@ -1975,6 +1975,14 @@ select {
   padding-bottom: 2rem;
 }
 
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+
+.pb-2\.5 {
+  padding-bottom: 0.625rem;
+}
+
 .pb-5 {
   padding-bottom: 1.25rem;
 }
@@ -1993,22 +2001,6 @@ select {
 
 .pt-2 {
   padding-top: 0.5rem;
-}
-
-.pb-2 {
-  padding-bottom: 0.5rem;
-}
-
-.pb-6 {
-  padding-bottom: 1.5rem;
-}
-
-.pb-3 {
-  padding-bottom: 0.75rem;
-}
-
-.pb-2\.5 {
-  padding-bottom: 0.625rem;
 }
 
 .text-center {
@@ -2236,6 +2228,15 @@ select {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.blog-header-image {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+}
+
 .hover\:rotate-1:hover {
   --tw-rotate: 1deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -2376,11 +2377,6 @@ select {
     font-size: 1.875rem;
     line-height: 2.25rem;
   }
-
-  .sm\:text-4xl {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
-  }
 }
 
 @media (min-width: 768px) {
@@ -2388,24 +2384,8 @@ select {
     margin-top: 0px;
   }
 
-  .md\:h-16 {
-    height: 4rem;
-  }
-
-  .md\:h-10 {
-    height: 2.5rem;
-  }
-
   .md\:w-auto {
     width: auto;
-  }
-
-  .md\:w-16 {
-    width: 4rem;
-  }
-
-  .md\:w-10 {
-    width: 2.5rem;
   }
 
   .md\:max-w-5xl {
@@ -2428,23 +2408,14 @@ select {
     gap: 0.5rem;
   }
 
-  .md\:rounded-full {
-    border-radius: 9999px;
-  }
-
-  .md\:object-cover {
-    -o-object-fit: cover;
-       object-fit: cover;
+  .md\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 
   .md\:text-base {
     font-size: 1rem;
     line-height: 1.5rem;
-  }
-
-  .md\:text-4xl {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
   }
 }
 
