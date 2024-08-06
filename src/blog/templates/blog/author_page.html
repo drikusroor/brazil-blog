@@ -3,46 +3,20 @@
 
 {% block content %}
 <div class="bg-green-700 py-8 flex-grow">
-    <div class="max-w-3xl md:max-w-5xl mx-auto p-4">
-        <div class="bg-white rounded-xl overflow-hidden drop-shadow">
-            <div class="p-8">
-                <h1 class="text-4xl font-bold mb-4 text-black">{{ page.title }}</h1>
-                
-                <div class="mb-8 clear-both">
-                    <div class="float-start">
-                        {% user_avatar user %}
-                    </div>
-                    <div class="bio text-gray-700 ml-4">
-                        {{ page.bio|richtext }}
-                    </div>
-                </div>
-
-                <div class="clear-both"></div>
-
-                <h2 class="text-2xl font-semibold my-4 text-black">Posts by {{ page.title }}</h2>
-                
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {% for post in page.user.blog_posts.all %}
-                        <a href="{% pageurl post %}" class="bg-yellow-500 rounded-xl overflow-hidden drop-shadow group hover:rotate-1 transition-transform">
-                            <div class="relative aspect-square">
-                                {% if post.image %}
-                                    {% image post.image fill-512x512 as img %}
-                                    <img src="{{ img.url }}" alt="{{ post.title }}" class="w-full h-full object-cover object-center">
-                                {% else %}
-                                    <div class="h-full bg-gray-300"></div>
-                                {% endif %}
-                                <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
-                                    <h3 class="text-xl font-semibold text-black group-hover:underline">{{ post.title }}</h3>
-                                    <p class="text-sm text-gray-800">{{ post.date|date:"d-m-Y" }}</p>
-                                </div>
-                            </div>
-                        </a>
-                    {% empty %}
-                        <p class="text-gray-700">No posts yet.</p>
-                    {% endfor %}
-                </div>
+    <div class="flex flex-col gap-4 max-w-3xl md:max-w-5xl mx-auto p-4 bg-white rounded-xl overflow-hidden drop-shadow">
+        <h1 class="text-4xl font-bold text-black">{{ page.title }}</h1>
+        
+        <div class="flex flex-row gap-4 items-center">
+            <div>
+                {% user_avatar user %}
+            </div>
+            <div class="bio text-gray-700">
+                {{ page.bio|richtext }}
             </div>
         </div>
+
+        <h2 class="text-2xl font-semibold text-black">Posts by {{ page.title }}</h2>
+        {% include "blog/includes/blogpost-grid.html" with blogposts=page.user.blog_posts.all only %}
     </div>
 </div>
 {% endblock %}

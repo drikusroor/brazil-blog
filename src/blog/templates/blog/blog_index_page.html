@@ -5,39 +5,7 @@
 
 <div class="bg-green-700 py-8 flex-grow">
     {% include "blog/includes/filter-bar.html" %}
-    
-    <div class="max-w-3xl md:max-w-5xl mx-auto p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {% for post in blogpages %}
-            <a href="{% pageurl post %}" class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
-                <div class="relative aspect-square">
-                    {% if post.specific.image %}
-                        <img src="{{ post.specific.image|advanced_image:'fill-64x64,format-jpeg,bgcolor-eab308' }}"
-                             class="lazyload blur w-full h-full object-cover object-center transition bg-yellow-500 scale-105 duration-150"
-                             data-src="{{ post.specific.image|advanced_image:'fill-512x512,quality-90' }}"
-                             alt="{{ post.specific.image.alt }}">
-                    {% else %}
-                        <div class="h-80 bg-gray-300"></div>
-                    {% endif %}
-                    <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
-                        <h2 class="font-bold text-4xl text-black group-hover:underline hover:underline decoration-wavy mb-2 pb-2.5 overflow-scroll line-clamp-2">{{ post.title }} </h2>
-                        <div class="flex flex-col justify-between gap-2 text-sm">
-                            <div class="flex flex-row items-center flex-wrap gap-2">
-                                {% post_user_avatar post 'w-8 h-8 rounded-full object-cover' %}
-                                {{ post.specific.date | date:"d-m-Y H:i" }}
-                            </div>
-                            <div>
-                                {% if post.specific.intro %}
-                                    <div class="line-clamp-2">{{ post.specific.intro }}</div>
-                                {% else %}
-                                    {{ post.specific.body|richtext|slice:":500" }}
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        {% endfor %}
-    </div>
+    {% include "blog/includes/blogpost-grid.html" with blogposts=blogpages only %}
     {% include "blog/includes/tukanchamon.html" %}
 </div>
 
