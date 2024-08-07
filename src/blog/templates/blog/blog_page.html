@@ -8,43 +8,51 @@
         <div class="bg-white rounded-xl overflow-hidden drop-shadow">
 
             <!-- Header -->
-            <div class="relative aspect-w-16 aspect-h-4">
+            <div class="relative size-full aspect-[16/9]">
                 {% if page.image %}
-                    {% picture page.image format-{webp,avif,jpeg} fill-1024x320 bgcolor-3730a3 %}
+                    {% picture page.image format-{webp,avif,jpeg} original class="blog-header-image" bgcolor-3730a3 %}
                 {% else %}
-                    <div class="h-80 bg-gray-300"></div>
+                    <div class="h-full w-full bg-gray-300"></div>
                 {% endif %}
                 <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
-                    <h1 class="bold text-4xl mb-0 text-black">{{ page.title }}</h1>
-                    <div class="flex items-center justify-between gap-4">
-                        {{ page.specific.date | date:"d-m-Y H:i" }}
+                    <div class="flex items-end justify-between gap-4">
+                        <div class="flex-col w-4/5">
+                            <h1 class="flex-wrap font-bold text-xl md:text-4xl mb-0 text-black overflow-scroll line-clamp-3">{{ page.title }}</h1>
+                            <div class="text-sm italic">{{ page.specific.date | date:"d-m-Y H:i" }}</div>
+                        </div>
                         {% if page.author.author_page %}
-                            <a href="{{ page.author.author_page.url }}" class="flex flex-row items-center gap-4 hover:underline">
-                                <p class="text-sm italic">{% post_user_display_name page %}</p>
-                                {% post_user_avatar page %}
+                            <a href="{{ page.author.author_page.url }}" class="flex flex-row items-center gap-2 hover:underline">
+                                <p class="text-sm italic hidden sm:block">{% post_user_display_name page %}</p>
+                                {% post_user_avatar page 'w-10 h-10 rounded-full object-cover sm:w-16 sm:h-16' %}
                             </a>
                         {% else %}
                             <div class="flex flex-row items-center gap-4">
-                                <p class="text-sm italic">{% post_user_display_name page %}</p>
+                                <p class="hidden sm:flex text-sm italic">{% post_user_display_name page %}</p>
                                 {% post_user_avatar page %}
                             </div>
                         {% endif %}
                     </div>
-                    <div class="flex ml-auto items-center gap-4">
-                        {{ page.hero_text }}
-                        {% if page.hero_cta_link %}
-                            <a href="{% pageurl page.hero_cta_link %}" class="bg-blue-700 text-white px-4 py-2 rounded-lg no-underline hover:text-amber-300 transition-colors drop-shadow">
-                                {% firstof page.hero_cta page.hero_cta_link.title %}
-                            </a>
-                        {% endif %}
-                    </div>
+                    {% if page.hero_text %}
+                        <div class="flex ml-auto items-center gap-4">
+                            {{ page.hero_text }}
+                            {% if page.hero_cta_link %}
+                                <a href="{% pageurl page.hero_cta_link %}" class="bg-blue-700 text-white px-4 py-2 rounded-lg no-underline hover:text-amber-300 transition-colors drop-shadow">
+                                    {% firstof page.hero_cta page.hero_cta_link.title %}
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- Body -->
-            <div class="p-4">
-                {{ page.body|richtext }}
-            </div>
+            <div class="flex flex-col p-4 gap-4">
+                <div class="font-light">
+                    {{ page.intro }}
+                </div>
+                <div>
+                    {{ page.body|richtext }}
+                </div>
 
             <!-- Google drive video -->
             {% if preview_url %}
@@ -63,16 +71,18 @@
 
 
             <!-- Image Gallery -->
-            <div class="p-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {% for item in page.gallery_images.all %}
-                    <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
-                        {% image item.image fill-1920x1080 %}
-                        {{ item.caption }}
-                    </div>
-                {% endfor %}
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for item in page.gallery_images.all %}
+                        <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
+                            {% image item.image fill-1920x1080-c100 %}
+                            <div class="pl-2 p-1">{{ item.caption }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
             
             <!-- Comments -->
+
             <div class="inline-block w-full">
                 {% include "blog/includes/comments.html" with page=page %}
             </div>

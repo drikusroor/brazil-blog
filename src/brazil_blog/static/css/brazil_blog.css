@@ -1,3 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+.blog-header-image {
+    @apply w-full h-full object-cover object-center;
+}
