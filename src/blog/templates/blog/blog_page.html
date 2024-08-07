@@ -49,7 +49,10 @@
                 <div>
                     {{ page.body|richtext }}
                 </div>
+                  
+                <!-- Image Gallery -->
                 {% include "blog/includes/image-grid.html" with pictures=page.gallery_images.all %}
+
             </div>
 
             <div class="inline-block w-full">
@@ -59,6 +62,9 @@
                 🔙 {% trans "Return to blog" %}
             </a>
         </div>
+
+        <!-- Image modal -->
+        {% include "blog/includes/image-modal.html" %}
     </div>
 </div>
 
