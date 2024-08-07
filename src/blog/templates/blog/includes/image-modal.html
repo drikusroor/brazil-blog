@@ -16,9 +16,9 @@
     const openModal = document.querySelectorAll('.open-image-modal');
     const closeModal = document.querySelector(".close-image-modal");
 
-    // For each open-modal element check if it is clicked and open the clicked one
+    // For each open-modal element check if it is clicked and open the clicked info
     openModal.forEach(btn => btn.addEventListener('click', () => {
-        const modalinfo = btn.parentNode.childNodes[7];
+        const modalinfo = btn.childNodes[5];
 
         modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
         modalContent.querySelector(".image-modal-caption").textContent = modalinfo.children[1].textContent;
