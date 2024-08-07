@@ -49,14 +49,7 @@
                 <div>
                     {{ page.body|richtext }}
                 </div>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {% for item in page.gallery_images.all %}
-                        <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
-                            {% image item.image fill-1920x1080-c100 %}
-                            <div class="pl-2 p-1">{{ item.caption }}</div>
-                        </div>
-                    {% endfor %}
-                </div>
+                {% include "blog/includes/image-grid.html" with pictures=page.gallery_images.all %}
             </div>
 
             <div class="inline-block w-full">

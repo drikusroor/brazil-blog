@@ -1,0 +1,10 @@
+{% load wagtailcore_tags wagtailimages_tags user_tags %}
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for picture in pictures %}
+        <div class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
+            {% image picture.image fill-1920x1080-c100 %}
+            <div class="pl-2 p-1">{{ picture.caption }}</div>
+        </div>
+    {% endfor %}
+</div>
