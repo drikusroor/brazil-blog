@@ -7,17 +7,19 @@
         <img src="" alt="" class="image-modal-image">
         <p class="image-modal-caption text-white"></p>
     </div>
-</div>
+    <a id="prev" class="prev">&#10094;</a>
+    <a id="next" class="next">&#10095;</a>
+    </div>
 
 <script>
     // Get modal elements by their class names
     const modal = document.querySelector(".image-modal");
     const modalContent = document.querySelector('.image-modal-content');
-    const openModal = document.querySelectorAll('.open-image-modal');
+    const openModals = document.querySelectorAll('.open-image-modal');
     const closeModal = document.querySelector(".close-image-modal");
 
     // For each open-modal element check if it is clicked and open the clicked info
-    openModal.forEach(btn => btn.addEventListener('click', () => {
+    openModals.forEach(btn => btn.addEventListener('click', () => {
         const modalinfo = btn.childNodes[5];
 
         modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
@@ -69,6 +71,32 @@
         color: #bbb;
         text-decoration: none;
         cursor: pointer;
+    }
+
+    .prev,
+    .next {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        top: 50%;
+        width: auto;
+        margin-top: -22px;
+        padding: 50px;
+        color: white;
+        font-weight: bold;
+        font-size: 36px;
+        transition: 0.6s ease;
+        border-radius: 0 3px 3px 0;
+    }
+
+    .next {
+        right: 0;
+        border-radius: 3px 0 0 3px;
+    }
+
+    .prev:hover,
+    .next:hover {
+        background-color: rgba(0, 0, 0, 0.8);
     }
 </style>
 {% endblock %}
