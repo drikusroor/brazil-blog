@@ -17,6 +17,8 @@
     const modalContent = document.querySelector('.image-modal-content');
     const openModals = document.querySelectorAll('.open-image-modal');
     const closeModal = document.querySelector(".close-image-modal");
+    const prev = document.querySelector(".prev");
+    const next = document.querySelector(".next");
 
     // For each open-modal element check if it is clicked and open the clicked info
     openModals.forEach(btn => btn.addEventListener('click', () => {
@@ -45,6 +47,14 @@
         if(e.target.className === 'image-modal') {
             modal.style.display = "none";
         }
+    })
+
+    next.addEventListener('click', () => {
+        console.log('next')
+    })
+
+    prev.addEventListener('click', () => {
+        console.log('prev')
     })
 </script>
 
