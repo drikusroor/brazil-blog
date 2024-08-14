@@ -61,15 +61,9 @@
 
     // Function triggerd by pressing the next button, to see the next picture in the gallery
     next.addEventListener('click', () => {
-        var modalinfo;
-        var nextID;
+        const nextIndex = currentImageID == openModals.length ? 0 : currentImageID;
+        const modalinfo = searchForClass(openModals[nextIndex], 'image-modal-info');
 
-        if (currentImageID == openModals.length) {
-            nextID = 0;
-        } else {
-            nextID = currentImageID;
-        }
-        modalinfo = searchForClass(openModals[nextID], 'image-modal-info');
         modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
         modalContent.querySelector(".image-modal-caption").textContent = modalinfo.children[1].textContent;
 
