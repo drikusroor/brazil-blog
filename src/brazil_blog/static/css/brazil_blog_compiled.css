@@ -1607,6 +1607,10 @@ select {
   aspect-ratio: 1 / 1;
 }
 
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
 .size-full {
   width: 100%;
   height: 100%;

@@ -86,6 +86,8 @@ class BlogPage(Page):
     )
     intro = models.CharField(max_length=250)
     body = RichTextField(blank=True)
+    video = models.URLField(null=True, blank=True, help_text="Google drive share link",
+)
 
     search_fields = Page.search_fields + [
         index.SearchField("title"),
@@ -101,6 +103,7 @@ class BlogPage(Page):
         FieldPanel("image"),
         FieldPanel("intro"),
         FieldPanel("body"),
+        FieldPanel("video"),
         InlinePanel("gallery_images", label="Gallery images"),
     ]
 
@@ -113,6 +116,19 @@ class BlogPage(Page):
 
     base_form_class = BlogPageForm
 
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        if self.video :
+            preview_url = self.video
+
+            # Transform google drive share url to preview url for embedding
+            if 'drive.google' in self.video :
+                preview_url = (self.video.replace("view?usp=sharing","preview"))
+
+            context['preview_url'] = preview_url
+
+        return context
 
 class Comment(models.Model):
     post = models.ForeignKey(

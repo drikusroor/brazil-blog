@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('blog', '0005_alter_blogpage_date'),
-        ('wagtailcore', '0093_uploadedfile'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
