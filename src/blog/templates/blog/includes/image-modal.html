@@ -24,26 +24,11 @@
 
     var currentImageID;
 
-    // Return the item from an array with the correct class
-    function searchForClass (array, className) {
-        var classItem;
-        array.childNodes.forEach((item) => {
-            const itemClass = item?.attributes?.class;
-            if (itemClass != undefined && itemClass.value.includes(className)) {
-                classItem = item;
-            }
-        })
-        return classItem;
-    }
-
     // For each open-modal element check if it is clicked and open the clicked info
     openModals.forEach(btn => btn.addEventListener('click', () => {
         const modalinfo = searchForClass(btn, 'image-modal-info');
-        currentImageID = modalinfo.id;
-
-        modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
-        modalContent.querySelector(".image-modal-caption").textContent = modalinfo.children[1].textContent;
-
+        setCurrentImageID(modalinfo);
+        setModalContent(modalinfo);
         modal.style.display = "block";
     }))
 
@@ -61,19 +46,43 @@
 
     // Function triggerd by pressing the next button, to see the next picture in the gallery
     next.addEventListener('click', () => {
-        const nextIndex = currentImageID == openModals.length ? 0 : currentImageID;
+        const nextIndex = currentImageID == openModals.length - 1 ? 0 : currentImageID + 1;
         const modalinfo = searchForClass(openModals[nextIndex], 'image-modal-info');
-
-        modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
-        modalContent.querySelector(".image-modal-caption").textContent = modalinfo.children[1].textContent;
-
-        currentImageID = modalinfo.id;
+        setModalContent(modalinfo);
+        setCurrentImageID(modalinfo);
     })
 
     // Function triggerd by pressing the previous button, to see the previous picture in the gallery
     prev.addEventListener('click', () => {
-        console.log('prev')
+        const previousIndex = currentImageID == 0 ? openModals.length - 1 : currentImageID - 1;
+        const modalinfo = searchForClass(openModals[previousIndex], 'image-modal-info');
+        setModalContent(modalinfo);
+        setCurrentImageID(modalinfo);
     })
+
+    // Return the item from an array with the correct class
+    function searchForClass (array, className) {
+        var classItem;
+        array.childNodes.forEach((item) => {
+            const itemClass = item?.attributes?.class;
+            if (itemClass != undefined && itemClass.value.includes(className)) {
+                classItem = item;
+            }
+        })
+        return classItem;
+    }
+
+    // Function to set the modal content based on the modalinfo
+    function setModalContent(modalinfo) {
+        modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
+        modalContent.querySelector(".image-modal-caption").textContent = modalinfo.children[1].textContent;
+    }
+
+    // Function to set the currrentImageID based on the modalinfo
+    function setCurrentImageID(modalinfo) {
+        var imageID = modalinfo.id;
+        currentImageID = imageID++;
+    }
 </script>
 
 <style>

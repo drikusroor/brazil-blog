@@ -8,7 +8,7 @@
             {% if picture.caption%}
                 <div class="pl-2 p-1">{{ picture.caption }}</div>
             {% endif %}
-            <div class="image-modal-info hidden" id={{forloop.counter}}>
+            <div class="image-modal-info hidden" id={{forloop.counter0}}>
                 {% image picture.image original class="image-modal-image" %}
                 <div>{{ picture.caption }}</div>
             </div>
