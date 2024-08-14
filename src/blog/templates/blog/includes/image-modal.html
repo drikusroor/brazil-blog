@@ -12,24 +12,34 @@
     </div>
 
 <script>
+    // Get the image gallery element that opens the modal
+    const openModals = document.querySelectorAll('.open-image-modal');
+    
     // Get modal elements by their class names
     const modal = document.querySelector(".image-modal");
     const modalContent = document.querySelector('.image-modal-content');
-    const openModals = document.querySelectorAll('.open-image-modal');
     const closeModal = document.querySelector(".close-image-modal");
     const prev = document.querySelector(".prev");
     const next = document.querySelector(".next");
 
-    // For each open-modal element check if it is clicked and open the clicked info
-    openModals.forEach(btn => btn.addEventListener('click', () => {
-        var modalinfo;
+    var currentImageID;
 
-        btn.childNodes.forEach((item) => {
+    // Return the item from an array with the correct class
+    function searchForClass (array, className) {
+        var classItem;
+        array.childNodes.forEach((item) => {
             const itemClass = item?.attributes?.class;
-            if (itemClass != undefined && itemClass.value.includes('image-modal-info')) {
-                modalinfo = item;
+            if (itemClass != undefined && itemClass.value.includes(className)) {
+                classItem = item;
             }
         })
+        return classItem;
+    }
+
+    // For each open-modal element check if it is clicked and open the clicked info
+    openModals.forEach(btn => btn.addEventListener('click', () => {
+        const modalinfo = searchForClass(btn, 'image-modal-info');
+        currentImageID = modalinfo.id;
 
         modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
         modalContent.querySelector(".image-modal-caption").textContent = modalinfo.children[1].textContent;
@@ -51,7 +61,19 @@
 
     // Function triggerd by pressing the next button, to see the next picture in the gallery
     next.addEventListener('click', () => {
-        console.log('next')
+        var modalinfo;
+        var nextID;
+
+        if (currentImageID == openModals.length) {
+            nextID = 0;
+        } else {
+            nextID = currentImageID;
+        }
+        modalinfo = searchForClass(openModals[nextID], 'image-modal-info');
+        modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
+        modalContent.querySelector(".image-modal-caption").textContent = modalinfo.children[1].textContent;
+
+        currentImageID = modalinfo.id;
     })
 
     // Function triggerd by pressing the previous button, to see the previous picture in the gallery
