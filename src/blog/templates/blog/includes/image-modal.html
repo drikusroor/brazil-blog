@@ -20,7 +20,14 @@
 
     // For each open-modal element check if it is clicked and open the clicked info
     openModals.forEach(btn => btn.addEventListener('click', () => {
-        const modalinfo = btn.childNodes[5];
+        var modalinfo;
+
+        btn.childNodes.forEach((item) => {
+            const itemClass = item?.attributes?.class;
+            if (itemClass != undefined && itemClass.value.includes('image-modal-info')) {
+                modalinfo = item;
+            }
+        })
 
         modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
         modalContent.querySelector(".image-modal-caption").textContent = modalinfo.children[1].textContent;
