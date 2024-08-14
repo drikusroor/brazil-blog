@@ -5,7 +5,7 @@
     {% for picture in page.gallery_images.all %}
         <div id="{{forloop.counter0}}" class="open-image-modal bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform relative cursor-pointer" >
             {% image picture.image fill-1920x1080-c100 %}
-            <div class="image-caption" id="{{forloop.counter0}}">{{picture.caption}}</div>
+            <div class="image-caption text-lg md:text-sm p-2 font-semibold header-text-color" id="{{forloop.counter0}}">{{picture.caption}}</div>
             <div class="image-modal-info hidden" id={{forloop.counter0}}>
                 {% image picture.image original class="image-modal-image" %}
                 <div>{{ picture.caption }}</div>
@@ -38,8 +38,6 @@
 <style>
     .image-caption {
         display: none;
-        padding-left: 0.5rem;
-        padding: 0.25rem;
         position: absolute;
         top: 0px;
         width: 100%;

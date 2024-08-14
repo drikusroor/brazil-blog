@@ -1451,14 +1451,6 @@ select {
   z-index: 10;
 }
 
-.float-start {
-  float: inline-start;
-}
-
-.clear-both {
-  clear: both;
-}
-
 .m-1 {
   margin: 0.25rem;
 }
@@ -1466,11 +1458,6 @@ select {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
-}
-
-.my-4 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
 }
 
 .mb-0 {
@@ -1495,10 +1482,6 @@ select {
 
 .ml-2 {
   margin-left: 0.5rem;
-}
-
-.ml-4 {
-  margin-left: 1rem;
 }
 
 .ml-auto {
@@ -1995,10 +1978,6 @@ select {
   padding-left: 0px;
 }
 
-.pl-2 {
-  padding-left: 0.5rem;
-}
-
 .pl-4 {
   padding-left: 1rem;
 }
@@ -2049,16 +2028,16 @@ select {
   font-weight: 700;
 }
 
+.font-light {
+  font-weight: 300;
+}
+
 .font-medium {
   font-weight: 500;
 }
 
 .font-semibold {
   font-weight: 600;
-}
-
-.font-light {
-  font-weight: 300;
 }
 
 .uppercase {
@@ -2110,11 +2089,6 @@ select {
 .text-gray-700 {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity));
-}
-
-.text-gray-800 {
-  --tw-text-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 
 .text-red-500 {
@@ -2247,6 +2221,11 @@ select {
      object-fit: cover;
   -o-object-position: center;
      object-position: center;
+}
+
+.header-text-color {
+  --tw-text-opacity: 1;
+  color: rgb(5 21 77 / var(--tw-text-opacity));
 }
 
 .hover\:rotate-1:hover {
@@ -2428,6 +2407,11 @@ select {
   .md\:text-base {
     font-size: 1rem;
     line-height: 1.5rem;
+  }
+
+  .md\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
 }
 
