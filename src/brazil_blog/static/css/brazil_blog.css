@@ -7,5 +7,5 @@
 }
 
 .header-text-color {
-    @apply text-[#05154d]
+    @apply text-[#05154d];
 }
