@@ -2,13 +2,13 @@
 
 {% block content %}
 <div class="image-modal">
-    <span class="close-image-modal">&times;</span>
-    <div class="image-modal-content flex flex-col items-center gap-2 p-8">
-        <img src="" alt="" class="image-modal-image">
-        <p class="image-modal-caption text-white"></p>
-    </div>
-    <a id="prev" class="prev">&#10094;</a>
-    <a id="next" class="next">&#10095;</a>
+        <span class="close-image-modal">&times;</span>
+        <div class="image-modal-content">
+            <img src="" alt="" class="image-modal-image">
+            <p class="image-modal-caption text-white"></p>
+        </div>
+        <a id="prev" class="prev">&#10094;</a>
+        <a id="next" class="next">&#10095;</a>
 </div>
 
 <script>
@@ -90,7 +90,6 @@
         display: none; 
         position: fixed; 
         z-index: 10; 
-        padding-top: 100px;
         left: 0;
         top: 0;
         width: 100%; 
@@ -100,9 +99,21 @@
         background-color: rgba(0,0,0,0.9);
     }
 
+    .image-modal-content {
+        display: flex;
+        flex-direction: column;
+        place-items: center;
+        justify-items: center;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        padding: 6rem;
+    }
+
     .close-image-modal {
         position: absolute;
-        top: 15px;
+        top: 10px;
         right: 35px;
         color: #f1f1f1;
         font-size: 40px;
