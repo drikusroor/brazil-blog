@@ -74,8 +74,12 @@
 
     // Function to set the modal content based on the modalinfo
     function setModalContent(modalinfo) {
-        modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
-        modalContent.querySelector(".image-modal-caption").textContent = modalinfo.children[1].textContent;
+        const imgTag = searchForClass(modalinfo, 'image-modal-image');
+        const captionTag = searchForClass(modalinfo, 'image-modal-caption')
+
+        modalContent.querySelector(".image-modal-image").src = imgTag.src;
+        modalContent.querySelector(".image-modal-image").alt = imgTag.alt;
+        modalContent.querySelector(".image-modal-caption").textContent = captionTag.textContent;
     }
 
     // Function to set the currrentImageID based on the modalinfo
