@@ -5,7 +5,9 @@
     {% for picture in page.gallery_images.all %}
         <div id="{{forloop.counter0}}" class="open-image-modal bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform relative cursor-pointer" >
             {% image picture.image fill-1920x1080-c100 %}
-            <div class="image-caption text-lg md:text-sm p-2 font-semibold header-text-color" id="{{forloop.counter0}}">{{picture.caption}}</div>
+            <div class="image-caption text-lg md:text-sm p-2 font-semibold header-text-color w-full h-full absolute hidden top-0 flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500" id="{{forloop.counter0}}">
+                {{picture.caption}}
+            </div>
             <div class="image-modal-info hidden" id={{forloop.counter0}}>
                 {% image picture.image original class="image-modal-image" %}
                 <div>{{ picture.caption }}</div>
@@ -22,7 +24,7 @@
     galleryItems.forEach(item => item.addEventListener("mouseover", () => {
         var itemID = item.id;
         var index = itemID++;
-        if (imageCaptions[index].textContent) {
+        if (imageCaptions[index].textContent.length > 30) {
             imageCaptions[index].style.display = "flex";
         }
     }));
@@ -34,21 +36,4 @@
         imageCaptions[index].style.display = "none";
     }));
 </script>
-
-<style>
-    .image-caption {
-        display: none;
-        position: absolute;
-        top: 0px;
-        width: 100%;
-        height: 100%;
-        flex-direction: column;
-        justify-content: flex-end;
-        background-image: linear-gradient(to top, var(--tw-gradient-stops));
-        --tw-gradient-from: #eab308 var(--tw-gradient-from-position);
-        --tw-gradient-to: rgb(234 179 8 / 0) var(--tw-gradient-to-position);
-        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-    }
-</style>
-
 {% endblock %}
