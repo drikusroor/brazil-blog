@@ -5,3 +5,7 @@
 .blog-header-image {
     @apply w-full h-full object-cover object-center;
 }
+
+.header-text-color {
+    @apply text-[#05154d];
+}

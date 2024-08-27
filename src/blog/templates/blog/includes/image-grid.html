@@ -3,14 +3,37 @@
 {% block content %}
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
     {% for picture in page.gallery_images.all %}
-        <div class="open-image-modal bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
+        <div id="{{forloop.counter0}}" class="open-image-modal bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform relative cursor-pointer" >
             {% image picture.image fill-1920x1080-c100 %}
-            <div class="pl-2 p-1">{{ picture.caption }}</div>
-            <div class="image-modal-info hidden">
+            <div class="image-caption text-lg md:text-sm p-2 font-semibold header-text-color w-full h-full absolute hidden top-0 flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500" id="{{forloop.counter0}}">
+                {{picture.caption}}
+            </div>
+            <div class="image-modal-info hidden" id={{forloop.counter0}}>
                 {% image picture.image original class="image-modal-image" %}
-                <div>{{ picture.caption }}</div>
+                <div class="image-modal-caption">{{ picture.caption }}</div>
             </div>
         </div>
     {% endfor %}
 </div>
+
+<script>
+    const galleryItems = document.querySelectorAll(".open-image-modal");
+    const imageCaptions = document.querySelectorAll(".image-caption");
+
+    // Function to show the image caption, if there is one, on hovering
+    galleryItems.forEach(item => item.addEventListener("mouseover", () => {
+        var itemID = item.id;
+        var index = itemID++;
+        if (imageCaptions[index].textContent.length > 30) {
+            imageCaptions[index].style.display = "flex";
+        }
+    }));
+
+    // Function to hide the image caption again when mouse leaves
+    galleryItems.forEach(item => item.addEventListener("mouseleave", () => {
+        var itemID = item.id;
+        var index = itemID++;
+        imageCaptions[index].style.display = "none";
+    }));
+</script>
 {% endblock %}

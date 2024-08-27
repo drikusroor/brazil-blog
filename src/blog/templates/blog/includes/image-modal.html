@@ -1,28 +1,34 @@
 {% load i18n static wagtailcore_tags wagtailimages_tags user_tags %}
 
 {% block content %}
-<div class="image-modal">
-    <span class="close-image-modal">&times;</span>
-    <div class="image-modal-content flex flex-col items-center gap-2 p-8">
-        <img src="" alt="" class="image-modal-image">
-        <p class="image-modal-caption text-white"></p>
+<div class="hidden fixed z-10 left-0 top-0 w-screen h-screen bg-black/80 image-modal">
+    <span class="absolute top-2.5 right-9 text-white text-4xl font-bold transition duration-300 hover:text-[#bbb] hover:cursor-pointer close-image-modal">&times;</span>
+    <div class="flex flex-col items-center justify-center h-full w-full gap-4 p-6 lg:p-24 image-modal-content">
+        <img src="" alt="" class="flex w-full md:h-full object-scale-down image-modal-image" >
+        <p class="image-modal-caption hidden text-white"></p>
     </div>
+    <a id="prev" class="cursor-pointer absolute top-1/2 w-auto rounded p-4 md:p-12 text-white font-bold text-4xl transition duration-600 ease-in-out hover:bg-black hover:opacity-90 prev">&#10094;</a>
+    <a id="next" class="cursor-pointer absolute top-1/2 right-0 w-auto rounded p-4 md:p-12 text-white font-bold text-4xl transition duration-600 ease-in-out hover:bg-black hover:opacity-90 next">&#10095;</a>
 </div>
 
 <script>
+    // Get the image gallery element that opens the modal
+    const openModals = document.querySelectorAll('.open-image-modal');
+    
     // Get modal elements by their class names
     const modal = document.querySelector(".image-modal");
     const modalContent = document.querySelector('.image-modal-content');
-    const openModal = document.querySelectorAll('.open-image-modal');
     const closeModal = document.querySelector(".close-image-modal");
+    const prev = document.querySelector(".prev");
+    const next = document.querySelector(".next");
+
+    var currentImageID;
 
     // For each open-modal element check if it is clicked and open the clicked info
-    openModal.forEach(btn => btn.addEventListener('click', () => {
-        const modalinfo = btn.childNodes[5];
-
-        modalContent.querySelector(".image-modal-image").outerHTML = modalinfo.children[0].outerHTML;
-        modalContent.querySelector(".image-modal-caption").textContent = modalinfo.children[1].textContent;
-
+    openModals.forEach(btn => btn.addEventListener('click', () => {
+        const modalinfo = searchForClass(btn, 'image-modal-info');
+        setCurrentImageID(modalinfo);
+        setModalContent(modalinfo);
         modal.style.display = "block";
     }))
 
@@ -37,39 +43,54 @@
             modal.style.display = "none";
         }
     })
+    
+    // Function triggerd by pressing the next button, to see the next picture in the gallery
+    next.addEventListener('click', () => {
+        const nextIndex = currentImageID == openModals.length - 1 ? 0 : currentImageID + 1;
+        const modalinfo = searchForClass(openModals[nextIndex], 'image-modal-info');
+        setModalContent(modalinfo);
+        setCurrentImageID(modalinfo);
+    })
+
+    // Function triggerd by pressing the previous button, to see the previous picture in the gallery
+    prev.addEventListener('click', () => {
+        const previousIndex = currentImageID == 0 ? openModals.length - 1 : currentImageID - 1;
+        const modalinfo = searchForClass(openModals[previousIndex], 'image-modal-info');
+        setModalContent(modalinfo);
+        setCurrentImageID(modalinfo);
+    })
+
+    // Return the item from an array with the correct class
+    function searchForClass (array, className) {
+        var classItem;
+        array.childNodes.forEach((item) => {
+            const itemClass = item?.attributes?.class;
+            if (itemClass != undefined && itemClass.value.includes(className)) {
+                classItem = item;
+            }
+        })
+        return classItem;
+    }
+
+    // Function to set the modal content based on the modalinfo
+    function setModalContent(modalinfo) {
+        const imgTag = searchForClass(modalinfo, 'image-modal-image');
+        const captionTag = searchForClass(modalinfo, 'image-modal-caption')
+
+        modalContent.querySelector(".image-modal-image").src = imgTag.src;
+        modalContent.querySelector(".image-modal-image").alt = imgTag.alt;
+        modalContent.querySelector(".image-modal-caption").textContent = captionTag.textContent;
+
+        if (captionTag.textContent) {
+            modalContent.querySelector(".image-modal-caption").style.display = "flex";
+        }
+    }
+
+    // Function to set the currrentImageID based on the modalinfo
+    function setCurrentImageID(modalinfo) {
+        var imageID = modalinfo.id;
+        currentImageID = imageID++;
+    }
 </script>
-
-<style>
-    .image-modal {
-        display: none; 
-        position: fixed; 
-        z-index: 10; 
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%; 
-        height: 100%; 
-        overflow: auto; 
-        background-color: rgb(0,0,0);
-        background-color: rgba(0,0,0,0.9);
-    }
-
-    .close-image-modal {
-        position: absolute;
-        top: 15px;
-        right: 35px;
-        color: #f1f1f1;
-        font-size: 40px;
-        font-weight: bold;
-        transition: 0.3s;
-    }
-
-    .close-image-modal:hover,
-    .close-image-modal:focus {
-        color: #bbb;
-        text-decoration: none;
-        cursor: pointer;
-    }
-</style>
 {% endblock %}
 
