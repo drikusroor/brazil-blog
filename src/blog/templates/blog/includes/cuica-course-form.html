@@ -39,7 +39,11 @@
             cuicaSounds[randomIndex].play();
         }
 
-        document.getElementById('commentBody').addEventListener('keydown', playRandomCuicaSound);
+        const commentBody = document.getElementById('commentBody');
+
+        if (commentBody) {
+            commentBody.addEventListener('keydown', playRandomCuicaSound);
+        }
     });
 
 </script>
