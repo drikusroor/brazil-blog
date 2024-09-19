@@ -19,17 +19,17 @@
                         <div class="flex-col w-4/5">
                             <h1 class="header-text-color flex-wrap font-bold text-xl md:text-4xl mb-0 overflow-scroll line-clamp-3">{{ page.title }}</h1>
                             <div class="text-sm italic">{{ page.specific.date | date:"d-m-Y H:i" }}</div>
-                            <div id="like-section">
-                                <span id="like-count">{{ page.like_count }}</span> likes
-                                {% if user.is_authenticated %}
-                                    <button id="like-button" data-post-id="{{ page.id }}">
-                                        {% if user in page.likes.all %}
-                                            Unlike
-                                        {% else %}
-                                            Like
-                                        {% endif %}
-                                    </button>
-                                {% endif %}
+                            <div id="like-section" class="flex items-center space-x-2 pr-2 mt-2">
+                                <button id="like-button" data-post-id="{{ page.id }}" class="flex items-center space-x-2 px-2 py-1 rounded-full transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                                    {% if user in page.likes.all %}
+                                        bg-red-500 text-white hover:bg-red-600
+                                    {% else %}
+                                        bg-white text-gray-700 hover:bg-gray-300
+                                    {% endif %}
+                                ">
+                                    <div class="text-xl rounded-full -ml-1 bg-white">😻</div>
+                                    <div id="like-count" class="font-bold block mt-1">{{ page.like_count }}</div>
+                                </button>
                             </div>
                         </div>
                         {% if page.author.author_page %}
@@ -102,7 +102,11 @@
 </div>
 
 <script>
-    document.getElementById('like-button').addEventListener('click', function() {
+    const likeButton = document.getElementById('like-button');
+    const likeCount = document.getElementById('like-count');
+    const likeText = document.getElementById('like-text');
+
+    likeButton.addEventListener('click', function() {
         const postId = this.dataset.postId;
         fetch(`/blog/api/likes/${postId}/toggle_like/`, {
             method: 'POST',
@@ -113,8 +117,14 @@
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('like-count').textContent = data.like_count;
-            this.textContent = data.liked ? 'Unlike' : 'Like';
+            likeCount.textContent = data.like_count;
+            if (data.liked) {
+                    likeButton.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-300');
+                    likeButton.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+                } else {
+                    likeButton.classList.remove('bg-red-500', 'text-white', 'hover:bg-red-600');
+                    likeButton.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-300');
+                }
         });
     });
 
