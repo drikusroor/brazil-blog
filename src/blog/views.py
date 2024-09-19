@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.template import Template, Context
 from rest_framework import viewsets
 from .models import Comment, BlogPage
-from .serializers import CommentSerializer, LikeSerializer
+from .serializers import CommentSerializer, LikeSerializer, CommentLikeSerializer
 from .permissions import IsOwnerOrReadOnly
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
@@ -30,6 +30,11 @@ class CommentViewSet(viewsets.ModelViewSet):
         if post_id is not None:
             queryset = queryset.filter(post_id=post_id)
         return queryset
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
 
     def perform_create(self, serializer):
         if not self.request.user.is_authenticated:
@@ -75,4 +80,19 @@ class LikeViewSet(viewsets.ModelViewSet):
         liked = post.like_toggle(request.user)
         return Response(
             {"liked": liked, "like_count": post.like_count}, status=status.HTTP_200_OK
+        )
+
+
+class CommentLikeViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentLikeSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=True, methods=["post"])
+    def toggle_like(self, request, pk=None):
+        comment = self.get_object()
+        liked = comment.like_toggle(request.user)
+        return Response(
+            {"liked": liked, "like_count": comment.like_count},
+            status=status.HTTP_200_OK,
         )

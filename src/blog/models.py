@@ -155,12 +155,25 @@ class Comment(models.Model):
     parent_comment = models.ForeignKey(
         "self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies"
     )
+    likes = models.ManyToManyField(User, related_name="liked_comments", blank=True)
 
     class Meta:
         ordering = ["created_date"]
 
     def __str__(self):
         return self.body
+
+    @property
+    def like_count(self):
+        return self.likes.count()
+
+    def like_toggle(self, user):
+        if user in self.likes.all():
+            self.likes.remove(user)
+            return False
+        else:
+            self.likes.add(user)
+            return True
 
 
 class BlogPageGalleryImage(Orderable):
