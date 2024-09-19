@@ -1,6 +1,6 @@
 {% load i18n static wagtailcore_tags wagtailimages_tags custom_image_tags user_tags %}
 
-<div class="max-w-3xl md:max-w-5xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="max-w-3xl md:max-w-5xl w-full mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-4">
     {% for post in blogposts %}
         <a href="{% pageurl post %}" class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
             <div class="relative aspect-square">
