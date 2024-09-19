@@ -204,7 +204,7 @@ class AuthorPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        context["posts"] = self.user.blog_posts.live().order_by("-first_published_at")
+        context["posts"] = self.user.blog_posts.live().order_by("-date")
         return context
 
     parent_page_types = ["AuthorIndexPage"]
