@@ -86,8 +86,8 @@ class BlogPage(Page):
     )
     intro = models.CharField(max_length=250)
     body = RichTextField(blank=True)
-    video = models.URLField(null=True, blank=True, help_text="Google drive share link",
-)
+    video = models.URLField(null=True, blank=True, help_text="Google drive share link")
+    likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
 
     search_fields = Page.search_fields + [
         index.SearchField("title"),
@@ -119,16 +119,29 @@ class BlogPage(Page):
     def get_context(self, request):
         context = super().get_context(request)
 
-        if self.video :
+        if self.video:
             preview_url = self.video
 
             # Transform google drive share url to preview url for embedding
-            if 'drive.google' in self.video :
-                preview_url = (self.video.replace("view?usp=sharing","preview"))
+            if "drive.google" in self.video:
+                preview_url = self.video.replace("view?usp=sharing", "preview")
 
-            context['preview_url'] = preview_url
+            context["preview_url"] = preview_url
 
         return context
+
+    def like_toggle(self, user):
+        if user in self.likes.all():
+            self.likes.remove(user)
+            return False
+        else:
+            self.likes.add(user)
+            return True
+
+    @property
+    def like_count(self):
+        return self.likes.count()
+
 
 class Comment(models.Model):
     post = models.ForeignKey(

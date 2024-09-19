@@ -1,15 +1,18 @@
 from django.http import HttpResponse
 from django.template import Template, Context
 from rest_framework import viewsets
-from .models import Comment
-from .serializers import CommentSerializer
+from .models import Comment, BlogPage
+from .serializers import CommentSerializer, LikeSerializer
 from .permissions import IsOwnerOrReadOnly
+from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.decorators import permission_classes, action
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
 # Create your views here.
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
@@ -23,28 +26,27 @@ class CommentViewSet(viewsets.ModelViewSet):
         by filtering against a `post` query parameter in the URL.
         """
         queryset = super().get_queryset()
-        post_id = self.request.query_params.get('post')
+        post_id = self.request.query_params.get("post")
         if post_id is not None:
             queryset = queryset.filter(post_id=post_id)
         return queryset
-    
-    def perform_create(self, serializer):
 
+    def perform_create(self, serializer):
         if not self.request.user.is_authenticated:
             raise PermissionDenied("You must be authenticated to create a comment.")
 
         serializer.save(author=self.request.user)
 
+
 # public endpoints
+
 
 @permission_classes([AllowAny])
 class BrazilTimeViewSet(viewsets.ViewSet):
-
     def list(self, request):
-        template = Template('{% load brazil_time %}{% display_brazil_time %}')
+        template = Template("{% load brazil_time %}{% display_brazil_time %}")
         context = Context({})
-        return HttpResponse(
-            template.render(context))
+        return HttpResponse(template.render(context))
 
     def retrieve(self, request, pk=None):
         raise NotImplementedError("GET method is not supported.")
@@ -61,3 +63,16 @@ class BrazilTimeViewSet(viewsets.ViewSet):
     def destroy(self, request, pk=None):
         raise NotImplementedError("DELETE method is not supported.")
 
+
+class LikeViewSet(viewsets.ModelViewSet):
+    queryset = BlogPage.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=True, methods=["post"])
+    def toggle_like(self, request, pk=None):
+        post = self.get_object()
+        liked = post.like_toggle(request.user)
+        return Response(
+            {"liked": liked, "like_count": post.like_count}, status=status.HTTP_200_OK
+        )

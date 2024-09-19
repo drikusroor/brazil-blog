@@ -19,6 +19,18 @@
                         <div class="flex-col w-4/5">
                             <h1 class="header-text-color flex-wrap font-bold text-xl md:text-4xl mb-0 overflow-scroll line-clamp-3">{{ page.title }}</h1>
                             <div class="text-sm italic">{{ page.specific.date | date:"d-m-Y H:i" }}</div>
+                            <div id="like-section">
+                                <span id="like-count">{{ page.like_count }}</span> likes
+                                {% if user.is_authenticated %}
+                                    <button id="like-button" data-post-id="{{ page.id }}">
+                                        {% if user in page.likes.all %}
+                                            Unlike
+                                        {% else %}
+                                            Like
+                                        {% endif %}
+                                    </button>
+                                {% endif %}
+                            </div>
                         </div>
                         {% if page.author.author_page %}
                             <a href="{{ page.author.author_page.url }}" class="flex flex-row items-center gap-2 hover:underline">
@@ -88,6 +100,39 @@
         {% include "blog/includes/image-modal.html" %}
     </div>
 </div>
+
+<script>
+    document.getElementById('like-button').addEventListener('click', function() {
+        const postId = this.dataset.postId;
+        fetch(`/blog/api/likes/${postId}/toggle_like/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('like-count').textContent = data.like_count;
+            this.textContent = data.liked ? 'Unlike' : 'Like';
+        });
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
 
 {% include "blog/includes/tukanchamon.html" %}
 {% include "blog/includes/cuica-course-form.html" %}
