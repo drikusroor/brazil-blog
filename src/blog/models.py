@@ -86,8 +86,11 @@ class BlogPage(Page):
     )
     intro = models.CharField(max_length=250)
     body = RichTextField(blank=True)
-    video = models.URLField(null=True, blank=True, help_text="Google drive share link",
-)
+    video = models.URLField(
+        null=True,
+        blank=True,
+        help_text="Google drive share link",
+    )
 
     search_fields = Page.search_fields + [
         index.SearchField("title"),
@@ -119,16 +122,17 @@ class BlogPage(Page):
     def get_context(self, request):
         context = super().get_context(request)
 
-        if self.video :
+        if self.video:
             preview_url = self.video
 
             # Transform google drive share url to preview url for embedding
-            if 'drive.google' in self.video :
-                preview_url = (self.video.replace("view?usp=sharing","preview"))
+            if "drive.google" in self.video:
+                preview_url = self.video.replace("view?usp=sharing", "preview")
 
-            context['preview_url'] = preview_url
+            context["preview_url"] = preview_url
 
         return context
+
 
 class Comment(models.Model):
     post = models.ForeignKey(
@@ -191,8 +195,12 @@ class AuthorIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        # Fetch all users who have the role of "Authors"
-        authors = User.objects.filter(groups__name="Authors")
+
+        # authors are the users for which an AuthorPage has been created under AuthorIndexPage
+        authors = [
+            author_page.user for author_page in self.get_children().live().specific()
+        ]
+
         context["authors"] = authors
         return context
 
