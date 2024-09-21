@@ -18,6 +18,10 @@
                         <div class="flex flex-row items-center flex-wrap gap-2">
                             {% post_user_avatar post 'w-8 h-8 rounded-full object-cover' %}
                             {{ post.specific.date | date:"d-m-Y H:i" }}
+                            <div class="flex items-center space-x-1 ml-auto bg-white rounded-full px-1">
+                                <span class="text-xl">😻</span>
+                                <span class="font-bold pr-1 mt-0.5">{{ post.specific.like_count }}</span>
+                            </div>
                         </div>
                         <div>
                             {% if post.specific.intro %}
