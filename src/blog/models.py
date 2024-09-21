@@ -217,8 +217,12 @@ class AuthorIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        # Fetch all users who have the role of "Authors"
-        authors = User.objects.filter(groups__name="Authors")
+
+        # authors are the users for which an AuthorPage has been created under AuthorIndexPage
+        authors = [
+            author_page.user for author_page in self.get_children().live().specific()
+        ]
+
         context["authors"] = authors
         return context
 
