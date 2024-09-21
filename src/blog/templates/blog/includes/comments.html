@@ -101,6 +101,26 @@
             body.textContent = comment.body;
             li.appendChild(body);
 
+            const likeButton = document.createElement("button");
+            likeButton.classList.add(
+                "mt-2",
+                "text-sm",
+                "text-gray-600",
+                "hover:text-gray-800",
+                "transition-colors",
+            );
+            if (comment.liked_by_user) {
+                likeButton.classList.add("text-red-500");
+            }
+            likeButton.innerHTML = `<span class="text-xl">😻</span> <span class="like-count">${comment.like_count}</span>`;
+            likeButton.addEventListener("click", function () {
+                likeComment(comment.id).then((data) => {
+                    likeButton.querySelector(".like-count").textContent = data.like_count;
+                    likeButton.classList.toggle("text-red-500", data.liked);
+                });
+            });
+            li.appendChild(likeButton);
+
             const deleteButton = document.createElement("button");
             deleteButton.classList.add(
                 "absolute",
@@ -151,6 +171,18 @@
                 alert(errorMessage);
             });
     };
+
+    function likeComment(commentId) {
+        return fetch(`/blog/api/comment-likes/${commentId}/toggle_like/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector(
+                    'input[name="csrfmiddlewaretoken"]',
+                ).value,
+            },
+        }).then(response => response.json());
+    }
 
     document.addEventListener("DOMContentLoaded", function () {
         fetchComments().then(renderComments);

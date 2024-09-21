@@ -86,11 +86,8 @@ class BlogPage(Page):
     )
     intro = models.CharField(max_length=250)
     body = RichTextField(blank=True)
-    video = models.URLField(
-        null=True,
-        blank=True,
-        help_text="Google drive share link",
-    )
+    video = models.URLField(null=True, blank=True, help_text="Google drive share link")
+    likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
 
     search_fields = Page.search_fields + [
         index.SearchField("title"),
@@ -133,6 +130,18 @@ class BlogPage(Page):
 
         return context
 
+    def like_toggle(self, user):
+        if user in self.likes.all():
+            self.likes.remove(user)
+            return False
+        else:
+            self.likes.add(user)
+            return True
+
+    @property
+    def like_count(self):
+        return self.likes.count()
+
 
 class Comment(models.Model):
     post = models.ForeignKey(
@@ -146,12 +155,25 @@ class Comment(models.Model):
     parent_comment = models.ForeignKey(
         "self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies"
     )
+    likes = models.ManyToManyField(User, related_name="liked_comments", blank=True)
 
     class Meta:
         ordering = ["created_date"]
 
     def __str__(self):
         return self.body
+
+    @property
+    def like_count(self):
+        return self.likes.count()
+
+    def like_toggle(self, user):
+        if user in self.likes.all():
+            self.likes.remove(user)
+            return False
+        else:
+            self.likes.add(user)
+            return True
 
 
 class BlogPageGalleryImage(Orderable):
