@@ -6,9 +6,9 @@ const ctx = canvas.getContext('2d');
 const frogImage = new Image();
 frogImage.src = '/static/games/images/toucan.png'; // Replace with your frog image path
 
-const MAX_ENEMY_SPEED = 5;
-const MIN_ENEMY_SPEED = 1;
-const ENEMIES_COUNT = 5;
+const MAX_ENEMY_SPEED = 4;
+const MIN_ENEMY_SPEED = 1.5;
+const ENEMIES_COUNT = (canvas.height / 30) - 1;
 
 const getRandomSpeed = () => Math.floor(Math.random() * (MAX_ENEMY_SPEED - MIN_ENEMY_SPEED + 1)) + MIN_ENEMY_SPEED;
 
@@ -43,31 +43,13 @@ document.addEventListener('keyup', function (e) {
 // Spawn cars
 function spawnCars() {
 
-    cars = Array.from({ length: ENEMIES_COUNT }).reduce((cars, val) => {
+    cars = Array.from({ length: ENEMIES_COUNT }).reduce((cars, _, i) => {
         const carType = carTypes[Math.floor(Math.random() * carTypes.length)];
 
         const width = 50;
         const height = 30;
         const speed = getRandomSpeed();
-        const yMargin = 5;
-        let y;
-        while (!y) {
-            // Check if the car is not on the frog
-            // or in the same y as the frog
-            // or in the same y space as another car
-            const proposedY = Math.random() * canvas.height;
-            const noFrogConflict = frog.y + frog.height < proposedY || frog.y > proposedY + height;
-            const noCarConflict = cars.every((car) => {
-                console.log({ carY: car.y, proposedY, carHeight: car.height, proposedHeight: height });
-                return car.y + car.height < proposedY || car.y > proposedY + height;
-            });
-
-            console.log({ noCarConflict, noFrogConflict , proposedY, y: frog.y});
-
-            if (noFrogConflict && noCarConflict) {
-                y = proposedY;
-            }
-        }
+        const y = i * height;
 
         const car = {
             x: Math.random() * canvas.width,
