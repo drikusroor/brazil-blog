@@ -1,10 +1,16 @@
 from rest_framework import serializers
 from .models import Comment, BlogPage
 from django.contrib.auth.models import User
+from django.urls import reverse
 from django_markup.markup import formatter
+from blog.templatetags.user_tags import user_display_name, get_user_avatar_url
 
 
 class UserSerializer(serializers.ModelSerializer):
+    avatar = serializers.SerializerMethodField()
+    display_name = serializers.SerializerMethodField()
+    profile_url = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = [
@@ -13,7 +19,19 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "email",
-        ]  # Customize based on the information you want to expose
+            "avatar",
+            "display_name",
+            "profile_url",
+        ]
+
+    def get_avatar(self, obj):
+        return get_user_avatar_url(obj)
+
+    def get_display_name(self, obj):
+        return user_display_name(obj)
+
+    def get_profile_url(self, obj):
+        return reverse("profile", args=[obj.username])
 
 
 class RecursiveCommentSerializer(serializers.Serializer):

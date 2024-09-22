@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.template import Template, Context
+
 from rest_framework import viewsets
 from .models import Comment, BlogPage
 from .serializers import CommentSerializer, LikeSerializer, CommentLikeSerializer
@@ -10,6 +11,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import permission_classes, action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+
 
 # Create your views here.
 
@@ -47,12 +49,6 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
-
-    def save(self, request, *args, **kwargs):
-        raise Exception("Drikus is da best")
-        if not request.user.is_authenticated:
-            raise PermissionDenied("You must be authenticated to update a comment.")
-        return super().update(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

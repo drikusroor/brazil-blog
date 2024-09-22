@@ -6,6 +6,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
+from .views import profile, edit_profile
 from search import views as search_views
 from blog import urls as blog_urls
 
@@ -14,6 +15,9 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
+    # user profile page
+    path("profile/<username>/edit/", edit_profile, name="edit_profile"),
+    path("profile/<username>/", profile, name="profile"),
     path("accounts/", include("allauth.urls")),
     path("blog/", include(blog_urls)),
 ]
