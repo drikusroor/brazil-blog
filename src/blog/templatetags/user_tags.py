@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 register = template.Library()
 
+
 @register.simple_tag
 def user_display_name(user: User):
     if user.first_name and user.last_name:
@@ -16,10 +17,11 @@ def user_display_name(user: User):
     else:
         return "Anonymous"
 
+
 @register.simple_tag
 def post_user_display_name(post: BlogPage):
     user = post.author
-    
+
     # If the post doesn't have an author, we'll use the owner of the post as a fallback
     # Do we want to do this? Maybe we should just return "Anonymous"?
     if not user:
@@ -27,40 +29,46 @@ def post_user_display_name(post: BlogPage):
 
     if not user:
         return "Anonymous"
-    
+
     return user_display_name(user)
+
 
 @register.simple_tag
 def get_user_avatar_url(user: User) -> str:
-    if hasattr(user, 'wagtail_userprofile') and user.wagtail_userprofile.avatar:
+    if hasattr(user, "wagtail_userprofile") and user.wagtail_userprofile.avatar:
         return user.wagtail_userprofile.avatar.url
-    return ''
+    return ""
+
 
 @register.simple_tag
-def user_avatar(user: User, classes: str = 'rounded-full w-16 h-16 object-cover') -> str:
-
+def user_avatar(
+    user: User, classes: str = "rounded-full w-16 h-16 object-cover"
+) -> str:
     name = user_display_name(user)
 
-    if hasattr(user, 'wagtail_userprofile') and user.wagtail_userprofile.avatar:
-        return format_html('<img src="{}" alt="{}" class="{}" title="{}">',
-                           user.wagtail_userprofile.avatar.url, 
-                           name,
-                           classes, 
-                           name
-                           )
-    return ''
-    
-@register.simple_tag
-def post_user_avatar(post: BlogPage, classes: str = 'rounded-full w-16 h-16 object-cover') -> str:
+    if hasattr(user, "wagtail_userprofile") and user.wagtail_userprofile.avatar:
+        return format_html(
+            '<img src="{}" alt="{}" class="{}" title="{}">',
+            user.wagtail_userprofile.avatar.url,
+            name,
+            classes,
+            name,
+        )
+    return ""
 
+
+@register.simple_tag
+def post_user_avatar(
+    post: BlogPage, classes: str = "rounded-full w-16 h-16 object-cover"
+) -> str:
     user = post.author
-    
+
     # If the post doesn't have an author, we'll use the owner of the post as a fallback
     # Do we want to do this? Maybe we should just return "Anonymous"?
     if not user:
         user = post.owner
 
     if not user:
-        return ''
-    
+        return ""
+
     return user_avatar(user, classes)

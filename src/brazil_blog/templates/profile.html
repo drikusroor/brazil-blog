@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body_class %}template-404{% endblock %}
+
+{% block content %}
+
+<div class="bg-green-700 py-8 flex-grow">
+    <div class="bg-white rounded-xl w-full block drop-shadow p-4 mx-auto prose">
+        {% if avatar %}
+            <img src="{{ avatar }}" alt="Profile Picture" class="float-left rounded-full w-24 h-24 mr-4 object-cover" />
+        {% else %}
+            <i alt="Default Avatar" class="float-left rounded-full w-24 h-24 mr-4 object-cover bg-slate-700 text-white flex justify-center items-center text-4xl">
+                {{ display_name|first|upper }}
+            </i>
+        {% endif %}
+        <h1>{{ display_name }}'s Profile</h1>
+
+        <!-- if this is the logged in user's profile, show the edit link -->
+        {% if user.is_authenticated and user.id == user_id %}
+            <a class="inline-block text-blue-500 hover:text-blue-700 transition-colors" href="{% url 'edit_profile' username %}">Edit Profile</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
