@@ -23,18 +23,22 @@ class RecursiveCommentSerializer(serializers.Serializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    is_author = serializers.SerializerMethodField()
     author_details = UserSerializer(source="author", read_only=True)
     liked_by_user = serializers.SerializerMethodField()
     replies = RecursiveCommentSerializer(many=True, read_only=True)
+    rendered_body = serializers.CharField(read_only=True)
 
     class Meta:
         model = Comment
         fields = [
             "id",
             "post",
+            "is_author",
             "author",
             "author_details",
             "body",
+            "rendered_body",
             "created_date",
             "updated_date",
             "parent_comment",
@@ -44,11 +48,13 @@ class CommentSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
+            "is_author",
             "author",
             "created_date",
             "updated_date",
             "like_count",
             "liked_by_user",
+            "replies",
         ]
 
     def get_liked_by_user(self, obj):
@@ -57,9 +63,17 @@ class CommentSerializer(serializers.ModelSerializer):
             return request.user in obj.likes.all()
         return False
 
+    def get_is_author(self, obj):
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            return request.user == obj.author
+        return False
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["body"] = formatter(instance.body, filter_name="markdown")
+        representation["rendered_body"] = formatter(
+            instance.body, filter_name="markdown"
+        )
         return representation
 
     def create(self, validated_data):

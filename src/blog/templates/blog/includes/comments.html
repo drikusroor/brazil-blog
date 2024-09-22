@@ -9,11 +9,11 @@
 
     {% if user.is_authenticated %}
 
-    <form id="commentForm" class="mt-8" method="post">
+    <form id="commentForm" class="mt-8">
+
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
-
         <input type="hidden" name="post" value="{{ page.id }}" />
-
+        <input type="hidden" name="id" value="" />
         <input type="hidden" id="parentCommentId" name="parent_comment" value="" />
 
         <small class="text-gray-500">You are commenting as
@@ -124,7 +124,7 @@
 
         const body = document.createElement("p");
         body.classList.add("mt-2", "prose");
-        body.innerHTML = comment.body;
+        body.innerHTML = comment.rendered_body;
         li.appendChild(body);
 
         const likeButton = document.createElement("button");
@@ -147,26 +147,53 @@
         });
         li.appendChild(likeButton);
 
-        const deleteButton = document.createElement("button");
-        deleteButton.classList.add(
-            "absolute",
-            "top-2",
-            "right-2",
-            "text-red-500",
-            "hover:text-red-700",
-            "hover:underline",
-            "transition-colors",
-        );
-        deleteButton.textContent = "Delete";
-        deleteButton.addEventListener("click", function () {
-            if (confirm("Are you sure you want to delete this comment?")) {
-                deleteComment(comment.id).then(() => {
-                    fetchComments().then(renderComments);
-                });
-            }
-        });
+        if (comment.is_author) {
 
-        li.appendChild(deleteButton);
+            const editButton = document.createElement("button");
+            editButton.classList.add(
+                "absolute",
+                "top-2",
+                "right-16",
+                "text-blue-500",
+                "hover:text-blue-700",
+                "hover:underline",
+                "transition-colors",
+            );
+            editButton.textContent = "Edit";
+            editButton.addEventListener("click", function () {
+                document.getElementById("commentBody").value = comment.body;
+                document.getElementById("commentForm").querySelector('input[name="id"]').value = comment.id;
+                document.getElementById("parentCommentId").value = comment.parent_comment || "";
+                document.getElementById("replyingTo").textContent = "";
+                document.getElementById("replyingToContainer").classList.add("hidden");
+                document.getElementById("replyingToContainer").classList.remove("block");
+                document.getElementById("commentBody").focus();
+            });
+            li.appendChild(editButton);
+
+            const deleteButton = document.createElement("button");
+            deleteButton.classList.add(
+                "absolute",
+                "top-2",
+                "right-2",
+                "text-red-500",
+                "hover:text-red-700",
+                "hover:underline",
+                "transition-colors",
+            );
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", function () {
+                if (confirm("Are you sure you want to delete this comment?")) {
+                    deleteComment(comment.id).then(() => {
+                        fetchComments().then(renderComments);
+                    });
+                }
+            });
+
+            li.appendChild(deleteButton);
+
+        }
+
 
         if (level < 4) {
             const replyButton = document.createElement("button");
@@ -181,10 +208,9 @@
             );
             replyButton.textContent = "Reply";
             replyButton.addEventListener("click", function () {
-                document.getElementById("commentBody").value = `@${comment.author_details.username} `;
                 document.getElementById("commentBody").focus();
                 document.getElementById("parentCommentId").value = comment.id;
-                document.getElementById("replyingTo").innerHTML = `@${comment.author_details.username} - ${comment.body}`;
+                document.getElementById("replyingTo").innerHTML = `@${comment.author_details.username} - ${comment.rendered_body}`;
                 document.getElementById("replyingToContainer").classList.remove("hidden");
                 document.getElementById("replyingToContainer").classList.add("block");
                 document.getElementById("commentBody").focus();
@@ -193,10 +219,50 @@
             li.appendChild(replyButton);
         }
 
+        // add border on the left side to indicate the level
+        if (parent) {
+            const borderVertical = document.createElement("div");
+            borderVertical.classList.add(
+                "absolute",
+                "-top-4",
+                "-left-3",
+                "bg-gray-300",
+                "w-0.5",
+                "rounded-b-full",
+            );
+
+            const isLast = parent.replies[parent.replies.length - 1].id === comment.id;
+
+            if (isLast) {
+                borderVertical.classList.add(
+                    "bottom-1/2",
+                )
+            } else {
+                borderVertical.classList.add(
+                    "bottom-0",
+                )
+            }
+
+            li.appendChild(borderVertical);
+
+            const borderHorizontal = document.createElement("div");
+            borderHorizontal.classList.add(
+                "absolute",
+                "top-1/2",
+                "-left-3",
+                "bg-gray-300",
+                "w-3",
+                "h-0.5",
+                "skew-y-12",
+                "rounded-l-full",
+            );
+
+            li.appendChild(borderHorizontal);
+        }
+
         commentsList.appendChild(li);
 
         if (comment.replies.length > 0) {
-            console.log("rendering replies")
             comment.replies.forEach((reply) => renderSingleComment(reply, comment));
         }
     }
@@ -209,13 +275,37 @@
             .forEach((comment) => renderSingleComment(comment, null));
     }
 
+    function resetForm() {
+        document.getElementById("commentForm").reset();
+        document.getElementById("commentForm").querySelector('input[name="id"]').value = "";
+        document.getElementById("parentCommentId").value = "";
+        document.getElementById("replyingToContainer").classList.add("hidden");
+        document.getElementById("replyingToContainer").classList.remove("block");
+        document.getElementById("replyingTo").textContent = "";
+    }
+
     const onCommentFormSubmit = function (event) {
         event.preventDefault();
         const form = document.getElementById("commentForm");
         const formData = new FormData(form);
-        fetch("/blog/api/comments/", {
-            method: "POST",
+
+        // check if the comment is new or an edit
+        let commentId = form.querySelector('input[name="id"]').value;
+
+        const url = commentId
+            ? `/blog/api/comments/${commentId}/`
+            : "/blog/api/comments/";
+
+        const method = commentId ? "PUT" : "POST";
+
+        fetch(url, {
+            method: method,
             body: formData,
+            headers: {
+                "X-CSRFToken": document.querySelector(
+                    'input[name="csrfmiddlewaretoken"]',
+                ).value,
+            },
         })
             .then(async (response) => {
                 if (response.status >= 400) {
@@ -224,16 +314,19 @@
                 }
 
                 // reset the form
-                form.reset();
-                document.getElementById("parentCommentId").value = "";
-                document.getElementById("replyingToContainer").classList.add("hidden");
-                document.getElementById("replyingToContainer").classList.remove("block");
-                document.getElementById("replyingTo").textContent = "";
+                resetForm();
 
                 return response.json();
             })
             .then((data) => {
-                fetchComments().then(renderComments);
+                const commentId = data.id;
+
+                fetchComments().then((data) => {
+                    renderComments(data);
+
+                    const comment = document.getElementById(`comment-${commentId}`);
+                    comment.scrollIntoView({ behavior: "smooth" });
+                });
             })
             .catch((error) => {
                 console.error("Error:", error);
