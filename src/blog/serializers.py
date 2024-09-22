@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Comment, BlogPage
 from django.contrib.auth.models import User
+from django_markup.markup import formatter
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -55,6 +56,11 @@ class CommentSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return request.user in obj.likes.all()
         return False
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["body"] = formatter(instance.body, filter_name="markdown")
+        return representation
 
     def create(self, validated_data):
         validated_data["author"] = self.context["request"].user

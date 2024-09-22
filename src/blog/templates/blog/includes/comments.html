@@ -123,8 +123,8 @@
         li.appendChild(date);
 
         const body = document.createElement("p");
-        body.classList.add("mt-2");
-        body.textContent = comment.body;
+        body.classList.add("mt-2", "prose");
+        body.innerHTML = comment.body;
         li.appendChild(body);
 
         const likeButton = document.createElement("button");
@@ -184,7 +184,7 @@
                 document.getElementById("commentBody").value = `@${comment.author_details.username} `;
                 document.getElementById("commentBody").focus();
                 document.getElementById("parentCommentId").value = comment.id;
-                document.getElementById("replyingTo").textContent = `@${comment.author_details.username} - ${comment.body}`;
+                document.getElementById("replyingTo").innerHTML = `@${comment.author_details.username} - ${comment.body}`;
                 document.getElementById("replyingToContainer").classList.remove("hidden");
                 document.getElementById("replyingToContainer").classList.add("block");
                 document.getElementById("commentBody").focus();
