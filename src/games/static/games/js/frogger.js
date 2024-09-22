@@ -41,7 +41,7 @@ carTypes.forEach(carType => {
     carType.image.src = carType.imageSrc;
 });
 
-let frog = { x: canvas.width / 2 - 15, y: canvas.height - 30, width: 30, height: 30 };
+let frog = { x: canvas.width / 2 - 15, y: canvas.height - 30, width: 30, height: 30, facingLeft: false };
 let cars = [];
 let keys = {};
 let walkingSoundInstance = null;
@@ -155,8 +155,16 @@ function update() {
     // Move frog
     if (keys['ArrowUp']) frog.y -= 5;
     if (keys['ArrowDown']) frog.y += 5;
-    if (keys['ArrowLeft']) frog.x -= 5;
-    if (keys['ArrowRight']) frog.x += 5;
+    if (keys['ArrowLeft']) { 
+        frog.x -= 5; 
+        frog.facingLeft = true;
+        moved = true;
+    }
+    if (keys['ArrowRight']) { 
+        frog.x += 5; 
+        frog.facingLeft = false;
+        moved = true;
+    }
 
     // Keep frog within canvas
     frog.x = Math.max(0, Math.min(canvas.width - frog.width, frog.x));
@@ -215,8 +223,15 @@ function draw() {
     ctx.fillRect(0, 0, canvas.width, 30);
     ctx.fillRect(0, canvas.height - 30, canvas.width, 30);
 
-    // Draw frog
-    ctx.drawImage(frogImage, frog.x, frog.y, frog.width, frog.height);
+    // Draw frog (toucan)
+    ctx.save();
+    if (frog.facingLeft) {
+        ctx.scale(-1, 1);
+        ctx.drawImage(frogImage, -frog.x - frog.width, frog.y, frog.width, frog.height);
+    } else {
+        ctx.drawImage(frogImage, frog.x, frog.y, frog.width, frog.height);
+    }
+    ctx.restore();
 
     // Draw cars
     cars.forEach(car => {
@@ -247,6 +262,7 @@ function gameLoop() {
 function resetGame() {
     frog.x = canvas.width / 2 - 15;
     frog.y = canvas.height - 30;
+    frog.facingLeft = false;
 }
 
 // Initially hide the canvas
