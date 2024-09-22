@@ -56,7 +56,11 @@
                     {% if user.is_authenticated %}
                     <li class="pl-4 mt-2">
                         <a class="text-blue-800 hover:text-blue-900 transition-colors"
-                            href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
+                            href="{% url 'account_email' %}">{% trans "Account" %}</a>
+                    </li>
+                    <li class="pl-4 mt-2">
+                        <a class="text-blue-800 hover:text-blue-900 transition-colors"
+                            href="{% url 'profile' username=user.username %}">{% trans "Profile" %}</a>
                     </li>
                     <li class="pl-4 mt-2">
                         <a class="text-blue-800 hover:text-blue-900 transition-colors"

@@ -33,7 +33,7 @@
                             <a class="inline-block text-blue-500 hover:text-blue-700 transition-colors" href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
                         </li>
                         <li class="pl-0">
-                            <a class="inline-block text-blue-500 hover:text-blue-700 transition-colors" href="{% url 'account_profile' %}">{% trans "Edit Profile" %}</a>
+                            <a class="inline-block text-blue-500 hover:text-blue-700 transition-colors" href="{% url 'edit_profile' username=user.username %}">{% trans "Edit Profile" %}</a>
                         </li>
                         <li class="pl-0">
                             <a class="inline-block text-blue-500 hover:text-blue-700 transition-colors" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
