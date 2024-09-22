@@ -245,7 +245,7 @@
         const formData = new FormData(form);
 
         // check if the comment is new or an edit
-        const commentId = form.querySelector('input[name="id"]').value;
+        let commentId = form.querySelector('input[name="id"]').value;
 
         const url = commentId
             ? `/blog/api/comments/${commentId}/`
@@ -274,7 +274,16 @@
                 return response.json();
             })
             .then((data) => {
-                fetchComments().then(renderComments);
+
+                console.log({ data })
+                const commentId = data.id;
+
+                fetchComments().then((data) => {
+                    renderComments(data);
+
+                    const comment = document.getElementById(`comment-${commentId}`);
+                    comment.scrollIntoView({ behavior: "smooth" });
+                });
             })
             .catch((error) => {
                 console.error("Error:", error);
