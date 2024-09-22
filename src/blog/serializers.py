@@ -23,6 +23,7 @@ class RecursiveCommentSerializer(serializers.Serializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    is_author = serializers.SerializerMethodField()
     author_details = UserSerializer(source="author", read_only=True)
     liked_by_user = serializers.SerializerMethodField()
     replies = RecursiveCommentSerializer(many=True, read_only=True)
@@ -33,6 +34,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "post",
+            "is_author",
             "author",
             "author_details",
             "body",
@@ -46,6 +48,7 @@ class CommentSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
+            "is_author",
             "author",
             "created_date",
             "updated_date",
@@ -58,6 +61,12 @@ class CommentSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if request and request.user.is_authenticated:
             return request.user in obj.likes.all()
+        return False
+
+    def get_is_author(self, obj):
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            return request.user == obj.author
         return False
 
     def to_representation(self, instance):

@@ -147,48 +147,53 @@
         });
         li.appendChild(likeButton);
 
-        const editButton = document.createElement("button");
-        editButton.classList.add(
-            "absolute",
-            "top-2",
-            "right-16",
-            "text-blue-500",
-            "hover:text-blue-700",
-            "hover:underline",
-            "transition-colors",
-        );
-        editButton.textContent = "Edit";
-        editButton.addEventListener("click", function () {
-            document.getElementById("commentBody").value = comment.body;
-            document.getElementById("commentForm").querySelector('input[name="id"]').value = comment.id;
-            document.getElementById("parentCommentId").value = comment.parent_comment || "";
-            document.getElementById("replyingTo").textContent = "";
-            document.getElementById("replyingToContainer").classList.add("hidden");
-            document.getElementById("replyingToContainer").classList.remove("block");
-            document.getElementById("commentBody").focus();
-        });
-        li.appendChild(editButton);
+        if (comment.is_author) {
 
-        const deleteButton = document.createElement("button");
-        deleteButton.classList.add(
-            "absolute",
-            "top-2",
-            "right-2",
-            "text-red-500",
-            "hover:text-red-700",
-            "hover:underline",
-            "transition-colors",
-        );
-        deleteButton.textContent = "Delete";
-        deleteButton.addEventListener("click", function () {
-            if (confirm("Are you sure you want to delete this comment?")) {
-                deleteComment(comment.id).then(() => {
-                    fetchComments().then(renderComments);
-                });
-            }
-        });
+            const editButton = document.createElement("button");
+            editButton.classList.add(
+                "absolute",
+                "top-2",
+                "right-16",
+                "text-blue-500",
+                "hover:text-blue-700",
+                "hover:underline",
+                "transition-colors",
+            );
+            editButton.textContent = "Edit";
+            editButton.addEventListener("click", function () {
+                document.getElementById("commentBody").value = comment.body;
+                document.getElementById("commentForm").querySelector('input[name="id"]').value = comment.id;
+                document.getElementById("parentCommentId").value = comment.parent_comment || "";
+                document.getElementById("replyingTo").textContent = "";
+                document.getElementById("replyingToContainer").classList.add("hidden");
+                document.getElementById("replyingToContainer").classList.remove("block");
+                document.getElementById("commentBody").focus();
+            });
+            li.appendChild(editButton);
 
-        li.appendChild(deleteButton);
+            const deleteButton = document.createElement("button");
+            deleteButton.classList.add(
+                "absolute",
+                "top-2",
+                "right-2",
+                "text-red-500",
+                "hover:text-red-700",
+                "hover:underline",
+                "transition-colors",
+            );
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", function () {
+                if (confirm("Are you sure you want to delete this comment?")) {
+                    deleteComment(comment.id).then(() => {
+                        fetchComments().then(renderComments);
+                    });
+                }
+            });
+
+            li.appendChild(deleteButton);
+
+        }
+
 
         if (level < 4) {
             const replyButton = document.createElement("button");
