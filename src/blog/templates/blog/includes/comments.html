@@ -99,6 +99,39 @@
             li.style.marginLeft = `${parentIndentation + 24}px`;
         }
 
+        const avatarLink = document.createElement("a");
+        avatarLink.href = comment.author_details.profile_url;
+        li.appendChild(avatarLink);
+
+        if (comment.author_details.avatar) {
+            const avatar = document.createElement("img");
+            avatar.src = comment.author_details.avatar;
+            avatar.alt = comment.author_details.display_name;
+            avatar.classList.add("float-left", "mr-2", "rounded-full", "w-12", "h-12", "object-cover");
+            avatarLink.appendChild(avatar);
+        } else {
+            const avatar = document.createElement("i");
+            avatar.classList.add(
+                "float-left",
+                "mr-2",
+                "rounded-full",
+                "w-12",
+                "h-12",
+                "object-cover",
+                "bg-slate-500",
+                "text-white",
+                "flex",
+                "justify-center",
+                "items-center",
+                "text-2xl",
+                "not-italic",
+                "font-bold",
+            );
+            avatar.textContent = comment.author_details.display_name[0].toUpperCase();
+            avatarLink.appendChild(avatar);
+        }
+
+
         const author = document.createElement("p");
         author.classList.add("text-lg", "font-bold");
         author.textContent =

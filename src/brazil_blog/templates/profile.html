@@ -11,7 +11,7 @@
         {% if avatar %}
             <img src="{{ avatar }}" alt="Profile Picture" class="float-left rounded-full w-24 h-24 mr-4 object-cover" />
         {% else %}
-            <i alt="Default Avatar" class="float-left rounded-full w-24 h-24 mr-4 object-cover bg-slate-700 text-white flex justify-center items-center text-4xl">
+            <i alt="Default Avatar" class="float-left rounded-full not-italic w-24 h-24 mr-4 object-cover bg-slate-500 text-white flex justify-center items-center text-4xl font-bold">
                 {{ display_name|first|upper }}
             </i>
         {% endif %}
