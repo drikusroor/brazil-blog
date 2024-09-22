@@ -6,9 +6,10 @@ const ctx = canvas.getContext('2d');
 const frogImage = new Image();
 frogImage.src = '/static/games/images/toucan.png'; // Replace with your frog image path
 
+let score = 0;
 const MAX_ENEMY_SPEED = 4;
 const MIN_ENEMY_SPEED = 1.5;
-const ENEMIES_COUNT = (canvas.height / 30) - 1;
+const ENEMIES_COUNT = (canvas.height / 30) - 2;
 
 const getRandomSpeed = () => Math.floor(Math.random() * (MAX_ENEMY_SPEED - MIN_ENEMY_SPEED + 1)) + MIN_ENEMY_SPEED;
 
@@ -49,7 +50,7 @@ function spawnCars() {
         const width = 50;
         const height = 30;
         const speed = getRandomSpeed();
-        const y = i * height;
+        const y = (i + 1) * height;
 
         const { image } = carType;
 
@@ -102,7 +103,7 @@ function update() {
 
     // Check win condition
     if (frog.y <= 0) {
-        alert('You win!');
+        score += 1;
         resetGame();
     }
 }
@@ -110,6 +111,15 @@ function update() {
 // Draw everything
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw road
+    ctx.fillStyle = '#292929';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draw road lines  
+    ctx.fillStyle = '#9e5';
+    ctx.fillRect(0, 0, canvas.width, 30);
+    ctx.fillRect(0, canvas.height - 30, canvas.width, 30);
 
     // Draw frog
     ctx.drawImage(frogImage, frog.x, frog.y, frog.width, frog.height);
@@ -123,9 +133,13 @@ function draw() {
             ctx.restore();
             return;
         }
-        ctx.drawImage(car.image, car.x, car.y, car.width, car.height);
-        
+        ctx.drawImage(car.image, car.x, car.y, car.width, car.height); 
     });
+
+    // Draw score
+    ctx.fillStyle = '#333';
+    ctx.font = '20px monospace';
+    ctx.fillText(`SCORE: ${score}`, 10, 20);
 }
 
 // Game loop
