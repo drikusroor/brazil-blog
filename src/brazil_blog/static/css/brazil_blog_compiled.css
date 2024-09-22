@@ -1423,6 +1423,10 @@ select {
   top: -0.5rem;
 }
 
+.bottom-2 {
+  bottom: 0.5rem;
+}
+
 .left-0 {
   left: 0px;
 }
@@ -1924,6 +1928,11 @@ select {
   background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
 
+.bg-gray-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+}
+
 .bg-green-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(21 128 61 / var(--tw-bg-opacity));
@@ -2127,6 +2136,10 @@ select {
 
 .font-medium {
   font-weight: 500;
+}
+
+.font-normal {
+  font-weight: 400;
 }
 
 .font-semibold {

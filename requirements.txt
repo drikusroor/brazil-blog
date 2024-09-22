@@ -8,3 +8,6 @@ pytz
 
 # Ruff for linting and formatting
 ruff
+
+# markdown for markdown support
+django-markup

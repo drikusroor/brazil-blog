@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Comment, BlogPage
 from django.contrib.auth.models import User
+from django_markup.markup import formatter
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,9 +16,16 @@ class UserSerializer(serializers.ModelSerializer):
         ]  # Customize based on the information you want to expose
 
 
+class RecursiveCommentSerializer(serializers.Serializer):
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
+
+
 class CommentSerializer(serializers.ModelSerializer):
     author_details = UserSerializer(source="author", read_only=True)
     liked_by_user = serializers.SerializerMethodField()
+    replies = RecursiveCommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Comment
@@ -32,6 +40,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "parent_comment",
             "like_count",
             "liked_by_user",
+            "replies",
         ]
         read_only_fields = [
             "id",
@@ -47,6 +56,11 @@ class CommentSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return request.user in obj.likes.all()
         return False
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["body"] = formatter(instance.body, filter_name="markdown")
+        return representation
 
     def create(self, validated_data):
         validated_data["author"] = self.context["request"].user
