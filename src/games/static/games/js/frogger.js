@@ -17,7 +17,8 @@ const carTypes = [
     {
         name: 'redCar',
         imageSrc: '/static/games/images/red_car.png', // Replace with your car image path
-        speed: getRandomSpeed()
+        speed: getRandomSpeed(),
+        flipX: true,
     },
 ];
 
@@ -51,13 +52,16 @@ function spawnCars() {
         const speed = getRandomSpeed();
         const y = i * height;
 
+        const { image, flipX } = carType;
+
         const car = {
             x: Math.random() * canvas.width,
             y,
             width,
             height,
             speed,
-            image: carType.image
+            image,
+            flipX,
         };
 
         return [...cars, car];
@@ -110,7 +114,15 @@ function draw() {
 
     // Draw cars
     cars.forEach(car => {
+        if (car.flipX) {
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(car.image, -car.x - car.width, car.y, car.width, car.height);
+            ctx.restore();
+            return;
+        }
         ctx.drawImage(car.image, car.x, car.y, car.width, car.height);
+        
     });
 }
 
