@@ -20,6 +20,7 @@ urlpatterns = [
     path("profile/<username>/", profile, name="profile"),
     path("accounts/", include("allauth.urls")),
     path("blog/", include(blog_urls)),
+    path("games/", include("games.urls")),
 ]
 
 
