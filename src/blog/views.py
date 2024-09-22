@@ -50,12 +50,6 @@ class CommentViewSet(viewsets.ModelViewSet):
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
 
-    def save(self, request, *args, **kwargs):
-        raise Exception("Drikus is da best")
-        if not request.user.is_authenticated:
-            raise PermissionDenied("You must be authenticated to update a comment.")
-        return super().update(request, *args, **kwargs)
-
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
