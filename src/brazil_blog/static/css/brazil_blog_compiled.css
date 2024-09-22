@@ -1602,6 +1602,14 @@ select {
   min-height: 16rem;
 }
 
+.min-h-96 {
+  min-height: 24rem;
+}
+
+.min-h-48 {
+  min-height: 12rem;
+}
+
 .w-0 {
   width: 0px;
 }
