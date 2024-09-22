@@ -18,7 +18,6 @@ const carTypes = [
         name: 'redCar',
         imageSrc: '/static/games/images/red_car.png', // Replace with your car image path
         speed: getRandomSpeed(),
-        flipX: true,
     },
 ];
 
@@ -52,7 +51,9 @@ function spawnCars() {
         const speed = getRandomSpeed();
         const y = i * height;
 
-        const { image, flipX } = carType;
+        const { image } = carType;
+
+        const flipX = Math.random() > 0.5;
 
         const car = {
             x: Math.random() * canvas.width,
@@ -82,8 +83,9 @@ function update() {
 
     // Move cars
     cars.forEach(car => {
-        car.x += car.speed;
+        car.x += car.flipX ? car.speed : -car.speed;
         if (car.x > canvas.width) car.x = -car.width;
+        if (car.x < -car.width) car.x = canvas.width;
     });
 
     // Check collisions
