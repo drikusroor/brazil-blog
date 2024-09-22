@@ -14,6 +14,13 @@
 
         <input type="hidden" name="post" value="{{ page.id }}" />
 
+        <input type="hidden" id="parentCommentId" name="parent_comment" value="" />
+
+        <small class="text-gray-500">You are commenting as
+            <strong>{{ user.first_name|default:user.username }}</strong></small>
+
+        <small id="replyingToContainer" class="hidden bg-gray-50 border border-gray-300 mt-1 px-2 py-1 rounded text-gray-500 font-semibold">You are replying to: <br> <span class="text-black font-normal" id="replyingTo"></span></small>
+
         <div class="flex flex-col gap-4">
             <label for="body" class="text-lg">Comment</label>
             <textarea name="body" id="commentBody" class="p-4 bg-gray-100 rounded-lg" rows="4" required></textarea>
@@ -60,89 +67,146 @@
         });
     }
 
-    function renderComments(comments) {
-        const commentsList = document.getElementById("commentsList");
-        commentsList.innerHTML = "";
-        comments.forEach((comment) => {
-            const li = document.createElement("li");
-            li.classList.add(
-                "bg-slate-100",
-                "p-4",
-                "rounded-lg",
-                "mt-4",
-                "relative",
-            );
+    function renderSingleComment(comment, parent) {
 
-            const author = document.createElement("p");
-            author.classList.add("text-lg", "font-bold");
-            author.textContent =
-                comment.author_details.first_name ||
-                comment.author_details.username ||
-                "João Ninguém";
-            li.appendChild(author);
+        const li = document.createElement("li");
+        li.id = `comment-${comment.id}`;
 
-            const date = document.createElement("p");
-            date.classList.add("text-sm", "text-gray-500");
-            // format locale-agnostic but without seconds
-            date.textContent = new Date(comment.created_date).toLocaleString(
-                undefined,
-                {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                },
-            );
-            li.appendChild(date);
+        // nested level (0 is no parent, 2 is a reply to a reply)
+        // put in a data-attribute data-level
+        let level = 0;
 
-            const body = document.createElement("p");
-            body.classList.add("mt-2");
-            body.textContent = comment.body;
-            li.appendChild(body);
+        if (parent) {
+            const parentCommentEl = document.getElementById(`comment-${parent?.id}`);
+            const parentLevel = parentCommentEl ? parseInt(parentCommentEl.dataset.level) : 0;
+            level = parentLevel + 1;
+        }
 
-            const likeButton = document.createElement("button");
-            likeButton.classList.add(
-                "mt-2",
-                "text-sm",
-                "text-gray-600",
-                "hover:text-gray-800",
-                "transition-colors",
-            );
-            if (comment.liked_by_user) {
-                likeButton.classList.add("text-red-500");
-            }
-            likeButton.innerHTML = `<span class="text-xl">😻</span> <span class="like-count">${comment.like_count}</span>`;
-            likeButton.addEventListener("click", function () {
-                likeComment(comment.id).then((data) => {
-                    likeButton.querySelector(".like-count").textContent = data.like_count;
-                    likeButton.classList.toggle("text-red-500", data.liked);
-                });
+        li.dataset.level = level;
+
+        li.classList.add(
+            "bg-slate-100",
+            "p-4",
+            "rounded-lg",
+            "mt-4",
+            "relative",
+        );
+
+        // if the comment has a parent, indent it + the indentation of the parent
+        if (parent) {
+            const parentLi = document.getElementById(`comment-${parent.id}`);
+            const parentIndentation = parseInt(parentLi.style.marginLeft || 0);
+            li.style.marginLeft = `${parentIndentation + 24}px`;
+        }
+
+        const author = document.createElement("p");
+        author.classList.add("text-lg", "font-bold");
+        author.textContent =
+            comment.author_details.first_name ||
+            comment.author_details.username ||
+            "João Ninguém";
+        li.appendChild(author);
+
+        const date = document.createElement("p");
+        date.classList.add("text-sm", "text-gray-500");
+        // format locale-agnostic but without seconds
+        date.textContent = new Date(comment.created_date).toLocaleString(
+            undefined,
+            {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+            },
+        );
+        li.appendChild(date);
+
+        const body = document.createElement("p");
+        body.classList.add("mt-2");
+        body.textContent = comment.body;
+        li.appendChild(body);
+
+        const likeButton = document.createElement("button");
+        likeButton.classList.add(
+            "mt-2",
+            "text-sm",
+            "text-gray-600",
+            "hover:text-gray-800",
+            "transition-colors",
+        );
+        if (comment.liked_by_user) {
+            likeButton.classList.add("text-red-500");
+        }
+        likeButton.innerHTML = `<span class="text-xl">😻</span> <span class="like-count">${comment.like_count}</span>`;
+        likeButton.addEventListener("click", function () {
+            likeComment(comment.id).then((data) => {
+                likeButton.querySelector(".like-count").textContent = data.like_count;
+                likeButton.classList.toggle("text-red-500", data.liked);
             });
-            li.appendChild(likeButton);
+        });
+        li.appendChild(likeButton);
 
-            const deleteButton = document.createElement("button");
-            deleteButton.classList.add(
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add(
+            "absolute",
+            "top-2",
+            "right-2",
+            "text-red-500",
+            "hover:text-red-700",
+            "hover:underline",
+            "transition-colors",
+        );
+        deleteButton.textContent = "Delete";
+        deleteButton.addEventListener("click", function () {
+            if (confirm("Are you sure you want to delete this comment?")) {
+                deleteComment(comment.id).then(() => {
+                    fetchComments().then(renderComments);
+                });
+            }
+        });
+
+        li.appendChild(deleteButton);
+
+        if (level < 4) {
+            const replyButton = document.createElement("button");
+            replyButton.classList.add(
                 "absolute",
-                "top-2",
+                "bottom-2",
                 "right-2",
-                "text-red-500",
-                "hover:text-red-700",
+                "text-blue-500",
+                "hover:text-blue-700",
                 "hover:underline",
                 "transition-colors",
             );
-            deleteButton.textContent = "Delete";
-            deleteButton.addEventListener("click", function () {
-                if (confirm("Are you sure you want to delete this comment?")) {
-                    deleteComment(comment.id).then(() => {
-                        fetchComments().then(renderComments);
-                    });
-                }
+            replyButton.textContent = "Reply";
+            replyButton.addEventListener("click", function () {
+                document.getElementById("commentBody").value = `@${comment.author_details.username} `;
+                document.getElementById("commentBody").focus();
+                document.getElementById("parentCommentId").value = comment.id;
+                document.getElementById("replyingTo").textContent = `@${comment.author_details.username} - ${comment.body}`;
+                document.getElementById("replyingToContainer").classList.remove("hidden");
+                document.getElementById("replyingToContainer").classList.add("block");
+                document.getElementById("commentBody").focus();
             });
-            li.appendChild(deleteButton);
+    
+            li.appendChild(replyButton);
+        }
 
-            commentsList.appendChild(li);
-        });
+        commentsList.appendChild(li);
+
+        if (comment.replies.length > 0) {
+            console.log("rendering replies")
+            comment.replies.forEach((reply) => renderSingleComment(reply, comment));
+        }
+    }
+
+    function renderComments(comments) {
+        const commentsList = document.getElementById("commentsList");
+        commentsList.innerHTML = "";
+        comments
+            .filter((comment) => !comment.parent_comment)
+            .forEach((comment) => renderSingleComment(comment, null));
     }
 
     const onCommentFormSubmit = function (event) {
@@ -158,12 +222,18 @@
                     const message = await response.json();
                     throw new Error(message.detail);
                 }
+
+                // reset the form
+                form.reset();
+                document.getElementById("parentCommentId").value = "";
+                document.getElementById("replyingToContainer").classList.add("hidden");
+                document.getElementById("replyingToContainer").classList.remove("block");
+                document.getElementById("replyingTo").textContent = "";
+
                 return response.json();
             })
             .then((data) => {
-                fetchComments().then(renderComments).then(() => {
-                    document.getElementById("commentBody").value = "";
-                });
+                fetchComments().then(renderComments);
             })
             .catch((error) => {
                 console.error("Error:", error);

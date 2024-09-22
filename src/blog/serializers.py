@@ -15,9 +15,16 @@ class UserSerializer(serializers.ModelSerializer):
         ]  # Customize based on the information you want to expose
 
 
+class RecursiveCommentSerializer(serializers.Serializer):
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
+
+
 class CommentSerializer(serializers.ModelSerializer):
     author_details = UserSerializer(source="author", read_only=True)
     liked_by_user = serializers.SerializerMethodField()
+    replies = RecursiveCommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Comment
@@ -32,6 +39,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "parent_comment",
             "like_count",
             "liked_by_user",
+            "replies",
         ]
         read_only_fields = [
             "id",
