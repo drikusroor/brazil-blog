@@ -67,6 +67,7 @@ let keys = {};
 let walkingSoundInstance = null;
 let carSoundPlayer;
 let gameLoopId;
+let isPaused = false;
 
 // Create start button
 const startButton = document.createElement('button');
@@ -82,6 +83,35 @@ startButton.style.fontFamily = 'monospace';
 startButton.style.backgroundColor = '#333';
 startButton.style.color = '#fff';
 document.body.appendChild(startButton);
+
+// Create pause menu
+const pauseMenu = document.createElement('div');
+pauseMenu.style.position = 'absolute';
+pauseMenu.style.left = '50%';
+pauseMenu.style.top = '50%';
+pauseMenu.style.transform = 'translate(-50%, -50%)';
+pauseMenu.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+pauseMenu.style.padding = '20px';
+pauseMenu.style.borderRadius = '10px';
+pauseMenu.style.display = 'none';
+document.body.appendChild(pauseMenu);
+
+const continueButton = document.createElement('button');
+continueButton.textContent = 'Continue';
+continueButton.style.display = 'block';
+continueButton.style.marginBottom = '10px';
+continueButton.style.padding = '10px 20px';
+continueButton.style.fontSize = '16px';
+continueButton.style.cursor = 'pointer';
+pauseMenu.appendChild(continueButton);
+
+const forfeitButton = document.createElement('button');
+forfeitButton.textContent = 'Forfeit';
+forfeitButton.style.display = 'block';
+forfeitButton.style.padding = '10px 20px';
+forfeitButton.style.fontSize = '16px';
+forfeitButton.style.cursor = 'pointer';
+pauseMenu.appendChild(forfeitButton);
 
 // Start game function
 async function startGame() {
@@ -100,6 +130,7 @@ async function startGame() {
     ]);
 
     // Initialize game
+    resetGame();
     spawnCars();
     playBackgroundMusic();
     gameLoopId = requestAnimationFrame(gameLoop);
@@ -111,6 +142,40 @@ async function startGame() {
 
 // Event listener for start button
 startButton.addEventListener('click', startGame);
+
+// Event listeners for pause menu buttons
+continueButton.addEventListener('click', () => {
+    isPaused = false;
+    pauseMenu.style.display = 'none';
+    gameLoopId = requestAnimationFrame(gameLoop);
+});
+
+forfeitButton.addEventListener('click', () => {
+    isPaused = false;
+    pauseMenu.style.display = 'none';
+    canvas.style.display = 'none';
+    startButton.style.display = 'block';
+    
+    // Stop all sounds
+    if (walkingSoundInstance) {
+        walkingSoundInstance.source.stop();
+        walkingSoundInstance = null;
+    }
+    if (carSoundPlayer) {
+        carSoundPlayer.source.stop();
+        carSoundPlayer = null;
+    }
+    stopBackgroundMusic();
+    
+    // Reset game state
+    score = 0;
+    frog = { x: canvas.width / 2 - 15, y: canvas.height - 30, width: 30, height: 30, facingLeft: false };
+    cars = [];
+    keys = {};
+    
+    // Cancel the game loop
+    cancelAnimationFrame(gameLoopId);
+});
 
 // Play sound function
 function playSound(buffer, loop = false, volume = 1) {
@@ -141,11 +206,23 @@ function playBackgroundMusic() {
     };
 }
 
+// Stop background music function
+function stopBackgroundMusic() {
+    if (musicSource) {
+        musicSource.stop();
+        musicSource = null;
+    }
+    currentMusicIndex = 0;
+}
+
 // Key event handlers
 function handleKeyDown(e) {
     keys[e.key.toLowerCase()] = true;
     if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'].includes(e.key.toLowerCase()) && !walkingSoundInstance) {
         walkingSoundInstance = playSound(walkSound, true, 0.5);
+    }
+    if (e.key.toLowerCase() === 'escape') {
+        togglePause();
     }
 }
 
@@ -157,6 +234,18 @@ function handleKeyUp(e) {
             walkingSoundInstance.source.stop();
             walkingSoundInstance = null;
         }
+    }
+}
+
+// Toggle pause function
+function togglePause() {
+    isPaused = !isPaused;
+    if (isPaused) {
+        cancelAnimationFrame(gameLoopId);
+        pauseMenu.style.display = 'block';
+    } else {
+        pauseMenu.style.display = 'none';
+        gameLoopId = requestAnimationFrame(gameLoop);
     }
 }
 
@@ -215,7 +304,7 @@ function update() {
     });
 
     // Update car sound
-    const averageCarX = cars.reduce((sum, car) => sum + car.x, 0) / cars.length;
+    const averageCarX = cars.length ? cars.reduce((sum, car) => sum + car.x, 0) / cars.length : 0;
     const desiredCarVolume = 1 - Math.abs(averageCarX - canvas.width / 2) / (canvas.width / 2);
     carSoundPlayer.gainNode.gain.setValueAtTime(desiredCarVolume * .2, audioContext.currentTime);
     
@@ -290,9 +379,11 @@ function draw() {
 
 // Game loop
 function gameLoop() {
-    update();
-    draw();
-    gameLoopId = requestAnimationFrame(gameLoop);
+    if (!isPaused) {
+        update();
+        draw();
+        gameLoopId = requestAnimationFrame(gameLoop);
+    }
 }
 
 // Reset game
