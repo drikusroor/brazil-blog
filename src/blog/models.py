@@ -13,6 +13,8 @@ from wagtail.admin.forms import WagtailAdminPageForm
 
 from wagtail.search import index
 
+from locations.models import Location
+
 User = get_user_model()
 
 
@@ -88,6 +90,13 @@ class BlogPage(Page):
     body = RichTextField(blank=True)
     video = models.URLField(null=True, blank=True, help_text="Google drive share link")
     likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
+    location = models.OneToOneField(
+        Location,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="blog_posts",
+    )
 
     search_fields = Page.search_fields + [
         index.SearchField("title"),
@@ -104,6 +113,7 @@ class BlogPage(Page):
         FieldPanel("intro"),
         FieldPanel("body"),
         FieldPanel("video"),
+        FieldPanel("location"),
         InlinePanel("gallery_images", label="Gallery images"),
     ]
 
