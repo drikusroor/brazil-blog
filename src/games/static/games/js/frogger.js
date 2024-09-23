@@ -143,16 +143,17 @@ function playBackgroundMusic() {
 
 // Key event handlers
 function handleKeyDown(e) {
-    keys[e.key] = true;
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) && !walkingSoundInstance) {
+    keys[e.key.toLowerCase()] = true;
+    if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'].includes(e.key.toLowerCase()) && !walkingSoundInstance) {
         walkingSoundInstance = playSound(walkSound, true, 0.5);
     }
 }
 
 function handleKeyUp(e) {
-    keys[e.key] = false;
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-        if (walkingSoundInstance) {
+    keys[e.key.toLowerCase()] = false;
+    if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'].includes(e.key.toLowerCase())) {
+        if (!keys['arrowup'] && !keys['arrowdown'] && !keys['arrowleft'] && !keys['arrowright'] &&
+            !keys['w'] && !keys['a'] && !keys['s'] && !keys['d'] && walkingSoundInstance) {
             walkingSoundInstance.source.stop();
             walkingSoundInstance = null;
         }
@@ -191,17 +192,15 @@ function spawnCars() {
 // Update game objects
 function update() {
     // Move frog
-    if (keys['ArrowUp']) frog.y -= 5;
-    if (keys['ArrowDown']) frog.y += 5;
-    if (keys['ArrowLeft']) { 
+    if (keys['arrowup'] || keys['w']) frog.y -= 5;
+    if (keys['arrowdown'] || keys['s']) frog.y += 5;
+    if (keys['arrowleft'] || keys['a']) { 
         frog.x -= 5; 
         frog.facingLeft = true;
-        moved = true;
     }
-    if (keys['ArrowRight']) { 
+    if (keys['arrowright'] || keys['d']) { 
         frog.x += 5; 
         frog.facingLeft = false;
-        moved = true;
     }
 
     // Keep frog within canvas
