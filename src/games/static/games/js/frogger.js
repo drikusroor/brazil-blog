@@ -38,6 +38,11 @@ const carTypes = [
         imageSrc: '/static/games/images/capybara.png',
         speed: getRandomSpeed(),
     },
+    {
+        name: 'jaguar',
+        imageSrc: '/static/games/images/jaguar.png',
+        speed: getRandomSpeed(),
+    },
 ];
 
 // Load car images
