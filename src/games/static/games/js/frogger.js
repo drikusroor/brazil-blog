@@ -18,6 +18,16 @@ const loadAudio = async (url) => {
 
 let walkSound, carSound, hitSound, scoreSound;
 
+let musics = [
+    '/static/games/sounds/frogalicious.mp3',
+    '/static/games/sounds/toucanchamon.mp3',
+]
+
+// Background music variables
+let backgroundMusic = [];
+let currentMusicIndex = 0;
+let musicSource;
+
 // Game variables
 let score = 0;
 const MAX_ENEMY_SPEED = 4;
@@ -81,15 +91,17 @@ async function startGame() {
     canvas.style.display = 'block';
 
     // Load audio files
-    [walkSound, carSound, hitSound, scoreSound] = await Promise.all([
+    [walkSound, carSound, hitSound, scoreSound, ...backgroundMusic] = await Promise.all([
         loadAudio('/static/games/sounds/walk.wav'),
         loadAudio('/static/games/sounds/car.wav'),
         loadAudio('/static/games/sounds/hit.wav'),
-        loadAudio('/static/games/sounds/score.wav')
+        loadAudio('/static/games/sounds/score.wav'),
+        ...musics.map(loadAudio),
     ]);
 
     // Initialize game
     spawnCars();
+    playBackgroundMusic();
     gameLoopId = requestAnimationFrame(gameLoop);
 
     // Add event listeners
@@ -111,6 +123,22 @@ function playSound(buffer, loop = false, volume = 1) {
     gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
     source.start();
     return { source, gainNode };
+}
+
+// Play background music function
+function playBackgroundMusic() {
+    if (musicSource) {
+        musicSource.stop();
+    }
+    musicSource = audioContext.createBufferSource();
+    musicSource.buffer = backgroundMusic[currentMusicIndex];
+    musicSource.connect(audioContext.destination);
+    musicSource.loop = false;
+    musicSource.start();
+    musicSource.onended = () => {
+        currentMusicIndex = (currentMusicIndex + 1) % backgroundMusic.length;
+        playBackgroundMusic();
+    };
 }
 
 // Key event handlers
