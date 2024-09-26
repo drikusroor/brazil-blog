@@ -1,12 +1,6 @@
 # locations/models.py
 
 from django.db import models
-from wagtail.admin.panels import FieldPanel
-from wagtail.snippets.models import register_snippet
-from wagtail.admin.forms import WagtailAdminModelForm
-from wagtail.admin.panels import FieldPanel, ObjectList, TabbedInterface
-from wagtail.admin.ui.tables import UpdatedAtColumn
-from wagtail.snippets.views.snippets import SnippetViewSet
 
 
 class Location(models.Model):

@@ -1,9 +1,6 @@
 from django import forms
-from django.db import models
-from wagtail.admin.panels import FieldPanel
 from wagtail.snippets.models import register_snippet
 from wagtail.admin.forms import WagtailAdminModelForm
-from wagtail.admin.panels import FieldPanel, ObjectList, TabbedInterface
 from wagtail.admin.ui.tables import UpdatedAtColumn
 from wagtail.snippets.views.snippets import SnippetViewSet
 from django.forms.widgets import TextInput
@@ -15,9 +12,9 @@ class MapPickerWidget(TextInput):
     template_name = "widgets/map_picker.html"
 
     class Media:
-        css = {"all": ("https://unpkg.com/leaflet@1.7.1/dist/leaflet.css",)}
+        css = {"all": ("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",)}
         js = (
-            "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js",
+            "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
             "js/map_picker.js",
         )
 
