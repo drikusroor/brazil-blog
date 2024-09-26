@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     mapElements.forEach(function(element) {
         const input = element.querySelector('input');
         const mapElement = element.querySelector('div[id^="map-"]');
+        const latitudeFieldName = input.getAttribute('latitude_field_name');
+        const longitudeFieldName = input.getAttribute('longitude_field_name');
         
         if (!mapElement) {
             console.error('Map container not found');
@@ -19,6 +21,16 @@ document.addEventListener('DOMContentLoaded', function() {
         let marker;
         
         function updateMarker(lat, lng) {
+            // Update input fields
+            if (latitudeFieldName && longitudeFieldName) {
+                const latitudeInput = document.querySelector(`input[name="${latitudeFieldName}"]`);
+                const longitudeInput = document.querySelector(`input[name="${longitudeFieldName}"]`);
+                if (latitudeInput && longitudeInput) {
+                    latitudeInput.value = lat;
+                    longitudeInput.value = lng;
+                }
+            }
+
             if (marker) {
                 marker.setLatLng([lat, lng]);
             } else {

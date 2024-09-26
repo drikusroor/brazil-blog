@@ -22,6 +22,7 @@ class MapPickerWidget(TextInput):
         default_attrs = {"class": "map-picker-input"}
         if attrs:
             default_attrs.update(attrs)
+
         super().__init__(default_attrs)
 
     def get_context(self, name, value, attrs):
@@ -31,7 +32,15 @@ class MapPickerWidget(TextInput):
 
 
 class LocationForm(WagtailAdminModelForm):
-    location = forms.CharField(widget=MapPickerWidget())
+    location = forms.CharField(
+        widget=MapPickerWidget(
+            attrs={
+                "placeholder": "Click on the map to select a location",
+                "latitude_field_name": "latitude",
+                "longitude_field_name": "longitude",
+            }
+        )
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
