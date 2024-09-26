@@ -72,7 +72,7 @@ class LocationForm(WagtailAdminModelForm):
 class LocationViewSet(SnippetViewSet):
     model = Location
     icon = "user"
-    list_display = ["name", "get_latitude_readable", UpdatedAtColumn()]
+    list_display = ["name", "latitude", "longitude", UpdatedAtColumn()]
     list_per_page = 50
     copy_view_enabled = False
     inspect_view_enabled = True

@@ -9,14 +9,6 @@ class Location(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     description = models.TextField(blank=True)
 
-    def get_latitude_readable(self):
-        # if latitude is higher than 0, it is in the northern hemisphere
-        if self.latitude > 0:
-            return f"{self.latitude} N"
-
-        # if latitude is lower than 0, it is in the southern hemisphere
-        return f"{self.latitude} S"
-
     def __str__(self):
         return self.name
 
