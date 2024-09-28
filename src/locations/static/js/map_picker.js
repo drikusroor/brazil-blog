@@ -23,8 +23,17 @@ document.addEventListener('DOMContentLoaded', function() {
         function updateMarker(lat, lng) {
             // Update input fields
             if (latitudeFieldName && longitudeFieldName) {
-                const latitudeInput = document.querySelector(`input[name="${latitudeFieldName}"]`);
-                const longitudeInput = document.querySelector(`input[name="${longitudeFieldName}"]`);
+                let latitudeInput = document.querySelector(`input[name="${latitudeFieldName}"]`);
+                let longitudeInput = document.querySelector(`input[name="${longitudeFieldName}"]`);
+
+                if (!latitudeInput || !longitudeInput) {
+                    // look for *-latitude and *-longitude fields
+                    latitudeInput = document.querySelector(`input[name*="-latitude"]`);
+                    longitudeInput = document.querySelector(`input[name*="-longitude"]`);
+                }
+
+                console.log({latitudeInput, longitudeInput});
+
                 if (latitudeInput && longitudeInput) {
                     latitudeInput.value = lat;
                     longitudeInput.value = lng;
