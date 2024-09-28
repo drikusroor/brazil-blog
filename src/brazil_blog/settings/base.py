@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "games",
     "home",
     "search",
+    "locations",
     "rest_framework",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",

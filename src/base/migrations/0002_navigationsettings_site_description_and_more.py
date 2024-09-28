@@ -5,26 +5,31 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtailimages', '0025_alter_image_file_alter_rendition_file'),
-        ('base', '0001_initial'),
+        ("wagtailimages", "0025_alter_image_file_alter_rendition_file"),
+        ("base", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='navigationsettings',
-            name='site_description',
+            model_name="navigationsettings",
+            name="site_description",
             field=models.TextField(blank=True),
         ),
         migrations.AddField(
-            model_name='navigationsettings',
-            name='site_logo',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailimages.image'),
+            model_name="navigationsettings",
+            name="site_logo",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="wagtailimages.image",
+            ),
         ),
         migrations.AddField(
-            model_name='navigationsettings',
-            name='site_name',
+            model_name="navigationsettings",
+            name="site_name",
             field=models.CharField(blank=True, max_length=255),
         ),
     ]

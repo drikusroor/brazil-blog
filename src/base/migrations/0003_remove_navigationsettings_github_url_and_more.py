@@ -4,22 +4,21 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('base', '0002_navigationsettings_site_description_and_more'),
+        ("base", "0002_navigationsettings_site_description_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='navigationsettings',
-            name='github_url',
+            model_name="navigationsettings",
+            name="github_url",
         ),
         migrations.RemoveField(
-            model_name='navigationsettings',
-            name='mastodon_url',
+            model_name="navigationsettings",
+            name="mastodon_url",
         ),
         migrations.RemoveField(
-            model_name='navigationsettings',
-            name='twitter_url',
+            model_name="navigationsettings",
+            name="twitter_url",
         ),
     ]

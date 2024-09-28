@@ -5,16 +5,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0009_alter_blogpage_video'),
+        ("blog", "0009_alter_blogpage_video"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogpage',
-            name='likes',
-            field=models.ManyToManyField(blank=True, related_name='liked_posts', to=settings.AUTH_USER_MODEL),
+            model_name="blogpage",
+            name="likes",
+            field=models.ManyToManyField(
+                blank=True, related_name="liked_posts", to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

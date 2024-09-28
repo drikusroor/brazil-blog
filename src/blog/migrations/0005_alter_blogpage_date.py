@@ -5,15 +5,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0004_blogpagegalleryimage'),
+        ("blog", "0004_blogpagegalleryimage"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogpage',
-            name='date',
-            field=models.DateTimeField(default=django.utils.timezone.now, verbose_name='Post date'),
+            model_name="blogpage",
+            name="date",
+            field=models.DateTimeField(
+                default=django.utils.timezone.now, verbose_name="Post date"
+            ),
         ),
     ]

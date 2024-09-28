@@ -8,7 +8,6 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 
 
 class HomePage(Page):
-
     # add the Hero section of HomePage:
     image = models.ForeignKey(
         "wagtailimages.Image",
@@ -19,8 +18,7 @@ class HomePage(Page):
         help_text="Homepage image",
     )
     hero_text = models.CharField(
-        blank=True,
-        max_length=255, help_text="Write an introduction for the site"
+        blank=True, max_length=255, help_text="Write an introduction for the site"
     )
     hero_cta = models.CharField(
         blank=True,
@@ -51,5 +49,5 @@ class HomePage(Page):
             ],
             heading="Hero section",
         ),
-        FieldPanel('body'),
+        FieldPanel("body"),
     ]
