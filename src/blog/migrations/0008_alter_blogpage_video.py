@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0007_blogpage_video'),
+        ("blog", "0007_blogpage_video"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogpage',
-            name='video',
+            model_name="blogpage",
+            name="video",
             field=models.URLField(blank=True, null=True),
         ),
     ]
