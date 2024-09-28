@@ -13,13 +13,38 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const map = L.map(mapElement).setView([0, 0], 2);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-        
+        let map;
         let marker;
-        
+
+        function initializeMap() {
+            // remove existing map
+            if (map) {
+                map.remove();
+            }
+
+            // remove marker
+            if (marker) {
+                marker.remove();
+                marker = null;
+            }
+
+            map = L.map(mapElement).setView([0, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Initialize marker if value exists
+            if (input.value) {
+                console.log("Adding marker", input.value);
+                const [lat, lng] = input.value.split(',');
+                updateMarker(parseFloat(lat), parseFloat(lng));
+            }
+
+            map.on('click', function(e) {
+                updateMarker(e.latlng.lat, e.latlng.lng);
+            });
+        }
+
         function updateMarker(lat, lng) {
             // Update input fields
             if (latitudeFieldName && longitudeFieldName) {
@@ -31,8 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     latitudeInput = document.querySelector(`input[name*="-latitude"]`);
                     longitudeInput = document.querySelector(`input[name*="-longitude"]`);
                 }
-
-                console.log({latitudeInput, longitudeInput});
 
                 if (latitudeInput && longitudeInput) {
                     latitudeInput.value = lat;
@@ -48,15 +71,34 @@ document.addEventListener('DOMContentLoaded', function() {
             map.setView([lat, lng], 10);
             input.value = lat + ',' + lng;
         }
+
+        // Find the parent tabpanel
+        let tabPanel = mapElement.closest('[role="tabpanel"]');
         
-        // Initialize marker if value exists
-        if (input.value) {
-            const [lat, lng] = input.value.split(',');
-            updateMarker(parseFloat(lat), parseFloat(lng));
+        if (tabPanel) {
+            // Initialize map if the tab is initially visible
+            if (!tabPanel.hasAttribute('hidden')) {
+                initializeMap();
+            }
+
+            // Use MutationObserver to detect when the tab becomes visible
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
+                        if (!tabPanel.hasAttribute('hidden')) {
+                            initializeMap();
+                            if (map) {
+                                map.invalidateSize();
+                            }
+                        }
+                    }
+                });
+            });
+
+            observer.observe(tabPanel, { attributes: true, attributeFilter: ['hidden'] });
+        } else {
+            // If not in a tab, initialize immediately
+            initializeMap();
         }
-        
-        map.on('click', function(e) {
-            updateMarker(e.latlng.lat, e.latlng.lng);
-        });
     });
 });
