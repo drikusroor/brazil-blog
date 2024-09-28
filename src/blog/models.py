@@ -39,6 +39,7 @@ class BlogIndexPage(Page):
             .live()
             .filter(date__lte=now)
             .order_by("-date")
+            .prefetch_related("location")
         )
         context["blogpages"] = blogpages
 
