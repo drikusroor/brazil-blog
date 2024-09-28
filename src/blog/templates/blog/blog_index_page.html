@@ -6,7 +6,9 @@
 <div class="bg-green-700 py-8 flex-grow">
     {% include "blog/includes/filter-bar.html" %}
     {% include "blog/includes/blogpost-grid.html" with blogposts=blogpages only %}
-    {% include "blog/includes/blog-route-map.html" with blog_posts=blogpages %}
+    <div class="container mx-auto mt-8">
+        {% include "blog/includes/blog-route-map.html" with blog_posts=blogpages %}
+    </div>
     {% include "blog/includes/tukanchamon.html" %}
 </div>
 
