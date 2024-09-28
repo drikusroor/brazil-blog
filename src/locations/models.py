@@ -1,7 +1,6 @@
 # locations/models.py
 
 from django.db import models
-from django import forms
 from modelcluster.fields import ParentalKey
 from wagtail.admin.panels import FieldPanel
 

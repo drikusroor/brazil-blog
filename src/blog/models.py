@@ -15,7 +15,6 @@ from wagtail.admin.panels import (
     InlinePanel,
     ObjectList,
     TabbedInterface,
-    MultiFieldPanel,
 )
 
 from wagtail.admin.forms import WagtailAdminPageForm
