@@ -1,19 +1,29 @@
+# blog/models.py
+
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.dateparse import parse_date
 from django.db import models
 from django.db.models import Q
 from modelcluster.fields import ParentalKey
+from django.core.exceptions import ValidationError
 
 from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
-from wagtail.admin.panels import FieldPanel, InlinePanel, ObjectList, TabbedInterface
+from wagtail.admin.panels import (
+    FieldPanel,
+    InlinePanel,
+    ObjectList,
+    TabbedInterface,
+)
 
 from wagtail.admin.forms import WagtailAdminPageForm
-
 from wagtail.search import index
 
-from locations.models import Location
+from django import forms
+
+from locations.forms import MapPickerWidget
+
 
 User = get_user_model()
 
@@ -67,10 +77,45 @@ class BlogIndexPage(Page):
 
 
 class BlogPageForm(WagtailAdminPageForm):
+    map_location = forms.CharField(
+        widget=MapPickerWidget(
+            attrs={
+                "placeholder": "Click on the map to select a location",
+                "latitude_field_name": "latitude",
+                "longitude_field_name": "longitude",
+            }
+        )
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance._state.adding:
             self.initial["author"] = self.for_user.pk
+
+        if self.instance and self.instance.location.exists():
+            location = self.instance.location.first()
+
+            self.fields[
+                "map_location"
+            ].initial = f"{location.latitude},{location.longitude}"
+
+    def clean(self):
+        super().clean()
+
+        if self.instance.location.count() > 1:
+            raise ValidationError("Only one location can be added to a blog page.")
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        map_location = self.cleaned_data.get("map_location")
+        location = instance.location.first()
+        if location and map_location:
+            lat, lon = map_location.split(",")
+            location.latitude = float(lat)
+            location.longitude = float(lon)
+        if commit:
+            location.save()
+        return instance
 
 
 class BlogPage(Page):
@@ -90,13 +135,6 @@ class BlogPage(Page):
     body = RichTextField(blank=True)
     video = models.URLField(null=True, blank=True, help_text="Google drive share link")
     likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
-    location = models.OneToOneField(
-        Location,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="blog_posts",
-    )
 
     search_fields = Page.search_fields + [
         index.SearchField("title"),
@@ -113,8 +151,8 @@ class BlogPage(Page):
         FieldPanel("intro"),
         FieldPanel("body"),
         FieldPanel("video"),
-        FieldPanel("location"),
         InlinePanel("gallery_images", label="Gallery images"),
+        InlinePanel("location", label="Location"),
     ]
 
     edit_handler = TabbedInterface(
