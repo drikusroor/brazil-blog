@@ -1,0 +1,77 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div id="blog-route-map" style="width: 100%; height: 400px;"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/leaflet-curve@1.0.0/leaflet.curve.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var map = L.map('blog-route-map').setView([0, 0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var posts = [
+            {% for post in blog_posts %}
+                {% for location in post.location.all %}
+                    {
+                        title: "{{ post.title|escapejs }}",
+                        date: "{{ post.date|date:"Y-m-d" }}",
+                        url: "{% pageurl post %}",
+                        lat: {{ location.latitude }},
+                        lng: {{ location.longitude }},
+                        locationName: "{{ location.name|escapejs }}"
+                    },
+                {% endfor %}
+            {% endfor %}
+        ];
+
+        var markers = [];
+        var latlngs = [];
+
+        posts.forEach(function(post, index) {
+            var marker = L.marker([post.lat, post.lng]).addTo(map);
+            marker.bindPopup('<strong>' + post.title + '</strong><br>' + post.date + '<br>' + post.locationName + '<br><a href="' + post.url + '">Read more</a>');
+            markers.push(marker);
+            latlngs.push([post.lat, post.lng]);
+        });
+
+        if (markers.length > 0) {
+            var group = new L.featureGroup(markers);
+            map.fitBounds(group.getBounds().pad(0.1));
+
+            // Create curved lines
+            for (var i = 0; i < latlngs.length - 1; i++) {
+                var latlng1 = latlngs[i];
+                var latlng2 = latlngs[i + 1];
+                
+                var offsetX = latlng2[1] - latlng1[1];
+                var offsetY = latlng2[0] - latlng1[0];
+                
+                var r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2));
+                var theta = Math.atan2(offsetY, offsetX);
+                
+                var thetaOffset = 3.14 / 10;
+                
+                var r2 = (r / 2) / (Math.cos(thetaOffset));
+                var theta2 = theta + thetaOffset;
+                
+                var midpointX = (r2 * Math.cos(theta2)) + latlng1[1];
+                var midpointY = (r2 * Math.sin(theta2)) + latlng1[0];
+                
+                var midpointLatLng = [midpointY, midpointX];
+                
+                var curvedLine = L.curve(
+                    [
+                        'M', latlng1,
+                        'Q', midpointLatLng,
+                        latlng2
+                    ], {color: 'rgb(21, 128, 61)', fill: false}
+                ).addTo(map);
+            }
+        }
+    });
+</script>
