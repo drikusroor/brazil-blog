@@ -1,5 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import Template, Context
+from django.utils.dateparse import parse_date
 
 from rest_framework import viewsets
 from .models import Comment, BlogPage
@@ -14,8 +15,6 @@ from rest_framework.response import Response
 
 
 # Create your views here.
-
-
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -107,3 +106,20 @@ class CommentLikeViewSet(viewsets.ModelViewSet):
             {"liked": liked, "like_count": comment.like_count},
             status=status.HTTP_200_OK,
         )
+
+
+def posts_by_date(request):
+    date_str = request.GET.get("date")
+    date = parse_date(date_str)
+
+    if not date:
+        return JsonResponse({"error": "Invalid date"}, status=400)
+
+    posts = BlogPage.objects.live().filter(date__date=date).order_by("date")
+
+    post_data = [
+        {"title": post.title, "intro": post.intro, "url": post.get_url()}
+        for post in posts
+    ]
+
+    return JsonResponse({"posts": post_data})

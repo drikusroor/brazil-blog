@@ -5,6 +5,7 @@ from .views import (
     BrazilTimeViewSet,
     LikeViewSet,
     CommentLikeViewSet,
+    posts_by_date,
 )
 
 router = DefaultRouter()
@@ -14,6 +15,10 @@ router.register(r"likes", LikeViewSet)
 router.register(r"comment-likes", CommentLikeViewSet, basename="comment-likes")
 
 
+# path('api/posts-by-date/', posts_by_date, name='posts_by_date'),
+# router.register(r"posts-by-date", posts_by_date, basename="posts-by-date")
+
 urlpatterns = [
     path("api/", include(router.urls)),
+    path("api/posts-by-date/", posts_by_date, name="posts_by_date"),
 ]

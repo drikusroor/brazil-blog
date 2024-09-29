@@ -1,12 +1,14 @@
 # blog/models.py
 
 from django.contrib.auth import get_user_model
+from django import forms
 from django.utils import timezone
 from django.utils.dateparse import parse_date
 from django.db import models
 from django.db.models import Q
-from modelcluster.fields import ParentalKey
 from django.core.exceptions import ValidationError
+from django.db.models.functions import TruncDate
+from modelcluster.fields import ParentalKey
 
 from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
@@ -20,7 +22,7 @@ from wagtail.admin.panels import (
 from wagtail.admin.forms import WagtailAdminPageForm
 from wagtail.search import index
 
-from django import forms
+from itertools import groupby
 
 from locations.forms import MapPickerWidget
 
@@ -40,6 +42,7 @@ class BlogIndexPage(Page):
             .filter(date__lte=now)
             .order_by("-date")
             .prefetch_related("location")
+            .annotate(date_only=TruncDate("date"))
         )
         context["blogpages"] = blogpages
 
@@ -71,6 +74,13 @@ class BlogIndexPage(Page):
         context["page"] = self  # Add this line for the reset button
 
         context["active_filters"] = any([author_username, query, date_from, date_to])
+
+        # Group blog posts by date
+        grouped_posts = {}
+        for date, posts in groupby(blogpages, key=lambda x: x.date_only):
+            grouped_posts[date] = list(posts)
+
+        context["grouped_blog_posts"] = grouped_posts
 
         return context
 

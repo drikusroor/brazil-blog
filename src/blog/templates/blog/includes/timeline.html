@@ -1,0 +1,62 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="w-full overflow-x-auto py-1 zbg-gray-100">
+    <div class="flex items-center space-x-2 px-4" style="min-width: max-content;">
+        {% for date, posts in grouped_blog_posts.items %}
+            <div class="flex flex-row items-center gap-1">
+                <div class="w-4 h-4 rounded-full {% if posts|length > 1 %}bg-blue-500{% else %}bg-gray-400{% endif %} flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors duration-200" 
+                     data-date="{{ date|date:'Y-m-d' }}">
+                    <span class="text-white text-xs font-bold">{{ posts|length }}</span>
+                </div>
+                <div class="text-xs text-gray-600">{{ date|date:"M j" }}</div>
+            </div>
+            {% if not forloop.last %}
+                <div class="flex-grow h-px bg-gray-300 self-center"></div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<div id="postPreview" class="hidden fixed z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+    <h3 id="previewDate" class="text-lg font-bold mb-4"></h3>
+    <div id="previewPosts" class="space-y-4"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const timeline = document.querySelector('.overflow-x-auto');
+    const postPreview = document.getElementById('postPreview');
+    const previewDate = document.getElementById('previewDate');
+    const previewPosts = document.getElementById('previewPosts');
+
+    timeline.addEventListener('click', function(e) {
+        if (e.target.closest('[data-date]')) {
+            const datePoint = e.target.closest('[data-date]');
+            const date = datePoint.dataset.date;
+            showPostPreview(date);
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!postPreview.contains(e.target) && !timeline.contains(e.target)) {
+            postPreview.classList.add('hidden');
+        }
+    });
+
+    function showPostPreview(date) {
+        fetch(`/blog/api/posts-by-date/?date=${date}`)
+            .then(response => response.json())
+            .then(data => {
+                previewDate.textContent = new Date(date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                previewPosts.innerHTML = data.posts.map(post => `
+                    <div class="border-b border-gray-200 pb-2 mb-2 last:border-b-0 last:pb-0 last:mb-0">
+                        <h4 class="font-semibold">${post.title}</h4>
+                        <p class="text-sm text-gray-600">${post.intro}</p>
+                        <a href="${post.url}" class="text-blue-500 hover:underline text-sm">Read more</a>
+                    </div>
+                `).join('');
+                postPreview.classList.remove('hidden');
+            });
+    }
+});
+</script>
