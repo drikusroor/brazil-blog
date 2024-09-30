@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const mapElement = element.querySelector('div[id^="map-"]');
         const latitudeFieldName = input.getAttribute('latitude_field_name');
         const longitudeFieldName = input.getAttribute('longitude_field_name');
+        const modelName = input.getAttribute('model_name');
         
         if (!mapElement) {
             console.error('Map container not found');
@@ -62,42 +63,55 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Update input fields
             if (latitudeFieldName && longitudeFieldName) {
-                let latitudeInput = document.querySelector(`input[name="${latitudeFieldName}"]`);
-                let longitudeInput = document.querySelector(`input[name="${longitudeFieldName}"]`);
+                // id_location-FORMS aka id_{modelName}-FORMS
+                const container = modelName ? document.getElementById(`id_${modelName}-FORMS`) : document;
+                const children = Array.from(container.children).filter((child) => {
+                    return !child.classList.contains('deleted')
+                });
+
+                let child = children[0];
+
+                // Find the latitude and longitude input fields, there might be multiple
+                // so we need to find the one that is inside the subform and is not marked as deleted
+                let latitudeInput = child?.querySelector(`input[name="${latitudeFieldName}"]`);
+                let longitudeInput = child?.querySelector(`input[name="${longitudeFieldName}"]`);
+
 
                 if (!latitudeInput || !longitudeInput) {
                     // look for *-latitude and *-longitude fields
-                    latitudeInput = document.querySelector(`input[name*="-latitude"]`);
-                    longitudeInput = document.querySelector(`input[name*="-longitude"]`);
+                    latitudeInput = child?.querySelector(`input[name*="-latitude"]`);
+                    longitudeInput = child?.querySelector(`input[name*="-longitude"]`);
                 }
 
                 if (!latitudeInput || !longitudeInput) {
-                    // 
                     console.warn('Latitude and/or longitude field names not set');
     
                     // Check if add location button exists, with id of 'id_location-ADD'
-                    const addLocationButton = document.querySelector('button[id^="id_location-"]');
+                    const addLocationButton = document.querySelector(`button[id^="id_${modelName}-ADD"]`);
     
                     if (!addLocationButton) {
+                        console.warn('Add location button not found');
                         return;
                     }
 
                     // Click the add location button
                     addLocationButton.click();
-                    latitudeInput = document.querySelector(`input[name*="-latitude"]`);
-                    longitudeInput = document.querySelector(`input[name*="-longitude"]`);
 
-                    // Try & initialize the location name input (id='id_location-FORMS')
-                    const relatedSection = addLocationButton.closest('section');
-                    const locationNameInput = relatedSection?.querySelector('input[name*="-name"]');
-                    if (locationNameInput) {
-                        locationNameInput.focus();
-                    }
+                    // Find the new child
+                    child = Array.from(container.children).find((child) => !child.classList.contains('deleted'));
+
+                    latitudeInput = child?.querySelector(`input[name*="-latitude"]`);
+                    longitudeInput = child?.querySelector(`input[name*="-longitude"]`);
                 }
 
                 if (latitudeInput && longitudeInput) {
                     latitudeInput.value = lat;
                     longitudeInput.value = lng;
+                }
+
+                const locationNameInput = child?.querySelector('input[name*="-name"]');
+                if (locationNameInput && !locationNameInput.value) {
+                    locationNameInput.focus();
                 }
             }
 

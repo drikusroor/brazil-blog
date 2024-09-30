@@ -95,6 +95,7 @@ class BlogPageForm(WagtailAdminPageForm):
                 "placeholder": "Click on the map to select a location",
                 "latitude_field_name": "latitude",
                 "longitude_field_name": "longitude",
+                "model_name": "location",
             }
         )
     )
@@ -128,6 +129,9 @@ class BlogPageForm(WagtailAdminPageForm):
         if commit:
             location.save()
         return instance
+
+    class Media:
+        js = ["js/location_limiter.js"]
 
 
 class BlogPage(Page):
