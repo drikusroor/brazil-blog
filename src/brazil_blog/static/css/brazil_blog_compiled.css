@@ -1770,6 +1770,10 @@ select {
   cursor: pointer;
 }
 
+.cursor-wait {
+  cursor: wait;
+}
+
 .resize {
   resize: both;
 }

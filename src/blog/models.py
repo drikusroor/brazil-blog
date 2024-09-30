@@ -20,6 +20,7 @@ from wagtail.admin.panels import (
     TabbedInterface,
     FieldRowPanel,
 )
+from wagtail.snippets.models import register_snippet
 
 
 from wagtail.admin.forms import WagtailAdminPageForm
@@ -229,6 +230,7 @@ class BlogPage(Page):
         return self.likes.count()
 
 
+@register_snippet
 class Comment(models.Model):
     post = models.ForeignKey(
         BlogPage, on_delete=models.CASCADE, related_name="comments"
@@ -316,3 +318,20 @@ class AuthorIndexPage(Page):
         return context
 
     subpage_types = ["AuthorPage"]
+
+
+@register_snippet
+class Subscription(models.Model):
+    subscriber = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="subscriptions"
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="subscribers"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("subscriber", "author")
+
+    def __str__(self):
+        return f"{self.subscriber.username} subscribed to {self.author.username}"

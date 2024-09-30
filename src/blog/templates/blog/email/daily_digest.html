@@ -1,0 +1,22 @@
+<!-- templates/blog/email/daily_digest.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Daily Digest</title>
+</head>
+<body>
+    <h1>Your Daily Digest</h1>
+    <p>Hello {{ subscriber.username }},</p>
+    <p>Here are the new blog posts from your subscribed authors:</p>
+    
+    {% for post in new_posts %}
+        <h2><a href="{{ site.domain }}{{ post.url }}">{{ post.title }}</a></h2>
+        <p>By {{ post.author.get_full_name|default:post.author.username }}</p>
+        <p>{{ post.intro }}</p>
+    {% endfor %}
+    
+    <p>Visit our site to read the full posts: <a href="https://{{ site.domain }}">{{ site.name }}</a></p>
+</body>
+</html>

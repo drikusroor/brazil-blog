@@ -1,0 +1,50 @@
+<!-- Add this to your author_page.html template -->
+{% if user.is_authenticated and user != author %}
+    <button id="subscribeButton" data-author-id="{{ author.id }}" title="{% if user in author.subscribers.all %}Unsubscribe{% else %}Subscribe{% endif %}" class="focus:outline-none">
+        {% if user in author.subscribers.all %}
+            🔕
+        {% else %}
+            🔔  
+        {% endif %}
+    </button>
+
+    <script>
+        document.getElementById('subscribeButton').addEventListener('click', function() {
+
+            this.disabled = true;
+            this.classList.add('opacity-50', 'cursor-wait');
+
+            const authorId = this.dataset.authorId;
+            fetch(`/blog/api/toggle-subscription/${authorId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                this.textContent = data.subscribed ? '🔕' : '🔔';
+                this.title = data.subscribed ? 'Unsubscribe' : 'Subscribe';
+            })
+            .finally(() => {
+                this.disabled = false;
+                this.classList.remove('opacity-50', 'cursor-wait');
+            });
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+{% endif %}

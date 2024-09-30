@@ -1,9 +1,12 @@
 from django.http import HttpResponse, JsonResponse
 from django.template import Template, Context
 from django.utils.dateparse import parse_date
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 from rest_framework import viewsets
-from .models import Comment, BlogPage
+from .models import Comment, BlogPage, Subscription, User
 from .serializers import CommentSerializer, LikeSerializer, CommentLikeSerializer
 from .permissions import IsOwnerOrReadOnly
 from rest_framework import status
@@ -123,3 +126,22 @@ def posts_by_date(request):
     ]
 
     return JsonResponse({"posts": post_data})
+
+
+@require_POST
+@login_required
+def toggle_subscription(request, author_id):
+    author = get_object_or_404(User, id=author_id)
+    subscriber = request.user
+
+    subscription, created = Subscription.objects.get_or_create(
+        subscriber=subscriber, author=author
+    )
+
+    if not created:
+        subscription.delete()
+        subscribed = False
+    else:
+        subscribed = True
+
+    return JsonResponse({"subscribed": subscribed})

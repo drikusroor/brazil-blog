@@ -1,0 +1,16 @@
+Your Daily Digest
+
+Hello {{ subscriber.username }},
+Here are the new blog posts from your subscribed authors:
+
+{% for post in new_posts %}
+    {{ post.title }}
+    By {{ post.author.get_full_name|default:post.author.username }}
+    {{ post.intro }}
+    {{ site.domain }}{{ post.url }}
+    {% if not forloop.last %}
+        --------------------
+    {% endif %}
+{% endfor %}
+
+Visit our site to read the full posts: https://{{ site.domain }}">{{ site.name }}

@@ -6,6 +6,7 @@ from .views import (
     LikeViewSet,
     CommentLikeViewSet,
     posts_by_date,
+    toggle_subscription,
 )
 
 router = DefaultRouter()
@@ -21,4 +22,9 @@ router.register(r"comment-likes", CommentLikeViewSet, basename="comment-likes")
 urlpatterns = [
     path("api/", include(router.urls)),
     path("api/posts-by-date/", posts_by_date, name="posts_by_date"),
+    path(
+        "api/toggle-subscription/<int:author_id>/",
+        toggle_subscription,
+        name="toggle_subscription",
+    ),
 ]
