@@ -46,6 +46,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updateMarker(lat, lng) {
+
+            // Validate latitude and longitude
+            // and make sure they are numbers that have a maximum of 6 decimal places
+            // Latitude must be a number between -90 and 90
+            // Longitude must be a number between -180 and 180
+            if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+                console.error('Invalid latitude or longitude');
+                return;
+            }
+
+            // Round to 6 decimal places
+            lat = parseFloat(lat.toFixed(6));
+            lng = parseFloat(lng.toFixed(6));
+
             // Update input fields
             if (latitudeFieldName && longitudeFieldName) {
                 let latitudeInput = document.querySelector(`input[name="${latitudeFieldName}"]`);
