@@ -17,6 +17,7 @@ from wagtail.admin.panels import (
     InlinePanel,
     ObjectList,
     TabbedInterface,
+    FieldRowPanel,
 )
 
 from wagtail.admin.forms import WagtailAdminPageForm
@@ -166,8 +167,12 @@ class BlogPage(Page):
     ]
 
     location_panels = [
-        InlinePanel("location", label="Location"),
-        FieldPanel("map_location"),
+        FieldRowPanel(
+            children=[
+                InlinePanel("location", label="Location"),
+                FieldPanel("map_location"),
+            ]
+        )
     ]
 
     edit_handler = TabbedInterface(
