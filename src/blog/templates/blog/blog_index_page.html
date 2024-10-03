@@ -2,7 +2,7 @@
 {% load i18n static wagtailcore_tags wagtailimages_tags custom_image_tags user_tags %}
 {% block body_class %}template-blogindexpage{% endblock %}
 {% block content %}
-{% include "blog/includes/timeline.html" with grouped_blog_posts=grouped_blog_posts %}
+{% include "blog/includes/timeline.html" with grouped_blog_posts=grouped_blog_posts itinerary=itinerary %}
 
 <div class="bg-green-700 py-8 flex-grow">
     {% include "blog/includes/filter-bar.html" %}
