@@ -1,6 +1,6 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<div class="w-full overflow-x-auto py-1 relative">
+<div class="w-full overflow-x-auto py-1 relative" id="timeline">
     <div class="flex items-center" style="min-width: max-content;">
         <div class="flex flex-row items-center gap-1 w-full">
             
@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const spotEndDate = new Date(datePoint.dataset.endDate);
         const spotDuration = spotEndDate - spotStartDate;
         const spotDurationPercentage = (spotDuration / totalDuration) * 100;
-        console.log(spotDurationPercentage);
         
         datePoint.style.width = `${spotDurationPercentage}%`;
     });
@@ -82,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
     progressLine.style.width = `${progressPercentage}%`;
 
     // post group dates
-    const postGroups = Array.from(document.querySelectorAll('[data-date]'))
+    const postGroups = Array.from(document.querySelectorAll('#timeline [data-date]'))
         .sort((a, b) => new Date(a.dataset.date) - new Date(b.dataset.date));
 
     postGroups
@@ -99,9 +98,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Show post preview on click
     postGroups.forEach((postGroup) => {
+
+        const postGroupDate = postGroup.dataset.date;
+        const grid = document.getElementById('grid');
+        const gridPosts = Array.from(grid.querySelectorAll(`[data-date="${postGroupDate}"]`));
+
         postGroup.addEventListener('click', function(e) {
             const date = postGroup.dataset.date;
             showPostPreview(date);
+        });
+
+        // on hover
+        postGroup.addEventListener('mouseenter', function(e) {
+            const grid = document.getElementById('grid');
+
+            gridPosts.forEach((post) => {
+                post.classList.add('border-4', 'border-blue-600');
+            });
+        });
+
+        postGroup.addEventListener('mouseleave', function(e) {
+            gridPosts.forEach((post) => {
+                post.classList.remove('border-4', 'border-blue-600');
+            });
         });
     });
 
