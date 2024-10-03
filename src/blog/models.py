@@ -7,7 +7,7 @@ from django.utils.dateparse import parse_date
 from django.db import models
 from django.db.models import Q
 from django.core.exceptions import ValidationError
-from django.db.models.functions import TruncDate, Cast
+from django.db.models.functions import Cast
 from modelcluster.fields import ParentalKey
 from django.db.models import DateField
 
