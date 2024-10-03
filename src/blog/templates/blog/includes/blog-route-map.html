@@ -29,14 +29,45 @@
             {% endfor %}
         ];
 
+        var itinerary = {
+            id: "{{ itinerary.id }}",
+            name: "{{ itinerary.name|escapejs }}",
+            description: "{{ itinerary.description|escapejs }}",
+            stops: [
+                {% for stop in itinerary.stops %}
+                    {
+                        id: "{{ stop.title|escapejs }}",
+                        start_date: "{{ stop.start_date|date:"Y-m-d" }}",
+                        end_date: "{{ stop.end_date|date:"Y-m-d" }}",
+                        name: "{{ stop.name|escapejs }}",
+                        description: "{{ stop.description|escapejs }}",
+                        latitude: {{ stop.latitude }},
+                        longitude: {{ stop.longitude }}
+                    },
+                {% endfor %}
+            ]
+        }
+
+        console.log({ itinerary });
+
         var markers = [];
         var latlngs = [];
+
+        var itinerarylatlngs = [];
 
         posts.forEach(function(post, index) {
             var marker = L.marker([post.lat, post.lng]).addTo(map);
             marker.bindPopup('<strong>' + post.title + '</strong><br>' + post.date + '<br>' + post.locationName + '<br><a href="' + post.url + '">Read more</a>');
             markers.push(marker);
             latlngs.push([post.lat, post.lng]);
+        });
+
+        // the stops can be displayed a bit less prominently, perhaps a bit smaller and transparent
+        itinerary.stops.forEach(function(stop, index) {
+            var marker = L.marker([stop.latitude, stop.longitude], {icon: L.divIcon({className: 'itinerary-stop-icon', html: '<span>' + stop.name + '</span>'})}).addTo(map);
+            marker.bindPopup('<strong>' + stop.name + '</strong><br>' + stop.start_date + ' - ' + stop.end_date + '<br>' + stop.description);
+            markers.push(marker);
+            itinerarylatlngs.push([stop.latitude, stop.longitude]);
         });
 
         if (markers.length > 0) {
@@ -72,6 +103,42 @@
                     ], {color: 'rgb(21, 128, 61)', fill: false}
                 ).addTo(map);
             }
+        }
+
+        if (itinerarylatlngs.length > 0) {
+            itinerarylatlngs.map(function(latlng, index) {
+                if (index < itinerarylatlngs.length - 1) {
+                    var latlng1 = latlng;
+                    var latlng2 = itinerarylatlngs[index + 1];
+                    
+                    var offsetX = latlng2[1] - latlng1[1];
+                    var offsetY = latlng2[0] - latlng1[0];
+                    
+                    var r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2));
+                    var theta = Math.atan2(offsetY, offsetX);
+                    
+                    var thetaOffset = 3.14 / 10;
+                    
+                    var r2 = (r / 2) / (Math.cos(thetaOffset));
+                    var theta2 = theta + thetaOffset;
+                    
+                    var midpointX = (r2 * Math.cos(theta2)) + latlng1[1];
+                    var midpointY = (r2 * Math.sin(theta2)) + latlng1[0];
+                    
+                    var midpointLatLng = [midpointY, midpointX];
+                    
+                    var curvedLine = L.curve(
+                        [
+                            'M', latlng1,
+                            'Q', midpointLatLng,
+                            latlng2
+                        ], {
+                            color: 'rgba(234, 179, 8, 0.5)',
+                            fill: false
+                        }
+                    ).addTo(map);
+                }
+            });
         }
     });
 </script>

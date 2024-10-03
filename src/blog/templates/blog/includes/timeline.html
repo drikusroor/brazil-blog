@@ -1,18 +1,40 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<div class="w-full overflow-x-auto py-1 zbg-gray-100">
-    <div class="flex items-center space-x-2 px-4" style="min-width: max-content;">
+<div class="w-full overflow-x-auto py-1 relative" id="timeline">
+    <div class="flex items-center" style="min-width: max-content;">
+        <div class="flex flex-row items-center gap-1 w-full">
+            
+            {% for stop in itinerary.stops %}
+                    <div 
+                        id="stop-{{ stop.id }}"
+                        data-stop
+                        class="h-full flex flex-row items-center bg-yellow-600 justify-center cursor-pointer z-20 relative"
+                        data-start-date="{{ stop.start_date }}"
+                        data-end-date="{{ stop.end_date }}"
+                        title="{{ stop.name }} - {{ stop.start_date }} - {{ stop.end_date }}"
+                    >
+                        <span class="text-white text-xs font-bold">{{ stop.name }}</span>
+                        <div class="text-xs text-gray-600">{{ start_date|date:"M j" }}</div>
+                    </div>
+                {% if not forloop.last %}
+                    <div class="flex-grow h-px bg-gray-300 self-center"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div id="progressLine" class="absolute top-0 left-0 h-full bg-green-500 z-10" style="width: 0;"></div>
+
+    <div class="absolute top-0 left-0 w-full ">
         {% for date, posts in grouped_blog_posts.items %}
-            <div class="flex flex-row items-center gap-1">
-                <div class="w-4 h-4 rounded-full {% if posts|length > 1 %}bg-blue-500{% else %}bg-gray-400{% endif %} flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors duration-200" 
-                     data-date="{{ date|date:'Y-m-d' }}">
-                    <span class="text-white text-xs font-bold">{{ posts|length }}</span>
+            <div class="absolute flex items-center justify-center cursor-pointer transition-colors duration-200 z-30" 
+                    data-date="{{ date|date:'Y-m-d' }}">
+                <div
+                    class="w-4 h-4 bg-blue-600 hover:bg-blue-700 rounded-full text-white text-xs font-bold flex items-center justify-center mt-1"
+                    title="{{ posts|length }} posts on {{ date }}"
+                >
+                    {{ posts|length }}
                 </div>
-                <div class="text-xs text-gray-600">{{ date|date:"M j" }}</div>
             </div>
-            {% if not forloop.last %}
-                <div class="flex-grow h-px bg-gray-300 self-center"></div>
-            {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -28,6 +50,79 @@ document.addEventListener('DOMContentLoaded', function() {
     const postPreview = document.getElementById('postPreview');
     const previewDate = document.getElementById('previewDate');
     const previewPosts = document.getElementById('previewPosts');
+    const progressLine = document.getElementById('progressLine');
+
+    // Get all itinerary date points
+    const datePoints = Array.from(document.querySelectorAll('[data-stop]'));
+
+    const sortedDatePoints = datePoints.sort((a, b) => new Date(a.dataset.startDate) - new Date(b.dataset.startDate));
+
+    // Get the start and end dates of the timeline
+    const startDate = new Date(sortedDatePoints[0].dataset.startDate);
+    const endDate = new Date(sortedDatePoints[sortedDatePoints.length - 1].dataset.endDate);
+    const totalDuration = endDate - startDate;
+    const currentDate = new Date();
+
+    // Set individual widths for each date point
+    sortedDatePoints.forEach((datePoint, index) => {
+        const spotStartDate = new Date(datePoint.dataset.startDate);
+        const spotEndDate = new Date(datePoint.dataset.endDate);
+        const spotDuration = spotEndDate - spotStartDate;
+        const spotDurationPercentage = (spotDuration / totalDuration) * 100;
+        
+        datePoint.style.width = `${spotDurationPercentage}%`;
+    });
+
+    // Calculate the progress percentage
+    const currentProgress = currentDate - startDate;
+    const progressPercentage = Math.min(100, Math.max(0, (currentProgress / totalDuration) * 100));
+
+    // Set the width of the progress line
+    progressLine.style.width = `${progressPercentage}%`;
+
+    // post group dates
+    const postGroups = Array.from(document.querySelectorAll('#timeline [data-date]'))
+        .sort((a, b) => new Date(a.dataset.date) - new Date(b.dataset.date));
+
+    postGroups
+        .forEach((postGroup) => {
+            const date = new Date(postGroup.dataset.date);
+            const left = ((date - startDate) / totalDuration) * 100;
+
+            if (left > 100 || left < 0) {
+                postGroup.style.display = 'none';
+            }
+
+            postGroup.style.left = `${left}%`;
+        });
+
+    // Show post preview on click
+    postGroups.forEach((postGroup) => {
+
+        const postGroupDate = postGroup.dataset.date;
+        const grid = document.getElementById('grid');
+        const gridPosts = Array.from(grid.querySelectorAll(`[data-date="${postGroupDate}"]`));
+
+        postGroup.addEventListener('click', function(e) {
+            const date = postGroup.dataset.date;
+            showPostPreview(date);
+        });
+
+        // on hover
+        postGroup.addEventListener('mouseenter', function(e) {
+            const grid = document.getElementById('grid');
+
+            gridPosts.forEach((post) => {
+                post.classList.add('border-4', 'border-blue-600');
+            });
+        });
+
+        postGroup.addEventListener('mouseleave', function(e) {
+            gridPosts.forEach((post) => {
+                post.classList.remove('border-4', 'border-blue-600');
+            });
+        });
+    });
 
     timeline.addEventListener('click', function(e) {
         if (e.target.closest('[data-date]')) {

@@ -1,8 +1,12 @@
 {% load i18n static wagtailcore_tags wagtailimages_tags custom_image_tags user_tags %}
 
-<div class="max-w-3xl md:max-w-5xl w-full mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="max-w-3xl md:max-w-5xl w-full mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="grid">
     {% for post in blogposts %}
-        <a href="{% pageurl post %}" class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform">
+        <a 
+            href="{% pageurl post %}"
+            class="bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform"
+            data-date="{{ post.specific.date|date:'Y-m-d' }}"
+        >
             <div class="relative aspect-square">
                 {% if post.specific.image %}
                     <img src="{{ post.specific.image|advanced_image:'fill-64x64,format-jpeg,bgcolor-eab308' }}"

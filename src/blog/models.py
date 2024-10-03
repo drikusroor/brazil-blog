@@ -7,8 +7,9 @@ from django.utils.dateparse import parse_date
 from django.db import models
 from django.db.models import Q
 from django.core.exceptions import ValidationError
-from django.db.models.functions import TruncDate
+from django.db.models.functions import TruncDate, Cast
 from modelcluster.fields import ParentalKey
+from django.db.models import DateField
 
 from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
@@ -20,12 +21,14 @@ from wagtail.admin.panels import (
     FieldRowPanel,
 )
 
+
 from wagtail.admin.forms import WagtailAdminPageForm
 from wagtail.search import index
 
 from itertools import groupby
 
 from locations.forms import MapPickerWidget
+from locations.models import Itinerary
 
 
 User = get_user_model()
@@ -43,7 +46,7 @@ class BlogIndexPage(Page):
             .filter(date__lte=now)
             .order_by("-date")
             .prefetch_related("location")
-            .annotate(date_only=TruncDate("date"))
+            .annotate(date_only=Cast("date", DateField()))
         )
         context["blogpages"] = blogpages
 
@@ -82,6 +85,16 @@ class BlogIndexPage(Page):
             grouped_posts[date] = list(posts)
 
         context["grouped_blog_posts"] = grouped_posts
+
+        itinerary = Itinerary.objects.first()
+
+        if itinerary:
+            context["itinerary"] = {
+                "id": itinerary.id,
+                "name": itinerary.name,
+                "description": itinerary.description,
+                "stops": itinerary.serialize_stops(),
+            }
 
         return context
 
