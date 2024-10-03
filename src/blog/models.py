@@ -86,6 +86,16 @@ class BlogIndexPage(Page):
 
         context["grouped_blog_posts"] = grouped_posts
 
+        itinerary = Itinerary.objects.first()
+
+        if itinerary:
+            context["itinerary"] = {
+                "id": itinerary.id,
+                "name": itinerary.name,
+                "description": itinerary.description,
+                "stops": itinerary.serialize_stops(),
+            }
+
         return context
 
     content_panels = Page.content_panels + [FieldPanel("intro")]

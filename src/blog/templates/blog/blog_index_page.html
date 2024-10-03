@@ -8,7 +8,7 @@
     {% include "blog/includes/filter-bar.html" %}
     {% include "blog/includes/blogpost-grid.html" with blogposts=blogpages only %}
     <div class="container mx-auto mt-8">
-        {% include "blog/includes/blog-route-map.html" with blog_posts=blogpages %}
+        {% include "blog/includes/blog-route-map.html" with blog_posts=blogpages itinerary=itinerary %}
     </div>
     {% include "blog/includes/tukanchamon.html" %}
 </div>

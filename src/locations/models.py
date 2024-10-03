@@ -94,6 +94,9 @@ class Itinerary(ClusterableModel):
     def __str__(self):
         return self.name
 
+    def serialize_stops(self):
+        return [stop.serialize() for stop in self.stops.all()]
+
 
 class ItineraryStop(ClusterableModel):
     itinerary = ParentalKey(
@@ -107,15 +110,15 @@ class ItineraryStop(ClusterableModel):
     location = models.CharField(max_length=255)
 
     def parsed_location(self):
-        return self.location.split(",")
+        return self.location.split(",") if self.location else [None, None]
 
     def latitude(self):
-        (latitude,) = self.parsed_location()
-        return latitude
+        lat, _ = self.parsed_location()
+        return float(lat) if lat else None
 
     def longitude(self):
-        (_, longitude) = self.parsed_location()
-        return longitude
+        _, lon = self.parsed_location()
+        return float(lon) if lon else None
 
     panels = [
         FieldPanel("start_date"),
@@ -134,6 +137,17 @@ class ItineraryStop(ClusterableModel):
 
     def __str__(self):
         return f"{self.location.name} ({self.start_date} - {self.end_date})"
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "start_date": self.start_date.isoformat() if self.start_date else None,
+            "end_date": self.end_date.isoformat() if self.end_date else None,
+            "name": self.name,
+            "description": self.description,
+            "latitude": self.latitude(),
+            "longitude": self.longitude(),
+        }
 
 
 register_snippet(Itinerary)
