@@ -1,5 +1,5 @@
 <!-- Add this to your author_page.html template -->
-{% if user.is_authenticated and user != author %}
+{% if user.is_authenticated %}
     <button id="subscribeButton" data-author-id="{{ author.id }}" title="{% if user in author.subscribers.all %}Unsubscribe{% else %}Subscribe{% endif %}" class="focus:outline-none">
         {% if user in author.subscribers.all %}
             🔕
