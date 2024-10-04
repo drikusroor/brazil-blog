@@ -1419,6 +1419,10 @@ select {
   right: 0px;
 }
 
+.right-1 {
+  right: 0.25rem;
+}
+
 .right-16 {
   right: 4rem;
 }
@@ -1433,6 +1437,10 @@ select {
 
 .top-0 {
   top: 0px;
+}
+
+.top-1 {
+  top: 0.25rem;
 }
 
 .top-1\/2 {
