@@ -66,15 +66,19 @@ class CommentViewSet(viewsets.ModelViewSet):
             else Comment.objects.get(id=parent_comment).author
         )
 
+        comment_excerpt = (
+            comment.body[:20] + "..." if len(comment.body) > 20 else comment.body
+        )
+
         title = (
             f"New comment on your post: {post.title}"
             if not parent_comment
-            else "New reply to your comment"
+            else f"New reply to your comment: {comment_excerpt}"
         )
         message = (
             f"{request.user} commented on your post: {post.title}"
             if not parent_comment
-            else f"{request.user} replied to your comment"
+            else f"{request.user} replied to your comment: {comment_excerpt}"
         )
 
         Notification.objects.create(
