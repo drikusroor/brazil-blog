@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from django.db.models.functions import Cast
 from modelcluster.fields import ParentalKey
 from django.db.models import DateField
+# from django.core.management import call_command
 
 from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
@@ -20,6 +21,7 @@ from wagtail.admin.panels import (
     TabbedInterface,
     FieldRowPanel,
 )
+from wagtail.snippets.models import register_snippet
 
 
 from wagtail.admin.forms import WagtailAdminPageForm
@@ -229,6 +231,7 @@ class BlogPage(Page):
         return self.likes.count()
 
 
+@register_snippet
 class Comment(models.Model):
     post = models.ForeignKey(
         BlogPage, on_delete=models.CASCADE, related_name="comments"
@@ -316,3 +319,26 @@ class AuthorIndexPage(Page):
         return context
 
     subpage_types = ["AuthorPage"]
+
+
+class Subscription(models.Model):
+    subscriber = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="subscriptions"
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="subscribers"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    list_display = ["subscriber", "author", "created_at", "send_test_email"]
+
+    class Meta:
+        unique_together = ("subscriber", "author")
+
+    def send_test_email(self):
+        # command is located in blog/management/commands/send_daily_digest.py
+        # call_command("senddailydigest")
+        return "Send test emailz"
+
+    def __str__(self):
+        return f"{self.subscriber.username} subscribed to {self.author.username}"
