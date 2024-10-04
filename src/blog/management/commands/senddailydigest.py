@@ -2,10 +2,8 @@
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from django.core.mail import send_mass_mail
-from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
-from blog.models import Subscription, BlogPage
+from blog.models import BlogPage
 from django.contrib.auth import get_user_model
 from django.core.mail import get_connection
 from django.core.mail.message import EmailMultiAlternatives
@@ -17,17 +15,24 @@ class Command(BaseCommand):
     help = "Sends daily digest emails to subscribers"
 
     def handle(self, *args, **options):
-        yesterday = timezone.now().date() - timezone.timedelta(days=1)
-        site = Site.objects.get_current()
+        yesterday = timezone.now().date() - timezone.timedelta(days=7)
+
+        subscriber_ids = options.get("subscribers")
+        if subscriber_ids:
+            subscribers = User.objects.filter(
+                id__in=subscriber_ids, subscriptions__isnull=False
+            ).distinct()
+        else:
+            subscribers = User.objects.filter(subscriptions__isnull=False).distinct()
 
         emails = []
-        for subscriber in User.objects.filter(subscriptions__isnull=False).distinct():
+        for subscriber in subscribers:
             subscribed_authors = subscriber.subscriptions.values_list(
                 "author", flat=True
             )
             new_posts = (
                 BlogPage.objects.live()
-                .filter(author__in=subscribed_authors, date__date=yesterday)
+                .filter(author__in=subscribed_authors, date__lte=yesterday)
                 .select_related("author")
             )
 
@@ -35,7 +40,6 @@ class Command(BaseCommand):
                 context = {
                     "subscriber": subscriber,
                     "new_posts": new_posts,
-                    "site": site,
                 }
                 subject = f"Your Daily Digest for {yesterday}"
                 message = render_to_string("blog/email/daily_digest.txt", context)
@@ -66,6 +70,10 @@ class Command(BaseCommand):
         Given a datatuple of (subject, text_content, html_content, from_email, recipient_list),
         sends each message to each recipient list.
         """
+
+        if not auth_user and not auth_password:
+            return False
+
         connection = get_connection(
             fail_silently=fail_silently, username=auth_user, password=auth_password
         )

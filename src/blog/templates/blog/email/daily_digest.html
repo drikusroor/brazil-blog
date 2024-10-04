@@ -12,11 +12,11 @@
     <p>Here are the new blog posts from your subscribed authors:</p>
     
     {% for post in new_posts %}
-        <h2><a href="{{ site.domain }}{{ post.url }}">{{ post.title }}</a></h2>
+        <h2><a href="https://brazil.kokokoding.nl/{{ post.url }}">{{ post.title }}</a></h2>
         <p>By {{ post.author.get_full_name|default:post.author.username }}</p>
         <p>{{ post.intro }}</p>
     {% endfor %}
     
-    <p>Visit our site to read the full posts: <a href="https://{{ site.domain }}">{{ site.name }}</a></p>
+    <p>Visit our site to read the full posts: <a href="https://brazil.kokokoding.nl">Toucano</a></p>
 </body>
 </html>
