@@ -64,7 +64,7 @@
 
         // the stops can be displayed a bit less prominently, perhaps a bit smaller and transparent
         itinerary.stops.forEach(function(stop, index) {
-            var marker = L.marker([stop.latitude, stop.longitude], {icon: L.divIcon({className: 'itinerary-stop-icon', html: '<span>' + stop.name + '</span>'})}).addTo(map);
+            var marker = L.marker([stop.latitude, stop.longitude], {icon: L.divIcon({className: 'itinerary-stop-icon', html: '<span class="whitespace-nowrap drop-shadow bg-blue-700 text-white p-1 px-2 rounded">' + (index + 1) + '. ' + stop.name + '</span>'})}).addTo(map);
             marker.bindPopup('<strong>' + stop.name + '</strong><br>' + stop.start_date + ' - ' + stop.end_date + '<br>' + stop.description);
             markers.push(marker);
             itinerarylatlngs.push([stop.latitude, stop.longitude]);
@@ -133,7 +133,7 @@
                             'Q', midpointLatLng,
                             latlng2
                         ], {
-                            color: 'rgba(234, 179, 8, 0.5)',
+                            color: 'rgba(234, 179, 8, 0.75)',
                             fill: false
                         }
                     ).addTo(map);
