@@ -1,7 +1,9 @@
 from django.db import models
+from wagtail.snippets.models import register_snippet
 
 
 # Create your models here.
+@register_snippet
 class Notification(models.Model):
     title = models.CharField(max_length=255)
     message = models.TextField()

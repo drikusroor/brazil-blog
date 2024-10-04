@@ -16,6 +16,8 @@ from rest_framework.decorators import permission_classes, action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from notifications.models import Notification
+
 
 # Create your views here.
 class CommentViewSet(viewsets.ModelViewSet):
@@ -46,14 +48,30 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+
+        comment = self.perform_create(serializer)
+        comment_id = comment.id
+
+        # send notification to post author
+        post = serializer.instance.post
+
+        notification_url = f"{post.get_url()}#comment-{comment_id}"
+
+        # if True or post.author != request.user:
+        Notification.objects.create(
+            user=post.author,
+            title="New comment on your post",
+            message=f"New comment on your post: {post.title}",
+            url=notification_url,
+        )
+
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        return serializer.save(author=self.request.user)
 
 
 # public endpoints
