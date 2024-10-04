@@ -57,11 +57,30 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         notification_url = f"{post.get_url()}#comment-{comment_id}"
 
-        # if True or post.author != request.user:
+        # parent_id
+        parent_comment = request.data.get("parent_comment")
+
+        user_to_notify = (
+            post.author
+            if not parent_comment
+            else Comment.objects.get(id=parent_comment).author
+        )
+
+        title = (
+            f"New comment on your post: {post.title}"
+            if not parent_comment
+            else "New reply to your comment"
+        )
+        message = (
+            f"{request.user} commented on your post: {post.title}"
+            if not parent_comment
+            else f"{request.user} replied to your comment"
+        )
+
         Notification.objects.create(
-            user=post.author,
-            title="New comment on your post",
-            message=f"New comment on your post: {post.title}",
+            user=user_to_notify,
+            title=title,
+            message=message,
             url=notification_url,
         )
 

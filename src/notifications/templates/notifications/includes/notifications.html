@@ -12,7 +12,7 @@
         </svg>
         <span id="notification-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full"></span>
     </button>
-    <div id="notification-list" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg overflow-hidden z-20 max-h-96 overflow-y-auto">
+    <div id="notification-list" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-3xl shadow-lg overflow-hidden z-30 max-h-96 overflow-y-auto">
         <div class="py-2">
             <!-- Notifications will be inserted here -->
         </div>
@@ -35,20 +35,48 @@
 
                     list.innerHTML = data.map(notification => `
                         <div class="px-4 py-2 hover:bg-gray-100 ${notification.read ? 'bg-gray-50' : ''}">
-                            <a href="${notification.url}" class="block text-sm mb-1">${notification.title}</a>
+                            <a href="${notification.url}" class="block text-sm mb-1 ${notification.read ? 'text-gray-500' : ''}">${notification.title}</a>
                             <p class="text-xs text-gray-500">${new Date(notification.created_at).toLocaleString()}</p>
                             ${!notification.read ? `
-                                <button onclick="markAsRead(${notification.id})" class="mt-1 text-xs text-indigo-600 hover:text-indigo-900">
+                                <button id="markAsRead" data-notification-id="${notification.id}" class="mt-1 text-xs text-indigo-600 hover:text-indigo-900">
                                     Mark as read
                                 </button>
                             ` : ''}
                         </div>
                     `).join('');
+
+                    // Add mark all as read button
+                    list.innerHTML += `
+                        <div class="px-4 py-2 bg-gray-100">
+                            <button id="markAllAsRead" class="text-xs text-indigo-600 hover:text-indigo-900">
+                                Mark all as read
+                            </button>
+                        </div>
+                    `;
+
+                    list.querySelectorAll('#markAsRead').forEach(button => {
+                        button.addEventListener('click', function() {
+                            markAsRead(button.dataset.notificationId);
+                        });
+                    });
+
+                    list.querySelector('#markAllAsRead').addEventListener('click', markAllAsRead);
                 });
         }
 
         function markAsRead(id) {
-            fetch(`/api/notifications/${id}/mark_as_read/`, {
+            fetch(`/blog/api/notifications/${id}/mark_as_read/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(() => fetchNotifications());
+        }
+
+        function markAllAsRead() {
+            fetch(`/blog/api/notifications/mark_all_as_read/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
