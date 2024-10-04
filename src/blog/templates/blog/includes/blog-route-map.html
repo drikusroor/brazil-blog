@@ -126,6 +126,20 @@
                     var midpointY = (r2 * Math.sin(theta2)) + latlng1[0];
                     
                     var midpointLatLng = [midpointY, midpointX];
+
+                    // blue is 30 64 175
+                    // yellow is 234 179 8
+
+                    // make the lines gradient from blue to yellow
+                    // the first stop should be blue, the last stop should be yellow
+                    // the stops in between should be gradually changing from blue to yellow
+                    // for example, the first stop should be 30 64 175, the second stop should be more blue than yellow, the stop before the last stop should be almost yellow, the last stop should be 234 179 8
+
+                    var red = 30 + (234 - 30) * (index / (itinerarylatlngs.length - 1));
+                    var green = 64 + (179 - 64) * (index / (itinerarylatlngs.length - 1));
+                    var blue = 175 + (8 - 175) * (index / (itinerarylatlngs.length - 1));
+
+                    var color = 'rgba(' + red + ', ' + green + ', ' + blue + ', 0.75)';
                     
                     var curvedLine = L.curve(
                         [
@@ -133,7 +147,7 @@
                             'Q', midpointLatLng,
                             latlng2
                         ], {
-                            color: 'rgba(234, 179, 8, 0.75)',
+                            color: color,
                             fill: false
                         }
                     ).addTo(map);
