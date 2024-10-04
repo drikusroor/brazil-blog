@@ -90,6 +90,7 @@
             "rounded-lg",
             "mt-4",
             "relative",
+            "transition-colors",
         );
 
         // if the comment has a parent, indent it + the indentation of the parent
@@ -381,7 +382,28 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        fetchComments().then(renderComments);
+        fetchComments()
+            .then(renderComments)
+            .then(() => {
+                // look for comment id in url param or through #comment-<id>
+                let commentId = new URLSearchParams(window.location.search).get("comment");
+
+                if (!commentId) {
+                    commentId = window.location.hash.replace("#comment-", "");
+                }
+
+                if (commentId) {
+                    const comment = document.getElementById(`comment-${commentId}`);
+                    if (comment) {
+
+                        // give comment a different background color
+                        comment.classList.add("bg-amber-100");
+
+                        // scroll to the comment
+                        comment.scrollIntoView();
+                    }
+                }
+            });
 
         const commentForm = document.getElementById("commentForm")
 

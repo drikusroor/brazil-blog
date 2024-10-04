@@ -1,0 +1,119 @@
+{% load static %}
+
+{% block extra_css %}
+{# Make sure you've included Tailwind CSS in your project #}
+{% endblock %}
+
+{% block content %}
+<div class="relative">
+    <button id="notification-bell" class="p-3 rounded-full bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        <span id="notification-count" class="absolute top-1 right-1 inline-flex items-center justify-center p-1 w-6 h-6 flex-0 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full"></span>
+    </button>
+    <div id="notification-list" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-3xl shadow-lg overflow-hidden z-30 max-h-96 overflow-y-auto">
+        <div class="py-2">
+            <!-- Notifications will be inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const bell = document.getElementById('notification-bell');
+        const count = document.getElementById('notification-count');
+        const list = document.getElementById('notification-list');
+
+        function fetchNotifications() {
+            fetch('/blog/api/notifications/')
+                .then(response => response.json())
+                .then(data => {
+                    const unreadCount = data.filter(n => !n.read).length;
+                    count.textContent = unreadCount;
+                    count.classList.toggle('hidden', unreadCount === 0);
+
+                    list.innerHTML = data.map(notification => `
+                        <div class="px-4 py-2 hover:bg-gray-100 ${notification.read ? 'bg-gray-50' : ''}">
+                            <a href="${notification.url}" class="block text-sm mb-1 ${notification.read ? 'text-gray-500' : ''}">${notification.title}</a>
+                            <p class="text-xs text-gray-500">${new Date(notification.created_at).toLocaleString()}</p>
+                            ${!notification.read ? `
+                                <button id="markAsRead" data-notification-id="${notification.id}" class="mt-1 text-xs text-indigo-600 hover:text-indigo-900">
+                                    Mark as read
+                                </button>
+                            ` : ''}
+                        </div>
+                    `).join('');
+
+                    // Add mark all as read button
+                    list.innerHTML += `
+                        <div class="px-4 py-2 bg-gray-100">
+                            <button id="markAllAsRead" class="text-xs text-indigo-600 hover:text-indigo-900">
+                                Mark all as read
+                            </button>
+                        </div>
+                    `;
+
+                    list.querySelectorAll('#markAsRead').forEach(button => {
+                        button.addEventListener('click', function() {
+                            markAsRead(button.dataset.notificationId);
+                        });
+                    });
+
+                    list.querySelector('#markAllAsRead').addEventListener('click', markAllAsRead);
+                });
+        }
+
+        function markAsRead(id) {
+            fetch(`/blog/api/notifications/${id}/mark_as_read/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(() => fetchNotifications());
+        }
+
+        function markAllAsRead() {
+            fetch(`/blog/api/notifications/mark_all_as_read/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(() => fetchNotifications());
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        bell.addEventListener('click', function() {
+            list.classList.toggle('hidden');
+        });
+
+        // Close the notification list when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!bell.contains(event.target) && !list.contains(event.target)) {
+                list.classList.add('hidden');
+            }
+        });
+
+        fetchNotifications();
+        setInterval(fetchNotifications, 60000); // Refresh every minute
+    });
+</script>
+{% endblock %}

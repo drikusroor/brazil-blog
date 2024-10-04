@@ -32,9 +32,10 @@
         {% endcache %}
         <div class="flex flex-row items-center gap-4">
             {% include "includes/opt-out.html" %}
-            <div class="group relative z-10">
+            {% include "notifications/includes/notifications.html" %}
+            <div class="group relative z-30">
                 <div
-                    class="rounded-full bg-blue-800 text-white w-12 h-12 flex items-center justify-center relative z-10 cursor-pointer">
+                    class="rounded-full bg-blue-800 text-white w-12 h-12 flex items-center justify-center relative z-30 cursor-pointer">
                     {% if user.is_authenticated %}
                     <span>{{ user.username|first|upper }}</span>
                     {% else %}
@@ -43,7 +44,7 @@
                 </div>
 
                 <ul
-                    class="list-none pl-0 mt-0 absolute -top-2 -right-2 w-48 z-0 pt-2 pb-5 bg-white rounded-3xl block opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
+                    class="list-none pl-0 mt-0 absolute -top-2 -right-2 w-48 z-30 pt-2 pb-5 bg-white rounded-3xl block opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
                     <h3 class="pl-4 mt-3 font-bold">{% trans "Hello" %} {{ user.username|default:"" }}!</h3>
                     {% if user.is_staff %}
                     <li class="pl-4 mt-2">

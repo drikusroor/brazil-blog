@@ -16,6 +16,8 @@ from rest_framework.decorators import permission_classes, action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from notifications.models import Notification
+
 
 # Create your views here.
 class CommentViewSet(viewsets.ModelViewSet):
@@ -46,14 +48,53 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+
+        comment = self.perform_create(serializer)
+        comment_id = comment.id
+
+        # send notification to post author
+        post = serializer.instance.post
+
+        notification_url = f"{post.get_url()}#comment-{comment_id}"
+
+        # parent_id
+        parent_comment = request.data.get("parent_comment")
+
+        user_to_notify = (
+            post.author
+            if not parent_comment
+            else Comment.objects.get(id=parent_comment).author
+        )
+
+        comment_excerpt = (
+            comment.body[:20] + "..." if len(comment.body) > 20 else comment.body
+        )
+
+        title = (
+            f"New comment on your post: {post.title}"
+            if not parent_comment
+            else f"New reply to your comment: {comment_excerpt}"
+        )
+        message = (
+            f"{request.user} commented on your post: {post.title}"
+            if not parent_comment
+            else f"{request.user} replied to your comment: {comment_excerpt}"
+        )
+
+        Notification.objects.create(
+            user=user_to_notify,
+            title=title,
+            message=message,
+            url=notification_url,
+        )
+
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        return serializer.save(author=self.request.user)
 
 
 # public endpoints

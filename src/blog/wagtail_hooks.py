@@ -1,7 +1,33 @@
+from wagtail import hooks
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
 
 from .models import Subscription
+
+from notifications.models import Notification
+
+from blog.templatetags.user_tags import user_display_name
+
+
+# after publishing page
+@hooks.register("after_publish_page")
+def after_publish_page(request, page):
+    # page author
+    author = page.author
+
+    # get all subscriptions for the page author
+    subscriptions = Subscription.objects.filter(author=author)
+
+    user_name = user_display_name(author)
+
+    # create notification for each subscription
+    for subscription in subscriptions:
+        Notification.objects.create(
+            user=subscription.subscriber,
+            title=f"New post published: {page.title}",
+            message=f"Your subscription to {user_name} has a new post: {page.title}",
+            url=page.get_url(),
+        )
 
 
 class SubscriptionViewSet(SnippetViewSet):
