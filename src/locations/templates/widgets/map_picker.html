@@ -1,5 +1,10 @@
 <!-- templates/widgets/map_picker.html -->
 <div class="map-picker-widget">
-    {{ widget.value_label }} {% include "django/forms/widgets/text.html" %}
-    <div id="{{ widget.map_id }}" style="width: 100%; height: 400px;"></div>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+        <div>
+            {{ widget.value_label }} {% include "django/forms/widgets/text.html" %}
+        </div>
+        <button type="button" class="button button-primary" data-button-current-location id="{{ widget.id }}-pick">Current location</button>
+    </div>
+    <div id="{{ widget.map_id }}" class="mt-2" style="margin-top: 1rem; width: 100%; height: 400px;"></div>
 </div>

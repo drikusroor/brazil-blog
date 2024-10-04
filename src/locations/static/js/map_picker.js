@@ -21,6 +21,9 @@ function handleMapElement(element) {
   const latitudeFieldName = input.getAttribute("latitude_field_name");
   const longitudeFieldName = input.getAttribute("longitude_field_name");
   const modelName = input.getAttribute("model_name");
+  const currentLocationButton = element.querySelector(
+    "[data-button-current-location]"
+  );
 
   if (!mapElement) {
     console.error("Map container not found");
@@ -185,6 +188,18 @@ function handleMapElement(element) {
   } else {
     // If not in a tab, initialize immediately
     initializeMap();
+  }
+
+  if (currentLocationButton) {
+    currentLocationButton.addEventListener("click", function () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          updateMarker(position.coords.latitude, position.coords.longitude);
+        });
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+    });
   }
 }
 
