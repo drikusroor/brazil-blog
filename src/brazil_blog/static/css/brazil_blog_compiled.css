@@ -1905,6 +1905,10 @@ select {
   overflow-y: auto;
 }
 
+.overflow-ellipsis {
+  text-overflow: ellipsis;
+}
+
 .whitespace-nowrap {
   white-space: nowrap;
 }

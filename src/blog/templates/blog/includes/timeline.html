@@ -13,7 +13,9 @@
                         data-end-date="{{ stop.end_date }}"
                         title="{{ stop.name }} - {{ stop.start_date }} - {{ stop.end_date }}"
                     >
-                        <span class="text-white text-xs font-bold">{{ stop.name }}</span>
+                        <span class="text-white text-xs font-bold whitespace-nowrap overflow-hidden overflow-ellipsis" style="max-width: 100px;">
+                            {{ stop.name }}
+                        </span>
                         <div class="text-xs text-gray-600">{{ start_date|date:"M j" }}</div>
                     </div>
                 {% if not forloop.last %}
