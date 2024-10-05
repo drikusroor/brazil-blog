@@ -1659,6 +1659,10 @@ select {
   height: 100vh;
 }
 
+.h-2 {
+  height: 0.5rem;
+}
+
 .max-h-96 {
   max-height: 24rem;
 }
@@ -1733,6 +1737,10 @@ select {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-2 {
+  width: 0.5rem;
 }
 
 .max-w-3xl {
@@ -2714,8 +2722,16 @@ select {
     height: 4rem;
   }
 
+  .sm\:h-2 {
+    height: 0.5rem;
+  }
+
   .sm\:w-16 {
     width: 4rem;
+  }
+
+  .sm\:w-2 {
+    width: 0.5rem;
   }
 
   .sm\:flex-row {
