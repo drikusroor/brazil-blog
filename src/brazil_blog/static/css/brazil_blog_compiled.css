@@ -1471,6 +1471,10 @@ select {
   z-index: 30;
 }
 
+.col-auto {
+  grid-column: auto;
+}
+
 .float-left {
   float: left;
 }
@@ -1758,6 +1762,10 @@ select {
   max-width: 20rem;
 }
 
+.max-w-5xl {
+  max-width: 64rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -1829,6 +1837,10 @@ select {
 
 .list-none {
   list-style-type: none;
+}
+
+.grid-flow-col {
+  grid-auto-flow: column;
 }
 
 .flex-row {
@@ -2774,6 +2786,11 @@ select {
     padding: 3rem;
   }
 
+  .md\:px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
   .md\:text-3xl {
     font-size: 1.875rem;
     line-height: 2.25rem;
@@ -2796,11 +2813,68 @@ select {
 }
 
 @media (min-width: 1024px) {
+  .lg\:max-w-6xl {
+    max-width: 72rem;
+  }
+
+  .lg\:max-w-7xl {
+    max-width: 80rem;
+  }
+
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .lg\:p-24 {
     padding: 6rem;
+  }
+
+  .lg\:px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:max-w-full {
+    max-width: 100%;
+  }
+
+  .xl\:max-w-7xl {
+    max-width: 80rem;
+  }
+
+  .xl\:max-w-\[1600px\] {
+    max-width: 1600px;
+  }
+
+  .xl\:max-w-\[1500px\] {
+    max-width: 1500px;
+  }
+
+  .xl\:max-w-\[1800px\] {
+    max-width: 1800px;
+  }
+
+  .xl\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .xl\:grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1536px) {
+  .\32xl\:max-w-full {
+    max-width: 100%;
+  }
+
+  .\32xl\:max-w-\[full\] {
+    max-width: full;
+  }
+
+  .\32xl\:grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }

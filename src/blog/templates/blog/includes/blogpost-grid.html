@@ -1,6 +1,6 @@
 {% load i18n static wagtailcore_tags wagtailimages_tags custom_image_tags user_tags %}
 
-<div class="max-w-3xl md:max-w-5xl w-full mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="grid">
+<div class="max-w-3xl md:max-w-5xl lg:max-w-7xl xl:max-w-[1800px] 2xl:max-w-full w-full mx-auto grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4" id="grid">
     {% for post in blogposts %}
         <a 
             href="{% pageurl post %}"
