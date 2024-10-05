@@ -27,17 +27,24 @@
                 <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
                     <h2 class="header-text-color font-bold text-4xl group-hover:underline hover:underline decoration-wavy mb-2 pb-2.5 line-clamp-2">{{ post.title }} </h2>
                     <div class="flex flex-col justify-between gap-2 text-sm">
-                        <div class="flex flex-row items-center flex-wrap gap-2">
+                        <div class="flex flex-row items-center gap-2">
                             {% post_user_avatar post 'w-8 h-8 rounded-full object-cover' %}
-                            {{ post.specific.date | date:"d-m-Y H:i" }}
+                            <div class="flex flex-row justify-between w-full">
+                                <div>
+                                    {{ post.specific.date | date:"d-m-Y H:i" }}
+                                </div>
+                                <div>
+                                    {% for location in post.location.all %}
+                                    📍{{location.name}}
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            {% if post.specific.intro %}
-                                <div class="line-clamp-2">{{ post.specific.intro }}</div>
-                            {% else %}
-                                {{ post.specific.body|richtext|slice:":500" }}
-                            {% endif %}
-                        </div>
+                        {% if post.specific.intro %}
+                            <div class="line-clamp-2">{{ post.specific.intro }}</div>
+                        {% else %}
+                            {{ post.specific.body|richtext|slice:":500" }}
+                        {% endif %}
                     </div>
                 </div>
             </div>
