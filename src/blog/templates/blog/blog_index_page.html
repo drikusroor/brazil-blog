@@ -4,7 +4,7 @@
 {% block content %}
 {% include "blog/includes/timeline.html" with grouped_blog_posts=grouped_blog_posts itinerary=itinerary %}
 
-<div class="bg-green-700 py-8 flex-grow">
+<div class="bg-green-700 py-8 px-4 flex-grow">
     {% include "blog/includes/filter-bar.html" %}
     {% include "blog/includes/blogpost-grid.html" with blogposts=blogpages only %}
     <div class="container mx-auto mt-8">

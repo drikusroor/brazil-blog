@@ -4,7 +4,7 @@
 {% get_site_root as site_root %}
 {% with site_name=settings.base.NavigationSettings.site_name site_logo=settings.base.NavigationSettings.site_logo %}
 <header class="bg-yellow-500 font-bold">
-    <div class="max-w-3xl md:max-w-5xl px-4 py-4 mx-auto flex flex-row justify-between items-center gap-3">
+    <div class="max-w-3xl md:max-w-5xl lg:max-w-7xl xl:max-w-[1800px] 2xl:max-w-full px-4 py-4 mx-auto flex flex-row justify-between items-center gap-3">
         {% cache 500 static_header %}
         <div class="flex items-center gap-3">
             <a href="{% pageurl site_root %}" class="inline-block">

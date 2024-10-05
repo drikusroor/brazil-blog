@@ -14,36 +14,52 @@
                 {% else %}
                     <div class="h-full w-full bg-gray-300"></div>
                 {% endif %}
-                <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500">
-                    <div class="flex items-end justify-between gap-4">
+                <div class="absolute top-0 right-0 flex flex-row z-10 items-center p-2 gap-2">
+                    <div id="like-section" class="flex items-center">
+                        <button 
+                            id="like-button" 
+                            data-post-id="{{ page.id }}" 
+                            class="flex items-center space-x-2 px-2 py-1 rounded-full transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600
+                            {% if user in page.likes.all %}
+                                bg-blue-600 text-white hover:bg-blue-700
+                            {% else %}
+                                bg-white text-gray-700 hover:bg-gray-300
+                            {% endif %}
+                        ">
+                            <div class="text-xl rounded-full -ml-1">😻</div>
+                            <div id="like-count" class="font-bold block mt-0.5">{{ page.like_count }}</div>
+                        </button>
+                    </div>
+                    {% include "blog/includes/subscribe-author.html" with author=page.author user=user class="h-10 w-10" %}
+                </div>
+                <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end gap-2 bg-gradient-to-t to-transparent from-yellow-500">
+
+                    <div class="flex justify-between gap-4">
                         <div class="flex-col flex-1">
-                            <h1 class="header-text-color flex-wrap font-bold text-xl md:text-4xl mb-0 line-clamp-3">{{ page.title }}</h1>
-                            <div class="text-sm italic">{{ page.specific.date | date:"d-m-Y H:i" }}</div>
-                            <div id="like-section" class="flex items-center space-x-2 pr-2 mt-2">
-                                <button id="like-button" data-post-id="{{ page.id }}" class="flex items-center space-x-2 px-2 py-1 rounded-full transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
-                                    {% if user in page.likes.all %}
-                                        bg-red-500 text-white hover:bg-red-600
-                                    {% else %}
-                                        bg-white text-gray-700 hover:bg-gray-300
-                                    {% endif %}
-                                ">
-                                    <div class="text-xl rounded-full -ml-1 bg-white">😻</div>
-                                    <div id="like-count" class="font-bold block mt-0.5">{{ page.like_count }}</div>
-                                </button>
+                            <h1 class="header-text-color flex-wrap font-bold text-xl md:text-4xl line-clamp-3">{{ page.title }}</h1>
+                            <div class="flex justify-between items-center">
+                                <div class="flex flex-col">
+                                    <div class="text-sm italic">{{ page.specific.date | date:"d-m-Y H:i" }}</div>
+                                    <div class="text-sm">
+                                        {% for location in page.location.all %}
+                                        📍{{location.name}}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% if page.author.author_page %}
+                                    <a href="{{ page.author.author_page.url }}" class="flex flex-row items-center gap-2 hover:underline">
+                                        <p class="text-sm italic hidden sm:block">{% post_user_display_name page %}</p>
+                                        {% post_user_avatar page 'w-10 h-10 rounded-full object-cover sm:w-12 sm:h-12' %}
+                                    </a>
+                                {% else %}
+                                    <div class="flex flex-row items-center gap-4">
+                                        <p class="hidden sm:flex text-sm italic">{% post_user_display_name page %}</p>
+                                        {% post_user_avatar page %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
-                        {% if page.author.author_page %}
-                            <a href="{{ page.author.author_page.url }}" class="flex flex-row items-center gap-2 hover:underline">
-                                <p class="text-sm italic hidden sm:block">{% post_user_display_name page %}</p>
-                                {% post_user_avatar page 'w-10 h-10 rounded-full object-cover sm:w-16 sm:h-16' %}
-                            </a>
-                        {% else %}
-                            <div class="flex flex-row items-center gap-4">
-                                <p class="hidden sm:flex text-sm italic">{% post_user_display_name page %}</p>
-                                {% post_user_avatar page %}
-                            </div>
-                        {% endif %}
-                        {% include "blog/includes/subscribe-author.html" with author=page.author user=user %}
+
                     </div>
                     {% if page.hero_text %}
                         <div class="flex ml-auto items-center gap-4">
@@ -121,9 +137,9 @@
             likeCount.textContent = data.like_count;
             if (data.liked) {
                     likeButton.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-300');
-                    likeButton.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+                    likeButton.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
                 } else {
-                    likeButton.classList.remove('bg-red-500', 'text-white', 'hover:bg-red-600');
+                    likeButton.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700');
                     likeButton.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-300');
                 }
         });

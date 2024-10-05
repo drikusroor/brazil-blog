@@ -1,6 +1,15 @@
 <!-- Add this to your author_page.html template -->
 {% if user.is_authenticated %}
-    <button id="subscribeButton" data-author-id="{{ author.id }}" title="{% if user in author.subscribers.all %}Unsubscribe{% else %}Subscribe{% endif %}" class="focus:outline-none bg-green-600 hover:bg-green-700 text-white block flex-0 w-10 h-10 sm:w-16 sm:h-16 rounded-full">
+    <button 
+        id="subscribeButton" 
+        data-author-id="{{ author.id }}" 
+        title="{% if user in author.subscribers.all %}Unsubscribe{% else %}Subscribe{% endif %}"
+        class="
+        {% if class %}
+            {{class}} bg-green-600 hover:bg-green-700 text-white rounded-full
+        {% else %}
+            focus:outline-none bg-green-600 hover:bg-green-700 text-white block flex-0 w-10 h-10 sm:w-16 sm:h-16 rounded-full
+        {% endif %}">
         {% if user in author.subscribers.all %}
             🔕
         {% else %}
