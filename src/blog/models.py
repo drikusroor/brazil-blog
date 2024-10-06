@@ -207,6 +207,10 @@ class BlogPage(Page):
     def get_context(self, request):
         context = super().get_context(request)
 
+        context["is_subscribed"] = Subscription.objects.filter(
+            subscriber=request.user, author=self.author
+        ).exists()
+
         if self.video:
             preview_url = self.video
 
@@ -297,6 +301,9 @@ class AuthorPage(Page):
         context["posts"] = (
             self.user.blog_posts.live().filter(date__lte=now).order_by("-date")
         )
+        context["is_subscribed"] = Subscription.objects.filter(
+            subscriber=request.user, author=self.user
+        ).exists()
         return context
 
     parent_page_types = ["AuthorIndexPage"]
