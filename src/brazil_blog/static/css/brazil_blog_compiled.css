@@ -1568,10 +1568,6 @@ select {
   margin-top: 2rem;
 }
 
-.ml-4 {
-  margin-left: 1rem;
-}
-
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -2552,6 +2548,22 @@ select {
   --tw-text-opacity: 1;
   color: rgb(5 21 77 / var(--tw-text-opacity));
 }
+
+/** Make youtube video responsive */
+
+.responsive-object {
+  position: relative;
+}
+
+.responsive-object iframe {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+/** End: Make youtube video responsive */
 
 .last\:mb-0:last-child {
   margin-bottom: 0px;

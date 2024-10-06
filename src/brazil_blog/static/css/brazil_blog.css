@@ -9,3 +9,13 @@
 .header-text-color {
     @apply text-[#05154d];
 }
+
+/** Make youtube video responsive */
+.responsive-object {
+    @apply relative;
+}
+
+.responsive-object iframe {
+    @apply w-full h-full absolute top-0 left-0;
+}
+/** End: Make youtube video responsive */
