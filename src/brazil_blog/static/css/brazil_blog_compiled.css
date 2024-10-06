@@ -1435,6 +1435,10 @@ select {
   right: 0.5rem;
 }
 
+.right-4 {
+  right: 1rem;
+}
+
 .right-9 {
   right: 2.25rem;
 }
@@ -1449,6 +1453,10 @@ select {
 
 .top-1\/2 {
   top: 50%;
+}
+
+.top-10 {
+  top: 2.5rem;
 }
 
 .top-2 {
@@ -1667,6 +1675,10 @@ select {
   max-height: 24rem;
 }
 
+.max-h-24 {
+  max-height: 6rem;
+}
+
 .min-h-16 {
   min-height: 4rem;
 }
@@ -1735,8 +1747,21 @@ select {
   width: 100%;
 }
 
+.w-max {
+  width: -moz-max-content;
+  width: max-content;
+}
+
 .w-screen {
   width: 100vw;
+}
+
+.min-w-10 {
+  min-width: 2.5rem;
+}
+
+.min-w-24 {
+  min-width: 6rem;
 }
 
 .min-w-36 {
@@ -1918,6 +1943,10 @@ select {
 
 .self-center {
   align-self: center;
+}
+
+.overflow-auto {
+  overflow: auto;
 }
 
 .overflow-hidden {
@@ -2120,6 +2149,10 @@ select {
 
 .bg-opacity-60 {
   --tw-bg-opacity: 0.6;
+}
+
+.bg-opacity-80 {
+  --tw-bg-opacity: 0.8;
 }
 
 .bg-gradient-to-t {
@@ -2559,11 +2592,6 @@ select {
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-gray-300:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
-}
-
 .hover\:bg-green-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(21 128 61 / var(--tw-bg-opacity));
@@ -2621,6 +2649,10 @@ select {
 
 .hover\:underline:hover {
   text-decoration-line: underline;
+}
+
+.hover\:opacity-100:hover {
+  opacity: 1;
 }
 
 .hover\:opacity-90:hover {
