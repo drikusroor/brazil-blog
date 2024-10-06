@@ -21,16 +21,16 @@
                             data-post-id="{{ page.id }}" 
                             class="flex items-center space-x-2 px-2 py-1 rounded-full transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600
                             {% if user in page.likes.all %}
-                                bg-blue-600 text-white hover:bg-blue-700
+                                bg-blue-500 text-white hover:bg-blue-700
                             {% else %}
-                                bg-white text-gray-700 hover:bg-gray-300
+                                bg-green-600 text-gray-700 hover:bg-green-700 bg-opacity-80
                             {% endif %}
                         ">
                             <div class="text-xl rounded-full -ml-1">😻</div>
                             <div id="like-count" class="font-bold block mt-0.5">{{ page.like_count }}</div>
                         </button>
                     </div>
-                    {% include "blog/includes/subscribe-author.html" with author=page.author user=user class="h-10 w-10" %}
+                    {% include "blog/includes/subscribe-author.html" with author=page.author user=user class="h-10 w-10 bg-opacity-80" %}
                 </div>
                 <div class="h-full absolute top-0 p-4 w-full flex flex-col justify-end gap-2 bg-gradient-to-t to-transparent from-yellow-500">
 
@@ -136,11 +136,11 @@
         .then(data => {
             likeCount.textContent = data.like_count;
             if (data.liked) {
-                    likeButton.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-300');
+                    likeButton.classList.remove('bg-green-600', 'text-gray-700', 'hover:bg-green-700', 'bg-opacity-80');
                     likeButton.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
                 } else {
                     likeButton.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700');
-                    likeButton.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-300');
+                    likeButton.classList.add('bg-green-600', 'text-gray-700', 'hover:bg-green-700', 'bg-opacity-80');
                 }
         });
     });
