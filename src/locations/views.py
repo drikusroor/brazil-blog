@@ -13,11 +13,12 @@ def itinerary_overview(request):
     current_date = date.today()
 
     # get the current_stop, aka the stop that is happening today, aka the stop that has the start_date <= current_date <= end_date
-    current_stop_id = (
-        itinerary.stops.filter(start_date__lte=current_date, end_date__gte=current_date)
-        .first()
-        .id
-    )
+    current_stop = itinerary.stops.filter(
+        start_date__lte=current_date, end_date__gte=current_date
+    ).first()
+
+    # get the current_stop_id
+    current_stop_id = current_stop.id if current_stop else None
 
     context = {
         "itinerary": itinerary,
