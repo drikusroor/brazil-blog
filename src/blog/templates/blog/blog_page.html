@@ -27,7 +27,20 @@
                             {% endif %}
                         ">
                             <div class="text-xl rounded-full -ml-1">😻</div>
-                            <div id="like-count" class="font-bold block mt-0.5">{{ page.like_count }}</div>
+                            <div class="group">
+                                <div id="like-count" data-post-id="{{ page.id }}" class="font-bold block mt-0.5">{{ page.like_count }}</div>
+                                {% if page.like_count > 0 %}
+                                    <ul
+                                    id="like-list"
+                                    class="absolute top-10 right-4 min-w-24 w-max max-h-24 overflow-auto flex flex-col items-start z-30 px-4 py-2 bg-blue-500 rounded-3xl opacity-0 pointer-events-none hover:opacity-100 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">    
+                                        {% for user in page.likes.all %}
+                                            <li class="text-sm">
+                                                {{ user }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
                         </button>
                     </div>
                     {% include "blog/includes/subscribe-author.html" with author=page.author user=user class="h-10 w-10 bg-opacity-80" %}
@@ -122,6 +135,7 @@
     const likeButton = document.getElementById('like-button');
     const likeCount = document.getElementById('like-count');
     const likeText = document.getElementById('like-text');
+    const likeList = document.getElementById('like-list');
 
     likeButton.addEventListener('click', function() {
         const postId = this.dataset.postId;
@@ -144,6 +158,25 @@
                 }
         });
     });
+
+    likeCount.addEventListener('mouseover', function() {
+        const postId = this.dataset.postId;
+        fetch(`/blog/api/likes/${postId}/`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.like_count > 0) {
+                    likeList.classList.add('group-hover:opacity-100', 'hover:opacity-100');
+                } else {
+                    likeList.classList.remove('group-hover:opacity-100', 'hover:opacity-100');
+                }
+        });
+    })
 
     function getCookie(name) {
         let cookieValue = null;
