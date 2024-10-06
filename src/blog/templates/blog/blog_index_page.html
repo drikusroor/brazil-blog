@@ -5,6 +5,9 @@
 {% include "blog/includes/timeline.html" with grouped_blog_posts=grouped_blog_posts itinerary=itinerary %}
 
 <div class="bg-green-700 py-8 px-4 flex-grow">
+    {% if not user.is_authenticated %}
+        {% include "blog/includes/not-logged-in.html" %}
+    {% endif %}
     {% include "blog/includes/filter-bar.html" %}
     {% include "blog/includes/blogpost-grid.html" with blogposts=blogpages only %}
     <div class="container mx-auto mt-8 max-w-3xl md:max-w-5xl lg:max-w-7xl xl:max-w-[1800px] 2xl:max-w-full">
