@@ -207,9 +207,10 @@ class BlogPage(Page):
     def get_context(self, request):
         context = super().get_context(request)
 
-        context["is_subscribed"] = Subscription.objects.filter(
-            subscriber=request.user, author=self.author
-        ).exists()
+        if request.user.is_authenticated:
+            context["is_subscribed"] = Subscription.objects.filter(
+                subscriber=request.user, author=self.author
+            ).exists()
 
         if self.video:
             preview_url = self.video
