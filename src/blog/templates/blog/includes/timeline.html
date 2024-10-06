@@ -2,7 +2,7 @@
 
 <div class="w-full overflow-x-auto py-1 relative" id="timeline">
     <div class="flex items-center" style="min-width: max-content;">
-        <div class="flex flex-row items-center gap-1 w-full">
+        <a class="flex flex-row items-center gap-1 w-full" href="{% url 'itinerary_overview' %}">
             
             {% for stop in itinerary.stops %}
                     <div 
@@ -22,7 +22,7 @@
                     <div class="flex-grow h-px bg-gray-300 self-center"></div>
                 {% endif %}
             {% endfor %}
-        </div>
+                </a>
     </div>
     <div id="progressLine" class="absolute top-0 left-0 h-full bg-green-500 z-10" style="width: 0;"></div>
 
