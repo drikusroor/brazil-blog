@@ -34,8 +34,8 @@
                                     id="like-list"
                                     class="absolute top-10 right-4 min-w-24 w-max max-h-24 overflow-auto flex flex-col items-start z-30 px-4 py-2 bg-blue-500 rounded-3xl opacity-0 pointer-events-none hover:opacity-100 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">    
                                         {% for user in page.likes.all %}
-                                            <li class="text-sm">
-                                                {{ user }}
+                                            <li id="like-list-user" class="text-sm">
+                                                {% user_display_name user %}
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -136,6 +136,7 @@
     const likeCount = document.getElementById('like-count');
     const likeText = document.getElementById('like-text');
     const likeList = document.getElementById('like-list');
+    const likeListUser = document.getElementById('like-list-user');
 
     likeButton.addEventListener('click', function() {
         const postId = this.dataset.postId;
