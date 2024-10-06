@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags %}
+{% load static wagtailcore_tags markup_tags %}
 
 {% block content %}
 <div class="bg-green-700 py-8">
     <div class="max-w-3xl md:max-w-5xl lg:max-w-7xl xl:max-w-[1800px] 2xl:max-w-full mx-auto p-4 bg-white rounded-xl overflow-hidden drop-shadow-lg">
         <h1 class="text-3xl font-bold mb-4 text-slate-900">{{ itinerary.name }}</h1>
-        <p class="text-gray-600 mb-6">{{ itinerary.description }}</p>
+        <div class="mb-6 prose">{{ itinerary.description|richtext }}</div>
 
         <div class="space-y-4">
             {% for stop in itinerary.stops.all %}
@@ -31,7 +31,9 @@
                                 <span>{{ stop.start_date|date:"d M Y" }} - {{ stop.end_date|date:"d M Y" }}</span>
                             </div>
                             
-                            <p class="text-gray-600 mt-2">{{ stop.description }}</p>
+                            <div class="text-gray-600 mt-2 prose">
+                                {{ stop.description|richtext }}
+                            </div>
                         </div>
                     </div>
                 </div>

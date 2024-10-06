@@ -6,6 +6,7 @@ from wagtail.admin.panels import FieldPanel, InlinePanel
 from wagtail.models import ClusterableModel
 from wagtail.admin.forms import WagtailAdminModelForm
 from wagtail.snippets.models import register_snippet
+from wagtail.fields import RichTextField
 from locations.forms import MapPickerWidget
 
 
@@ -80,7 +81,7 @@ class ItineraryForm(WagtailAdminModelForm):
 
 class Itinerary(ClusterableModel):
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
+    description = RichTextField(blank=True)
 
     panels = [
         FieldPanel("name"),
@@ -105,7 +106,7 @@ class ItineraryStop(ClusterableModel):
     end_date = models.DateField()
 
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
+    description = RichTextField(blank=True)
     location = models.CharField(max_length=255)
 
     def parsed_location(self):
