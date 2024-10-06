@@ -18,13 +18,15 @@
                     <div id="like-section" class="flex items-center">
                         <button 
                             id="like-button" 
-                            data-post-id="{{ page.id }}" 
+                            data-post-id="{{ page.id }}"
+                            data-is-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}"
                             class="flex items-center space-x-2 px-2 py-1 rounded-full transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600
                             {% if user in page.likes.all %}
                                 bg-blue-500 text-white hover:bg-blue-700
                             {% else %}
-                                bg-green-600 text-gray-700 hover:bg-green-700 bg-opacity-80
+                                bg-green-600 text-gray-700 {% if user.is_authenticated %} hover:bg-green-700 {% endif %} bg-opacity-80
                             {% endif %}
+                            disabled={% if not user.is_authenticated %}true{% endif %}
                         ">
                             <div class="text-xl rounded-full -translate-y-0.5">😻</div>
                             <div class="group">
@@ -138,7 +140,52 @@
     const likeList = document.getElementById('like-list');
     const likeListUser = document.getElementById('like-list-user');
 
+    const showLoginDialog = () => {
+        const backdrop = document.createElement('div');
+        backdrop.classList.add('fixed', 'inset-0', 'bg-black', 'bg-opacity-50', 'z-50');
+
+        // connect the backdrop to the document
+        document.body.appendChild(backdrop);
+
+        const dialog = document.createElement('dialog');
+        dialog.classList.add('justify-center', 'bg-white', 'rounded-lg', 'drop-shadow-lg', 'p-4');
+        dialog.innerHTML = `
+            <div>
+                <h2 class="text-xl font-bold mb-4">You need to be logged in to like this post</h2>
+                <div class="flex gap-4 justify-center">
+                    <a href="/accounts/login/?next={{ request.path }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg no-underline hover:text-amber-300 transition-colors">Login</a>
+                    <a href="/accounts/signup/" class="bg-green-600 text-white px-4 py-2 rounded-lg no-underline hover:text-amber-300 transition-colors">Sign up</a>
+                </div>
+            </div>
+        `;
+
+        // connect the dialog to the document
+        document.body.appendChild(dialog);
+
+        dialog.showModal();
+
+        dialog.addEventListener('click', function() {
+            dialog.close();
+
+            // remove the dialog from the document
+            dialog.remove();
+
+            // remove the backdrop from the document
+            backdrop.remove();
+        });
+    }
+
     likeButton.addEventListener('click', function() {
+
+        const isAuthenticated = this.dataset.isAuthenticated;
+
+        if (isAuthenticated === 'false') {
+
+            showLoginDialog();
+
+            return;
+        }
+
         const postId = this.dataset.postId;
         fetch(`/blog/api/likes/${postId}/toggle_like/`, {
             method: 'POST',
