@@ -1671,12 +1671,12 @@ select {
   height: 100vh;
 }
 
-.max-h-96 {
-  max-height: 24rem;
-}
-
 .max-h-24 {
   max-height: 6rem;
+}
+
+.max-h-96 {
+  max-height: 24rem;
 }
 
 .min-h-16 {
@@ -1754,10 +1754,6 @@ select {
 
 .w-screen {
   width: 100vw;
-}
-
-.min-w-10 {
-  min-width: 2.5rem;
 }
 
 .min-w-24 {
