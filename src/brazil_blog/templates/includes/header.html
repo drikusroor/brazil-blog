@@ -32,7 +32,9 @@
         {% endcache %}
         <div class="flex flex-row items-center gap-4">
             {% include "includes/opt-out.html" %}
-            {% include "notifications/includes/notifications.html" %}
+            {% if user.is_authenticated %}
+                {% include "notifications/includes/notifications.html" %}
+            {% endif %}
             <div class="group relative z-30">
                 <div
                     class="rounded-full bg-blue-800 text-white w-12 h-12 flex items-center justify-center relative z-30 cursor-pointer">
