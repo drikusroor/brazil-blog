@@ -302,9 +302,12 @@ class AuthorPage(Page):
         context["posts"] = (
             self.user.blog_posts.live().filter(date__lte=now).order_by("-date")
         )
-        context["is_subscribed"] = Subscription.objects.filter(
-            subscriber=request.user, author=self.user
-        ).exists()
+
+        if request.user.is_authenticated:
+            context["is_subscribed"] = Subscription.objects.filter(
+                subscriber=request.user, author=self.user
+            ).exists()
+
         return context
 
     parent_page_types = ["AuthorIndexPage"]
