@@ -9,9 +9,7 @@ from notifications.models import Notification
 from blog.templatetags.user_tags import user_display_name
 
 
-# after publishing page
-@hooks.register("after_publish_page")
-def after_publish_page(request, page):
+def after_publish_blog_page(request, page):
     # page author
     author = page.author
 
@@ -28,6 +26,13 @@ def after_publish_page(request, page):
             message=f"Your subscription to {user_name} has a new post: {page.title}",
             url=page.get_url(),
         )
+
+
+# after publishing page
+@hooks.register("after_publish_page")
+def after_publish_page(request, page):
+    if page.__class__.__name__ == "BlogPage":
+        after_publish_blog_page(request, page)
 
 
 class SubscriptionViewSet(SnippetViewSet):
