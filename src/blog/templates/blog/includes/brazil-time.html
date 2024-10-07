@@ -9,6 +9,19 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateBrazilTime() {
         fetch('/blog/api/brazil_time/')
             .then(response => response.text())
+            .then((text) => {
+                // if text contains an erroneous status code or message, throw an error
+
+                // status code regex, find the status code in the text that starts with 3, 4, or 5 and is followed by 2 digits
+                const statusCodeRegex = /(?:3|4|5)\d{2}/;
+
+                // find "Bad Request" or "Internal Server Error" or "Bad Gateway" in the text
+                const statusMessageRegex = /Bad Request|Internal Server Error|Bad Gateway/;
+
+                if (statusCodeRegex.test(text) || statusMessageRegex.test(text)) {
+                    throw new Error(text);
+                }
+            })
             .then(time => {
                 document.getElementById('brazilTime').innerHTML = time;
             })
