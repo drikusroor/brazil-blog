@@ -8,9 +8,9 @@
         <div class="bg-white rounded-xl overflow-hidden drop-shadow">
 
             <!-- Header -->
-            <div class="relative size-full aspect-[16/9]">
+            <div class="relative size-full aspect-video overflow-hidden">
                 {% if page.image %}
-                    {% picture page.image format-{webp,avif,jpeg} original class="blog-header-image" bgcolor-3730a3 %}
+                    {% picture page.image format-{webp,avif,jpeg} fill-992x558 class="blur lazyload transition bg-yellow-500 scale-105 duration-150 blog-header-image" bgcolor-3730a3 loading="lazy" decoding="async" %}
                 {% else %}
                     <div class="h-full w-full bg-gray-300"></div>
                 {% endif %}

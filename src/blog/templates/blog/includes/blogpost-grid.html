@@ -10,9 +10,10 @@
             <div class="relative aspect-square">
                 {% if post.specific.image %}
                     <img src="{{ post.specific.image|advanced_image:'fill-64x64,format-jpeg,bgcolor-eab308' }}"
-                         class="lazyload blur w-full h-full object-cover object-center transition bg-yellow-500 scale-105 duration-150"
-                         data-src="{{ post.specific.image|advanced_image:'fill-512x512,quality-90' }}"
-                         alt="{{ post.specific.image.alt }}">
+                        class="lazyload blur w-full h-full object-cover object-center transition bg-yellow-500 scale-105 duration-150"
+                        data-src="{{ post.specific.image|advanced_image:'fill-512x512,quality-90' }}"
+                        alt="{{ post.specific.image.alt }}"
+                    />
                 {% else %}
                     <div class="h-full bg-gray-300"></div>
                 {% endif %}
