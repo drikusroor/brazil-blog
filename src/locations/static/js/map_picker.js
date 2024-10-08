@@ -190,12 +190,18 @@ function handleMapElement(element) {
   }
 
   if (currentLocationButton) {
-    currentLocationButton.addEventListener("click", function () {
+    currentLocationButton.addEventListener("click", () => {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
+        navigator.geolocation.getCurrentPosition((position) => {
           updateMarker(position.coords.latitude, position.coords.longitude);
+        }, (error) => {
+          // show user a message that there was an error getting current location
+          alert(`Error getting current location from browser: ${error.message}`);
+          console.error("Error getting current location", error);
         });
       } else {
+        // show user a message that geolocation is not supported
+        alert("Geolocation is not supported by this browser.");
         console.error("Geolocation is not supported by this browser.");
       }
     });
