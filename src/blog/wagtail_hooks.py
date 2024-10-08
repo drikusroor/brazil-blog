@@ -1,6 +1,3 @@
-from django.utils.html import format_html
-from django.urls import path
-from django.http import JsonResponse
 from wagtail import hooks
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet

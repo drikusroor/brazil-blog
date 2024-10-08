@@ -1,7 +1,6 @@
 # blog/models.py
 
 from django.contrib.auth import get_user_model
-from django.http import JsonResponse
 from django.utils.html import format_html
 from django import forms
 from django.utils import timezone

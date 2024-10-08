@@ -3,7 +3,7 @@ from django.template import Template, Context
 from django.utils.dateparse import parse_date
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 
 from rest_framework import viewsets
 from .models import Comment, BlogPage, Subscription, User
