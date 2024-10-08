@@ -11,3 +11,6 @@ ruff
 
 # markdown for markdown support
 django-markup
+
+# django crontab for cron jobs
+django-crontab
