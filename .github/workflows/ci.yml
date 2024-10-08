@@ -63,7 +63,18 @@ jobs:
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
           EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
         run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd brazil-blog && git pull && docker compose -f docker-compose-deploy.yml up -d --build && docker system prune -f"
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+          "export DJANGO_SUPERUSER_USERNAME='$DJANGO_SUPERUSER_USERNAME' && \
+          export DJANGO_SUPERUSER_PASSWORD='$DJANGO_SUPERUSER_PASSWORD' && \
+          export DJANGO_SUPERUSER_EMAIL='$DJANGO_SUPERUSER_EMAIL' && \
+          export EMAIL_HOST_USER='$EMAIL_HOST_USER' && \
+          export EMAIL_HOST_PASSWORD='$EMAIL_HOST_PASSWORD' && \
+          export EMAIL_HOST='$EMAIL_HOST' && \
+          export EMAIL_PORT='$EMAIL_PORT' && \
+          cd brazil-blog && \
+          git pull && \
+          docker compose -f docker-compose-deploy.yml up -d --build && \
+          docker system prune -f"
       - name: Clear cache
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd brazil-blog && bin/manage clearcache"
