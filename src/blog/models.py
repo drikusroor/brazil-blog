@@ -194,7 +194,7 @@ class BlogPage(Page):
     location_panels = [
         FieldRowPanel(
             children=[
-                InlinePanel("location", label="Location"),
+                InlinePanel("location", label="Location", min_num=1, max_num=1),
                 FieldPanel("map_location"),
             ]
         )
