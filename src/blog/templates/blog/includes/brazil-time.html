@@ -16,11 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 const statusCodeRegex = /(?:3|4|5)\d{2}/;
 
                 // find "Bad Request" or "Internal Server Error" or "Bad Gateway" in the text
-                const statusMessageRegex = /Bad Request|Internal Server Error|Bad Gateway/;
+                const statusMessageRegex = /Bad Request|Internal Server Error|Bad Gateway|Error/;
 
                 if (statusCodeRegex.test(text) || statusMessageRegex.test(text)) {
                     throw new Error(text);
                 }
+
+                return text;
             })
             .then(time => {
                 document.getElementById('brazilTime').innerHTML = time;
