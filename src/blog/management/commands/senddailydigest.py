@@ -49,7 +49,7 @@ class Command(BaseCommand):
                         subject,
                         message,
                         html_message,
-                        "noreply@brazil.kokokoding.nl",
+                        "noreply@tropischeverrassing.fun",
                         [subscriber.email],
                     )
                 )

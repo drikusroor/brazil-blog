@@ -1,5 +1,6 @@
 # blog/models.py
 
+import logging
 from django.contrib.auth import get_user_model
 from django.utils.html import format_html
 from django import forms
@@ -12,6 +13,10 @@ from django.db.models.functions import Cast
 from modelcluster.fields import ParentalKey
 from django.db.models import DateField
 from django.core.mail import send_mail
+from django.core.mail.backends.smtp import EmailBackend
+from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
@@ -360,16 +365,53 @@ class Subscription(models.Model):
     def send_test_email(self, request, subscription_id):
         subscription = Subscription.objects.get(id=subscription_id)
 
-        result = send_mail(
-            "Test email",
-            f"This is a test email from {subscription.author.username} to {subscription.subscriber.username}",
-            "noreply@tropischeverrassing.fun",
-            [subscription.subscriber.email],
-        )
+        try:
+            backend = EmailBackend(
+                host=settings.EMAIL_HOST,
+                port=settings.EMAIL_PORT,
+                username=settings.EMAIL_HOST_USER,
+                password=settings.EMAIL_HOST_PASSWORD,
+                use_tls=settings.EMAIL_USE_TLS,
+                fail_silently=False,
+                timeout=10,
+            )
 
-        success = result == 1
+            # print smtp backend settings
+            print(backend.host)
+            print(backend.port)
+            print(backend.username)
 
-        return f"Email sent: {success}"
+            if backend.open():
+                logger.info("Email backend opened successfully")
+            else:
+                logger.error("Email backend failed to open")
+                return "Error: Email backend failed to open"
+
+            num_sent = send_mail(
+                "Test email",
+                f"This is a test email from {subscription.author.username} to {subscription.subscriber.username}",
+                "noreply@tropischeverrassing.fun",
+                [subscription.subscriber.email],
+                fail_silently=False,
+                connection=backend,
+            )
+
+            if num_sent >= 1:
+                message = "Email sent successfully"
+                logger.info(message)
+            else:
+                message = "Error: Email not sent"
+                logger.error(message)
+
+        except Exception as e:
+            logger.error(f"Error sending test email: {e}")
+            message = f"Error: {e}"
+
+        finally:
+            if backend:
+                backend.close()
+
+        return message
 
     def __str__(self):
         return f"{self.subscriber.username} subscribed to {self.author.username}"
