@@ -14,3 +14,6 @@ django-markup
 
 # django crontab for cron jobs
 django-crontab
+
+# easy-thumbnails for image processing
+easy-thumbnails

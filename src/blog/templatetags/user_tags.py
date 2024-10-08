@@ -2,6 +2,7 @@ from django import template
 from django.utils.html import format_html
 from blog.models import BlogPage
 from django.contrib.auth.models import User
+from easy_thumbnails.files import get_thumbnailer
 
 register = template.Library()
 
@@ -33,10 +34,18 @@ def post_user_display_name(post: BlogPage):
     return user_display_name(user)
 
 
+def get_thumbnail_url(image, size):
+    if image:
+        thumbnailer = get_thumbnailer(image)
+        thumbnail_options = {"size": (size, size), "crop": True}
+        return thumbnailer.get_thumbnail(thumbnail_options).url
+    return ""
+
+
 @register.simple_tag
-def get_user_avatar_url(user: User) -> str:
+def get_user_avatar_url(user: User, max_size: int = 128) -> str:
     if hasattr(user, "wagtail_userprofile") and user.wagtail_userprofile.avatar:
-        return user.wagtail_userprofile.avatar.url
+        return get_thumbnail_url(user.wagtail_userprofile.avatar, max_size)
     return ""
 
 
@@ -47,9 +56,21 @@ def user_avatar(
     name = user_display_name(user)
 
     if hasattr(user, "wagtail_userprofile") and user.wagtail_userprofile.avatar:
+        image = user.wagtail_userprofile.avatar
+        max_size = (
+            128  # This should be larger than the largest size you use in your CSS
+        )
+
+        # Generate URLs for full size and thumbnail
+        full_url = get_thumbnail_url(image, max_size)
+        thumb_url = get_thumbnail_url(image, 10)  # Tiny thumbnail for placeholder
+
         return format_html(
-            '<img src="{}" alt="{}" class="{}" title="{}">',
-            user.wagtail_userprofile.avatar.url,
+            '<img src="{}" data-src="{}" alt="{}" class="{} lazyload blur-up" title="{}"'
+            ' style="filter: blur(5px); transition: filter 0.3s;"'
+            " onload=\"this.style.filter='none';\">",
+            thumb_url,
+            full_url,
             name,
             classes,
             name,

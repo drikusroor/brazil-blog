@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "django_markup",
     "django_crontab",
+    "easy_thumbnails",
 ]
 
 MIDDLEWARE = [
@@ -219,3 +220,10 @@ EMAIL_USE_TLS = True
 CRONJOBS = [
     ("0 1 * * *", "django.core.management.call_command", ["senddailydigest"]),
 ]
+
+# Easy thumbnails settings
+THUMBNAIL_ALIASES = {
+    "": {
+        "avatar": {"size": (128, 128), "crop": True},
+    }
+}
