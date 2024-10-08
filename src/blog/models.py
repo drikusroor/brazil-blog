@@ -1,6 +1,8 @@
 # blog/models.py
 
 import logging
+from itertools import groupby
+
 from django.contrib.auth import get_user_model
 from django.utils.html import format_html
 from django import forms
@@ -16,8 +18,6 @@ from django.core.mail import send_mail
 from django.core.mail.backends.smtp import EmailBackend
 from django.conf import settings
 
-logger = logging.getLogger(__name__)
-
 from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
 from wagtail.admin.panels import (
@@ -28,15 +28,13 @@ from wagtail.admin.panels import (
     FieldRowPanel,
 )
 from wagtail.snippets.models import register_snippet
-
-
 from wagtail.admin.forms import WagtailAdminPageForm
 from wagtail.search import index
 
-from itertools import groupby
-
 from locations.forms import MapPickerWidget
 from locations.models import Itinerary
+
+logger = logging.getLogger(__name__)
 
 
 User = get_user_model()
@@ -360,7 +358,13 @@ class Subscription(models.Model):
             obj.id,
         )
 
+    def send_daily_digest_email_button(self):
+        return format_html(
+            '<button class="button button-small" onclick="sendDailyDigestEmail()">Send Daily Digest Email</button>'
+        )
+
     send_test_email_button.short_description = "Send Test Email"
+    send_daily_digest_email_button.short_description = "Send Daily Digest Email"
 
     def send_test_email(self, request, subscription_id):
         subscription = Subscription.objects.get(id=subscription_id)
@@ -375,11 +379,6 @@ class Subscription(models.Model):
                 fail_silently=False,
                 timeout=10,
             )
-
-            # print smtp backend settings
-            print(backend.host)
-            print(backend.port)
-            print(backend.username)
 
             if backend.open():
                 logger.info("Email backend opened successfully")

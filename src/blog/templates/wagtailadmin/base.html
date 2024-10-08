@@ -56,5 +56,17 @@
                 alert('An error occurred while sending the test email.');
             });
     }
+
+    function sendDailyDigestEmail() {
+        fetch('/blog/api/send-daily-digest-email/')
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred while sending the daily digest email.');
+            });
+    }
     </script>
 {% endblock %}

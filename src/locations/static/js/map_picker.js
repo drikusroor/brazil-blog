@@ -52,7 +52,6 @@ function handleMapElement(element) {
 
     // Initialize marker if value exists
     if (input.value) {
-      console.log("Adding marker", input.value);
       const [lat, lng] = input.value.split(",");
       updateMarker(parseFloat(lat), parseFloat(lng));
     }

@@ -1,9 +1,11 @@
+import logging
 from django.http import HttpResponse, JsonResponse
 from django.template import Template, Context
 from django.utils.dateparse import parse_date
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.core.management import call_command
 
 from rest_framework import viewsets
 from .models import Comment, BlogPage, Subscription, User
@@ -17,6 +19,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from notifications.models import Notification
+
+logger = logging.getLogger(__name__)
 
 
 # Create your views here.
@@ -193,3 +197,14 @@ def send_test_email(request, subscription_id):
     subscription = Subscription.objects.get(id=subscription_id)
     result = subscription.send_test_email(request, subscription_id)
     return JsonResponse({"message": result})
+
+
+@permission_classes([IsAdminUser])
+def send_daily_digest_email(self):
+    # call command to send daily digest email
+    try:
+        call_command("senddailydigest")
+        return "Daily digest email sent successfully"
+    except Exception as e:
+        logger.error(f"Error sending daily digest email: {e}")
+        return f"Error: {e}"

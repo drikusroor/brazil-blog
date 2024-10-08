@@ -8,6 +8,7 @@ from .views import (
     posts_by_date,
     toggle_subscription,
     send_test_email,
+    send_daily_digest_email,
 )
 
 router = DefaultRouter()
@@ -36,5 +37,10 @@ urlpatterns = [
         "api/send-test-email/<int:subscription_id>/",
         send_test_email,
         name="send_test_email",
+    ),
+    path(
+        "api/send-daily-digest-email/",
+        send_daily_digest_email,
+        name="send_daily_digest_email",
     ),
 ]

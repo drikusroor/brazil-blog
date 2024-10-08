@@ -38,7 +38,13 @@ def after_publish_page(request, page):
 class SubscriptionViewSet(SnippetViewSet):
     model = Subscription
     icon = "user"
-    list_display = ["subscriber", "author", "created_at", "send_test_email_button"]
+    list_display = [
+        "subscriber",
+        "author",
+        "created_at",
+        "send_test_email_button",
+        "send_daily_digest_email_button",
+    ]
     inline_actions = ["send_test_email"]
 
     def __init__(self, *args, **kwargs):
