@@ -235,6 +235,19 @@ class BlogPage(Page):
     def like_count(self):
         return self.likes.count()
 
+    @property
+    def liked_by(self):
+        likesArray = []
+        for user in self.likes.all():
+            likesArray.append(
+                {
+                    "username": user.username,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                }
+            )
+        return likesArray
+
 
 @register_snippet
 class Comment(models.Model):

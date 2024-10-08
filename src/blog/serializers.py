@@ -102,7 +102,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogPage
-        fields = ["id", "like_count"]
+        fields = ["id", "like_count", "liked_by"]
         read_only_fields = ["like_count"]
 
 
