@@ -30,16 +30,23 @@
                         ">
                             <div class="text-xl rounded-full -translate-y-0.5">😻</div>
                             <div class="group">
-                                <div id="like-count" data-post-id="{{ page.id }}" class="font-bold text-white drop-shadow">{{ page.like_count }}</div>
-                                    <ul
-                                    id="like-list"
-                                    class="absolute top-10 right-4 min-w-24 w-max max-h-24 overflow-auto flex flex-col items-start z-30 px-4 py-2 bg-blue-500 rounded-3xl opacity-0 pointer-events-none hover:opacity-100 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">    
-                                        {% for user in page.likes.all %}
-                                            <li id="like-list-user" class="text-sm">
-                                                {% user_display_name user %}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
+                                <div 
+                                    id="like-count" 
+                                    data-post-id="{{ page.id }}" 
+                                    data-user="{{ user }}"
+                                    data-full-name="{% if user.is_authenticated%} {% user_display_name user %} {% endif %}"
+                                    class="font-bold text-white drop-shadow">
+                                    {{ page.like_count }}
+                                </div>
+                                <ul
+                                id="like-list"
+                                class="absolute top-10 right-4 min-w-24 w-max max-h-24 overflow-auto flex flex-col items-start z-30 px-4 py-2 bg-blue-500 rounded-3xl opacity-0 pointer-events-none hover:opacity-100 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">    
+                                    {% for user in page.likes.all %}
+                                        <li id="{{user}}" class="text-sm">
+                                            {% user_display_name user %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
                             </div>
                         </button>
                     </div>
@@ -138,7 +145,6 @@
     const likeCount = document.getElementById('like-count');
     const likeText = document.getElementById('like-text');
     const likeList = document.getElementById('like-list');
-    const likeListUser = document.getElementById('like-list-user');
 
     const showLoginDialog = () => {
         const backdrop = document.createElement('div');
@@ -176,13 +182,9 @@
     }
 
     likeButton.addEventListener('click', function() {
-
         const isAuthenticated = this.dataset.isAuthenticated;
-
         if (isAuthenticated === 'false') {
-
             showLoginDialog();
-
             return;
         }
 
@@ -223,6 +225,17 @@
         })
         .then(response => response.json())
         .then(data => {
+            if (data.like_count > likeList.children.length) {
+                var newLi = document.createElement('li');
+                newLi.appendChild(document.createTextNode(this.dataset.fullName));
+                newLi.className = 'text-sm'
+                newLi.id = this.dataset.user
+                likeList.appendChild(newLi)
+            } else if (data.like_count < likeList.children.length) {
+                li = document.getElementById(this.dataset.user)
+                likeList.removeChild(li);
+            }
+
             if (data.like_count > 0) {
                 likeList.classList.add('group-hover:opacity-100', 'hover:opacity-100');
             } else {
