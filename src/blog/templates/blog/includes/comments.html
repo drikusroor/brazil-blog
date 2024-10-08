@@ -215,20 +215,30 @@
                 const loggedUser = document.getElementById("user-info");
                 const loggedInUser = loggedUser.attributes.user.textContent;
 
+                function addListItem (like) {
+                    var newLi = document.createElement('li');
+                    if (like.first_name && like.last_name) {
+                        newLi.appendChild(document.createTextNode(`${like.first_name} ${like.last_name}`))
+                    } else if (like.first_name) {
+                        newLi.appendChild(document.createTextNode(like.first_name))
+                    } else if (like.last_name) {
+                        newLi.appendChild(document.createTextNode(like.last_name))
+                    } else if (like.username) {
+                        newLi.appendChild(document.createTextNode(like.username))
+                    } else {
+                        newLi.appendChild(document.createTextNode(like))
+                    }
+                    newLi.className= 'text-sm'
+                    newLi.id = `comment-${commentId}-${like.username}`
+                    likeList.appendChild(newLi);
+                }
+
                 if (likeList.children.length === 0) {
                     for (like of data.liked_by) {
-                        var newLi = document.createElement('li');
-                        newLi.appendChild(document.createTextNode(`${like.first_name} ${like.last_name}`))
-                        newLi.className= 'text-sm'
-                        newLi.id = `comment-${commentId}-${like.username}`
-                        likeList.appendChild(newLi);
+                        addListItem(like)
                     }
                 } else if (data.like_count > likeList.children.length) {
-                    var newLi = document.createElement('li');
-                    newLi.appendChild(document.createTextNode(loggedUser.attributes.display.textContent));
-                    newLi.className = 'text-sm'
-                    newLi.id = `comment-${commentId}-${loggedInUser}`
-                    likeList.appendChild(newLi)
+                    addListItem(loggedUser.attributes.display.textContent);
                 } else if (data.like_count < likeList.children.length) {
                     var li = document.getElementById(`comment-${commentId}-${loggedInUser}`)
                     likeList.removeChild(li);

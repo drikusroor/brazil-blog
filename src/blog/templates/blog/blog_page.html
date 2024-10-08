@@ -227,7 +227,13 @@
         .then(data => {
             if (data.like_count > likeList.children.length) {
                 var newLi = document.createElement('li');
-                newLi.appendChild(document.createTextNode(this.dataset.fullName));
+
+                if (this.dataset.fullName) {
+                    newLi.appendChild(document.createTextNode(this.dataset.fullName))
+                } else {
+                    newLi.appendChild(document.createTextNode(this.dataset.user))
+                }
+
                 newLi.className = 'text-sm'
                 newLi.id = this.dataset.user
                 likeList.appendChild(newLi)
