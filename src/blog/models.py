@@ -106,6 +106,8 @@ class BlogIndexPage(Page):
 
     content_panels = Page.content_panels + [FieldPanel("intro")]
 
+    subpage_types = ["BlogPage"]
+
 
 class BlogPageForm(WagtailAdminPageForm):
     map_location = forms.CharField(
