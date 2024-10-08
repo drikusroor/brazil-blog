@@ -18,7 +18,8 @@
     {% for post in new_posts %}
         <div style="margin-top: 1rem; border-radius: 1rem; padding: 1rem; background-color: #f0f0f0; border: 1px solid #e0e0e0;">
             {% if post.image %}
-                <img src="{{ post.image.full_url }}" alt="{{ post.image.alt }}" style="max-width: 100%; border-radius: 1rem;">
+                {% image post.image width-320 as tmp_image %}
+                <img src="https://tropischeverrassing.fun/{{ tmp_image.url }}" alt="{{ tmp_image.alt }}" />
             {% endif %}
             <h2><a href="https://tropischeverrassing.fun/{{ post.url }}">{{ post.title }}</a></h2>
             <p>Door {{ post.author.get_full_name|default:post.author.username }}</p>
