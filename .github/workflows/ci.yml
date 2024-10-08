@@ -67,7 +67,7 @@ jobs:
     needs: deploy
 
     env:
-      CYPRESS_BASE_URL: "https://brazil.kokokoding.nl"
+      CYPRESS_BASE_URL: "https://tropischeverrassing.fun"
 
     services:
       web:

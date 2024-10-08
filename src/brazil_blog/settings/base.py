@@ -187,11 +187,14 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = "https://brazil.kokokoding.nl"
+WAGTAILADMIN_BASE_URL = "https://tropischeverrassing.fun"
 
 WAGTAILEMBEDS_RESPONSIVE_HTML = True
 
-CSRF_TRUSTED_ORIGINS = ["https://brazil.kokokoding.nl"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://brazil.kokokoding.nl",
+    "https://tropischeverrassing.fun",
+]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
