@@ -51,6 +51,7 @@ class Command(BaseCommand):
                 context = {
                     "subscriber": subscriber,
                     "new_posts": new_posts,
+                    "yesterday": yesterday,
                 }
                 subject = (
                     f"Er zijn nieuwe tropische verrassingen voor jou ({yesterday})"

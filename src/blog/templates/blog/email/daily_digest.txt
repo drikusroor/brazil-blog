@@ -1,11 +1,13 @@
-Your Daily Digest
+Een nieuwe tropische verrassing voor jou ({{ yesterday }})
 
-Hello {{ subscriber.username }},
-Here are the new blog posts from your subscribed authors:
+Hoi {{ subscriber.username }},
+Hier is een overzicht van de nieuwe tropische verrassingen die we gisteren hebben gepost:
+
+🌴 🍍 🥥 🏖️ 🦜 🌺 🍹 🌞 🦩 🍌 
 
 {% for post in new_posts %}
     {{ post.title }}
-    By {{ post.author.get_full_name|default:post.author.username }}
+    Door {{ post.author.get_full_name|default:post.author.username }}
     {{ post.intro }}
     {{ site.domain }}{{ post.url }}
     {% if not forloop.last %}
@@ -13,4 +15,10 @@ Here are the new blog posts from your subscribed authors:
     {% endif %}
 {% endfor %}
 
-Visit our site to read the full posts: https://{{ site.domain }}">{{ site.name }}
+Bezoek de site om alle nieuwe tropische verrassingen te kunnen zien: https://{{ site.domain }}">{{ site.name }}
+
+Veel plezier!
+
+Met olijke groetjes,
+
+Team Toucano 🦜

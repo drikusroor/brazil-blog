@@ -1,22 +1,38 @@
+{% load i18n static wagtailcore_tags wagtailimages_tags user_tags %}
+
 <!-- templates/blog/email/daily_digest.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Daily Digest</title>
+    <title>Een nieuwe tropische verrassing voor jou ({{ yesterday }})</title>
 </head>
 <body>
-    <h1>Your Daily Digest</h1>
-    <p>Hello {{ subscriber.username }},</p>
-    <p>Here are the new blog posts from your subscribed authors:</p>
+    <h1>Een nieuwe tropische verrassing voor jou ({{ yesterday }})</h1>
+    <p>Hoi {{ subscriber.username }},</p>
+    <p>Hier is een overzicht van de nieuwe tropische verrassingen die we gisteren hebben gepost:</p>
     
+    <p> 🌴 🍍 🥥 🏖️ 🦜 🌺 🍹 🌞 🦩 🍌 </p>
+
     {% for post in new_posts %}
-        <h2><a href="https://tropischeverrassing.fun/{{ post.url }}">{{ post.title }}</a></h2>
-        <p>By {{ post.author.get_full_name|default:post.author.username }}</p>
-        <p>{{ post.intro }}</p>
+        <div style="margin-top: 1rem; border-radius: 1rem; padding: 1rem; background-color: #f0f0f0; border: 1px solid #e0e0e0;">
+            {% if post.image %}
+                {% image post.image fill-320x240 %}
+            {% endif %}
+            <h2><a href="https://tropischeverrassing.fun/{{ post.url }}">{{ post.title }}</a></h2>
+            <p>Door {{ post.author.get_full_name|default:post.author.username }}</p>
+            <p>{{ post.intro }}</p>
+            <p><a href="https://tropischeverrassing.fun/{{ post.url }}">Lees meer</a></p>
+        </div>
     {% endfor %}
     
-    <p>Visit our site to read the full posts: <a href="https://tropischeverrassing.fun">Toucano</a></p>
+    <p>Bezoek de site om alle nieuwe tropische verrassingen te kunnen zien: <a href="https://tropischeverrassing.fun">Toucano</a></p>
+
+    <p>Veel plezier!</p>
+
+    <p>Met olijke groetjes,</p>
+
+    <p>Team Toucano 🦜</p>
 </body>
 </html>
