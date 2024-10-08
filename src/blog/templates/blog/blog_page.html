@@ -34,7 +34,7 @@
                                     id="like-count" 
                                     data-post-id="{{ page.id }}" 
                                     data-user="{{ user }}"
-                                    data-full-name="{% user_display_name user %}"
+                                    data-full-name="{% if user.is_authenticated%} {% user_display_name user %} {% endif %}"
                                     class="font-bold text-white drop-shadow">
                                     {{ page.like_count }}
                                 </div>
