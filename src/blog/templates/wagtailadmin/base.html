@@ -58,6 +58,12 @@
     }
 
     function sendDailyDigestEmail() {
+
+        // Show a confirmation dialog
+        if (!confirm('Are you sure you want to send the daily digest email? This will send an email to all subscribers.')) {
+            return;
+        }
+
         fetch('/blog/api/send-daily-digest-email/')
             .then(response => response.json())
             .then(data => {
