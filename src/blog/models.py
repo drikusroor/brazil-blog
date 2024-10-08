@@ -1,6 +1,8 @@
 # blog/models.py
 
 from django.contrib.auth import get_user_model
+from django.http import JsonResponse
+from django.utils.html import format_html
 from django import forms
 from django.utils import timezone
 from django.utils.dateparse import parse_date
@@ -10,7 +12,7 @@ from django.core.exceptions import ValidationError
 from django.db.models.functions import Cast
 from modelcluster.fields import ParentalKey
 from django.db.models import DateField
-# from django.core.management import call_command
+from django.core.mail import send_mail
 
 from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
@@ -346,10 +348,27 @@ class Subscription(models.Model):
     class Meta:
         unique_together = ("subscriber", "author")
 
-    def send_test_email(self):
-        # command is located in blog/management/commands/send_daily_digest.py
-        # call_command("senddailydigest")
-        return "Send test emailz"
+    def send_test_email_button(self):
+        obj = Subscription.objects.get(id=self.id)
+
+        return format_html(
+            '<button class="button button-small" onclick="sendTestEmail({})">Send Test Email</button>',
+            obj.id,
+        )
+
+    send_test_email_button.short_description = "Send Test Email"
+
+    def send_test_email(self, request, subscription_id):
+        subscription = Subscription.objects.get(id=subscription_id)
+
+        result = send_mail(
+            "Test email",
+            "This is a test email",
+            "noreply@tropischeverrassing.fun",
+            [subscription.subscriber.email],
+        )
+
+        return JsonResponse({"message": result})
 
     def __str__(self):
         return f"{self.subscriber.username} subscribed to {self.author.username}"

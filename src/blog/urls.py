@@ -7,6 +7,7 @@ from .views import (
     CommentLikeViewSet,
     posts_by_date,
     toggle_subscription,
+    send_test_email,
 )
 
 router = DefaultRouter()
@@ -30,5 +31,10 @@ urlpatterns = [
         "api/toggle-subscription/<int:author_id>/",
         toggle_subscription,
         name="toggle_subscription",
+    ),
+    path(
+        "api/send-test-email/<int:subscription_id>/",
+        send_test_email,
+        name="send_test_email",
     ),
 ]

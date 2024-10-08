@@ -3,7 +3,7 @@ from django.template import Template, Context
 from django.utils.dateparse import parse_date
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 from rest_framework import viewsets
 from .models import Comment, BlogPage, Subscription, User
@@ -13,7 +13,7 @@ from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import permission_classes, action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from notifications.models import Notification
@@ -186,3 +186,10 @@ def toggle_subscription(request, author_id):
         subscribed = True
 
     return JsonResponse({"subscribed": subscribed})
+
+
+@permission_classes([IsAdminUser])
+def send_test_email(request, subscription_id):
+    subscription = Subscription.objects.get(id=subscription_id)
+    result = subscription.send_test_email(request, subscription_id)
+    return JsonResponse({"message": result})

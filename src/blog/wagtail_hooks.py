@@ -1,3 +1,6 @@
+from django.utils.html import format_html
+from django.urls import path
+from django.http import JsonResponse
 from wagtail import hooks
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
@@ -38,7 +41,8 @@ def after_publish_page(request, page):
 class SubscriptionViewSet(SnippetViewSet):
     model = Subscription
     icon = "user"
-    list_display = ["subscriber", "author", "created_at", "send_test_email"]
+    list_display = ["subscriber", "author", "created_at", "send_test_email_button"]
+    inline_actions = ["send_test_email"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
