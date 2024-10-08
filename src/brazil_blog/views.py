@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, reverse
-from .forms import UserProfileForm
 from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.template import loader
 from blog.templatetags.user_tags import user_display_name, get_user_avatar_url
+from .forms import UserProfileForm
 
 
 def profile(request, username):
@@ -44,3 +46,8 @@ def edit_profile(request, username):
     else:
         form = UserProfileForm(instance=request.user)
     return render(request, "edit_profile.html", {"form": form})
+
+
+def robots_txt(request):
+    template = loader.get_template("robots.txt")
+    return HttpResponse(template.render(), content_type="text/plain")

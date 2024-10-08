@@ -6,7 +6,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
-from .views import profile, edit_profile
+from .views import profile, edit_profile, robots_txt
 from search import views as search_views
 from blog import urls as blog_urls
 
@@ -41,4 +41,5 @@ urlpatterns = urlpatterns + [
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:
     #    path("pages/", include(wagtail_urls)),
+    path("robots.txt", robots_txt),
 ]
