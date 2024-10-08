@@ -1,5 +1,5 @@
 {% load i18n static cache %}
-{% load wagtailcore_tags wagtailimages_tags navigation_tags brazil_time %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags brazil_time user_tags %}
 
 {% get_site_root as site_root %}
 {% with site_name=settings.base.NavigationSettings.site_name site_logo=settings.base.NavigationSettings.site_logo %}
@@ -37,9 +37,12 @@
             {% endif %}
             <div class="group relative z-30">
                 <div
-                    class="rounded-full bg-blue-800 text-white w-12 h-12 flex items-center justify-center relative z-30 cursor-pointer">
-                    {% if user.is_authenticated %}
-                    <span>{{ user.username|first|upper }}</span>
+                    class="rounded-full bg-blue-800 text-white w-12 h-12 flex items-center justify-center relative z-30 cursor-pointer"
+                    style="background-image: url({% get_user_avatar_url user %}); background-size: cover; background-position: center; background-repeat: no-repeat;"
+                >
+                {% if user.is_authenticated %}
+                    <div class="absolute top-0 right-0 w-full h-full bg-black rounded-full opacity-25 z-0"></div>
+                    <span class="z-10 drop-shadow">{{ user.username|first|upper }}</span>
                     {% else %}
                     <span>?</span>
                     {% endif %}
