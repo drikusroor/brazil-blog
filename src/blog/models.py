@@ -363,7 +363,7 @@ class Subscription(models.Model):
 
         result = send_mail(
             "Test email",
-            "This is a test email",
+            f"This is a test email from {subscription.author.username} to {subscription.subscriber.username}",
             "noreply@tropischeverrassing.fun",
             [subscription.subscriber.email],
         )
