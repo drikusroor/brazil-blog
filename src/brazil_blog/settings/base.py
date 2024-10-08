@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "django_markup",
+    "django_crontab",
 ]
 
 MIDDLEWARE = [
@@ -213,3 +214,8 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 # enable TLS by default
 EMAIL_USE_TLS = True
+
+# Crontab settings
+CRONJOBS = [
+    ("0 1 * * *", "django.core.management.call_command", ["senddailydigest"]),
+]
