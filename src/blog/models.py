@@ -286,6 +286,19 @@ class Comment(models.Model):
             self.likes.add(user)
             return True
 
+    @property
+    def liked_by(self):
+        likesArray = []
+        for user in self.likes.all():
+            likesArray.append(
+                {
+                    "username": user.username,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                }
+            )
+        return likesArray
+
 
 class BlogPageGalleryImage(Orderable):
     page = ParentalKey(
