@@ -368,7 +368,9 @@ class Subscription(models.Model):
             [subscription.subscriber.email],
         )
 
-        return JsonResponse({"message": result})
+        success = result == 1
+
+        return f"Email sent: {success}"
 
     def __str__(self):
         return f"{self.subscriber.username} subscribed to {self.author.username}"
