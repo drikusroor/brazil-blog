@@ -1,6 +1,8 @@
 from rest_framework import viewsets
 from rest_framework import serializers
+from django.utils import timezone
 from .models import DrinkConsumption
+from locations.models import ItineraryStop
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes, action
 from rest_framework.response import Response
@@ -72,3 +74,26 @@ class DrinkViewSet(viewsets.ModelViewSet):
         )
 
         return Response(total_amount_per_type)
+
+    @action(detail=False, methods=["post"])
+    def quick_add_drink(self, request):
+        drink_type_id = request.data.get("drink_type")
+        amount = request.data.get("amount", 1)
+        location = request.data.get("location", "")
+
+        DrinkConsumption.objects.create(
+            consumer=request.user, drink_type_id=drink_type_id, amount=amount
+        )
+
+        # find ItineraryStop whose start_date is less than or equal to current date
+        # and end_date is greater than or equal to current date
+        if not location:
+            stop = ItineraryStop.objects.filter(
+                itinerary__stops__start_date__lte=timezone.now(),
+                itinerary__stops__end_date__gte=timezone.now(),
+                itinerary__stops__location__isnull=False,
+            ).first()
+            if stop:
+                location = stop.location
+
+        return Response({"status": "success"})

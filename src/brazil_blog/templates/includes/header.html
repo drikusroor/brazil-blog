@@ -1,5 +1,5 @@
 {% load i18n static cache %}
-{% load wagtailcore_tags wagtailimages_tags navigation_tags brazil_time user_tags %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags brazil_time user_tags drink_tags %}
 
 {% get_site_root as site_root %}
 {% with site_name=settings.base.NavigationSettings.site_name site_logo=settings.base.NavigationSettings.site_logo %}
@@ -49,7 +49,7 @@
                 </div>
 
                 <ul
-                    class="list-none pl-0 mt-0 absolute -top-2 -right-2 w-48 z-30 pt-2 pb-5 bg-white rounded-3xl block opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
+                    class="list-none pl-0 mt-0 absolute -top-2 -right-2 w-48 z-30 pt-2 pb-4 bg-white rounded-3xl block opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
                     <h3 class="pl-4 mt-3 font-bold">{% trans "Hello" %} {{ user.username|default:"" }}!</h3>
                     {% if user.is_staff or user.is_superuser %}
                     <li class="pl-4 mt-2">
@@ -86,9 +86,17 @@
                         <a class="text-blue-800 hover:text-blue-900 transition-colors"
                             href="{% url 'frogger' %}" target="_blank">Spelletje spelen 🕹️</a>
                     </li>
+                    {% if user.is_superuser or user.is_staff %}
+                    <li class="px-4 mt-4">
+                        <div id="quick-drink-add-container" class="p-4 bg-slate-100  rounded-b-3xl border-slate-500">
+                            {% quick_drink_add_buttons %}
+                        </div>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
     </div>
 </header>
+
 {% endwith %}
