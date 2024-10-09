@@ -5,9 +5,26 @@
     <title>Frogger Game</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'games/css/frogger.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/brazil_blog_compiled.css' %}">
 </head>
 <body>
     <canvas id="gameCanvas" width="500" height="500"></canvas>
+    
+    <div id="buttonArea" class="relative w-full h-32 bg-white drop-shadow max-w-3xl mx-auto p-4 rounded-xl mt-4"></div>
+    
+    <div class="bg-white drop-shadow-lg max-w-3xl mx-auto p-4 rounded-xl mt-4">
+        <h1 class="text-2xl font-bold text-black">Frogger Game</h1>
+        <p class="text-gray-700 mt-2">Use the arrow keys to move the frog across the road and river.</p>
+    </div>
+
+    <div id="highScore" class="bg-white drop-shadow-lg max-w-3xl mx-auto p-4 rounded-xl my-4">
+        <h2 class="text-xl font-bold text-black">High Score</h2>
+        <ol id="highScoreList" class="list-decimal list-inside text-gray-700 mt-2">
+            <div class="bg-slate-400 animate-pulse rounded-lg p-2 h-96 w-full"></div>
+        </ol>
+    </div>
+
     <script src="{% static 'games/js/frogger.js' %}"></script>
+
 </body>
 </html>

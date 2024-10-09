@@ -6,6 +6,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.decorators import login_required
 from .models import Score
 from django.shortcuts import render
+from blog.serializers import UserSerializer
+from rest_framework import serializers
 
 
 def frogger(request):
@@ -21,3 +23,18 @@ def submit_score(request):
         Score.objects.create(player=request.user, score=int(score))
         return JsonResponse({"status": "success"})
     return JsonResponse({"status": "error", "message": "Invalid score"}, status=400)
+
+
+class ScoreSerializer(serializers.Serializer):
+    player = UserSerializer()
+    score = serializers.IntegerField()
+
+    class Meta:
+        model = Score
+        fields = "__all__"
+
+
+# get top 10 scores
+def top_scores(request):
+    scores = Score.objects.all()[:10]
+    return JsonResponse(ScoreSerializer(scores, many=True).data, safe=False)
