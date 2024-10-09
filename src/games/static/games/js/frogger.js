@@ -69,6 +69,8 @@ let carSoundPlayer;
 let gameLoopId;
 let isPaused = false;
 
+const buttonArea = document.querySelector('#buttonArea');
+
 // Create start button
 const startButton = document.createElement('button');
 startButton.textContent = 'Start Game';
@@ -82,7 +84,7 @@ startButton.style.cursor = 'pointer';
 startButton.style.fontFamily = 'monospace';
 startButton.style.backgroundColor = '#333';
 startButton.style.color = '#fff';
-document.body.appendChild(startButton);
+buttonArea.appendChild(startButton);
 
 // Create pause menu
 const pauseMenu = document.createElement('div');
@@ -94,7 +96,7 @@ pauseMenu.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
 pauseMenu.style.padding = '20px';
 pauseMenu.style.borderRadius = '10px';
 pauseMenu.style.display = 'none';
-document.body.appendChild(pauseMenu);
+buttonArea.appendChild(pauseMenu);
 
 const continueButton = document.createElement('button');
 continueButton.textContent = 'Continue';
@@ -103,6 +105,7 @@ continueButton.style.marginBottom = '10px';
 continueButton.style.padding = '10px 20px';
 continueButton.style.fontSize = '16px';
 continueButton.style.cursor = 'pointer';
+continueButton.style.color = '#fff';
 pauseMenu.appendChild(continueButton);
 
 const forfeitButton = document.createElement('button');
@@ -111,6 +114,7 @@ forfeitButton.style.display = 'block';
 forfeitButton.style.padding = '10px 20px';
 forfeitButton.style.fontSize = '16px';
 forfeitButton.style.cursor = 'pointer';
+forfeitButton.style.color = '#fff';
 pauseMenu.appendChild(forfeitButton);
 
 // Start game function
@@ -153,7 +157,7 @@ continueButton.addEventListener('click', () => {
 forfeitButton.addEventListener('click', () => {
     isPaused = false;
     pauseMenu.style.display = 'none';
-    canvas.style.display = 'none';
+    canvas.style.opacity = 0.1;
     startButton.style.display = 'block';
     
     // Stop all sounds
@@ -324,6 +328,10 @@ function update() {
             frog.y + frog.height > car.y
         ) {
             playSound(hitSound);
+            if (score > 0) {
+                submitFetchAndDisplayHighScore(score);
+            }
+            score = 0;
             resetGame();
         }
     });
@@ -386,12 +394,121 @@ function gameLoop() {
     }
 }
 
-// Reset game
+// Add this function to submit the score
+function submitScore(score) {
+    return fetch('/games/submit-score/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: `score=${score}`
+    })
+    .then(response => response.json())
+}
+
+
+
+// Fetch high score
+async function fetchHighScore() {
+    return fetch('/games/high-score/').then(response => response.json());
+}
+
+async function fetchAndDisplayHighScore() {
+
+    const highScoreList = document.getElementById('highScoreList');
+    
+    // add shimmer
+    highScoreList.innerHTML = '<div class="bg-slate-400 animate-pulse rounded-lg p-2 h-96 w-full"></div>';
+
+    fetchHighScore().then((data) => {
+        if (data?.length) {
+            highScoreList.innerHTML = '';
+
+            data.forEach((scoreEntry, index) => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('flex', 'items-center', 'justify-start', 'p-2', 'bg-slate-100', 'rounded-lg', 'mb-2');
+
+                const listItemContainer = document.createElement('div');
+                listItemContainer.classList.add('flex-1', 'flex', 'items-center', 'justify-start', 'gap-4');
+                
+                const { player, score } = scoreEntry;
+                const { display_name, avatar } = player;
+
+                const numberEl = document.createElement('span');
+                numberEl.textContent = index + 1;
+                if (index === 0) {
+                    numberEl.classList.add('text-center', 'rounded-full', 'w-8', 'h-8', 'p-0.5', 'text-xl', 'font-bold', 'bg-yellow-500', 'text-white');
+                } else if (index === 1) {
+                    numberEl.classList.add('text-center', 'rounded-full', 'w-8', 'h-8', 'p-0.5', 'text-xl', 'font-bold', 'bg-gray-500', 'text-white');
+                } else if (index === 2) {
+                    numberEl.classList.add('text-center', 'rounded-full', 'w-8', 'h-8', 'p-0.5', 'text-xl', 'font-bold', 'bg-yellow-900', 'text-white');
+                } else {
+                    numberEl.classList.add('text-center', 'rounded-full', 'w-8', 'h-8', 'p-0.5', 'text-xl', 'font-bold', 'bg-gray-300');
+                }
+
+                const avatarEl = document.createElement('img');
+                avatarEl.classList.add('w-8', 'h-8', 'rounded-full');
+                avatarEl.src = avatar;
+
+                const nameEl = document.createElement('span');
+                nameEl.textContent = display_name;
+
+                const scoreEl = document.createElement('span');
+                scoreEl.classList.add('text-lg', 'text-right', 'ml-auto', 'font-semibold', 'bg-green-700', 'text-white', 'px-2', 'rounded', 'min-w-16');
+                scoreEl.textContent = score;
+
+                listItemContainer.appendChild(numberEl);
+                listItemContainer.appendChild(avatarEl);
+                listItemContainer.appendChild(nameEl);
+                listItemContainer.appendChild(scoreEl);
+
+                listItem.appendChild(listItemContainer);
+
+                highScoreList.appendChild(listItem);
+            });
+
+        } else {
+            console.error('Error fetching high score:', data.message);
+            highScoreList.innerHTML = 'There are no high scores yet';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        highScoreList.innerHTML = 'Failed to fetch high scores';
+    });
+}
+
+async function submitFetchAndDisplayHighScore(score) {
+    return submitScore(score).then(fetchAndDisplayHighScore);
+}
+
+// Function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Modify the resetGame function
 function resetGame() {
+    canvas.style.opacity = 1;
     frog.x = canvas.width / 2 - 15;
     frog.y = canvas.height - 30;
     frog.facingLeft = false;
 }
 
 // Initially hide the canvas
-canvas.style.display = 'none';
+canvas.style.opacity = 0.1;
+
+// Fetch high score
+fetchAndDisplayHighScore();
