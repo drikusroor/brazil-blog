@@ -167,4 +167,29 @@ class DrinkStatisticsView(TemplateView):
         )
         context["avg_drinks_per_day"] = list(avg_drinks)
 
+        # Data for scatter plot
+        scatter_data = (
+            DrinkConsumption.objects.select_related("drink_type")
+            .values(
+                "date",
+                "amount",
+                "location",
+                "drink_type__name",
+                "drink_type__image__file",
+            )
+            .order_by("date")
+        )
+
+        # Calculate location coefficient (you may need to adjust this based on your coordinate system)
+        for item in scatter_data:
+            if item["location"]:
+                lat, lon = map(float, item["location"].split(","))
+                item["location_coeff"] = (
+                    lat + lon
+                )  # Simple coefficient, adjust as needed
+            else:
+                item["location_coeff"] = 0
+
+        context["scatter_data"] = json.dumps(list(scatter_data), cls=CustomJSONEncoder)
+
         return context
