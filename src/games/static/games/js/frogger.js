@@ -324,6 +324,10 @@ function update() {
             frog.y + frog.height > car.y
         ) {
             playSound(hitSound);
+            if (score > 0) {
+                submitScore(score);
+            }
+            score = 0;
             resetGame();
         }
     });
@@ -386,7 +390,44 @@ function gameLoop() {
     }
 }
 
-// Reset game
+// Add this function to submit the score
+function submitScore(score) {
+    fetch('/games/submit-score/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: `score=${score}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            console.log('Score submitted successfully');
+        } else {
+            console.error('Error submitting score:', data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Modify the resetGame function
 function resetGame() {
     frog.x = canvas.width / 2 - 15;
     frog.y = canvas.height - 30;
