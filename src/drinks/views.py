@@ -149,9 +149,10 @@ class DrinkStatisticsView(TemplateView):
         )
 
         # Drinks with location for the map
+        # including drink type's image url
         drinks_with_location = list(
             DrinkConsumption.objects.exclude(location="").values(
-                "location", "amount", "drink_type__name"
+                "location", "amount", "drink_type__name", "drink_type__image__file"
             )
         )
         context["drinks_with_location"] = json.dumps(

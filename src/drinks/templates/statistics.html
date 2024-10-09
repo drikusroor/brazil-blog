@@ -2,8 +2,8 @@
 {% load static wagtailimages_tags user_tags %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
@@ -65,10 +65,14 @@
                 <h2 class="text-xl font-semibold mb-4">Average Drinks per Day</h2>
                 <ul class="space-y-2">
                     {% for item in avg_drinks_per_day %}
-                        <li class="flex justify-between">
-                            <span>{{ item.drink_type__name }}</span>
-                            <span class="font-bold">{{ item.avg_per_day|floatformat:2 }}</span>
-                        </li>
+                        {% if forloop.first %}
+                            <li class="flex justify-between bg-amber-300 py-1 px-2 rounded-lg">
+                        {% else %}
+                            <li class="flex justify-between p-2">
+                        {% endif %}
+                                <span>{{ item.drink_type__name }}</span>
+                                <span class="font-bold">{{ item.avg_per_day|floatformat:2 }}</span>
+                            </li>
                     {% endfor %}
                 </ul>
             </div>
@@ -114,11 +118,28 @@
     }).addTo(map);
 
     const drinksWithLocation = JSON.parse('{{ drinks_with_location|safe }}');
+
+    console.log({drinksWithLocation});
+
     drinksWithLocation.forEach(drink => {
         const [lat, lng] = drink.location.split(',').map(parseFloat);
         if (!isNaN(lat) && !isNaN(lng)) {
-            L.marker([lat, lng]).addTo(map)
-                .bindPopup(`${drink.amount} ${drink.drink_type__name}(s)`);
+
+            if (!drink.drink_type__image__file) {
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup(`${drink.amount} ${drink.drink_type__name}(s)`);
+                return;
+            }
+
+            const icon = L.icon({
+                iconUrl: `/media/${drink.drink_type__image__file}`,
+                iconSize: [32, 32],
+                iconAnchor: [16, 32],
+                popupAnchor: [0, -32]
+            });
+
+            L.marker([lat, lng], { icon }).addTo(map)
+                .bindPopup(`${drink.amount} ${drink.drink_type__name}(s)`)
         }
     });
 
