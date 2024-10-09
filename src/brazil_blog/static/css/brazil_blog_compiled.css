@@ -1419,6 +1419,10 @@ select {
   left: 50%;
 }
 
+.left-4 {
+  left: 1rem;
+}
+
 .left-8 {
   left: 2rem;
 }
@@ -1608,10 +1612,6 @@ select {
 
 .hidden {
   display: none;
-}
-
-.aspect-\[16\/9\] {
-  aspect-ratio: 16/9;
 }
 
 .aspect-square {
