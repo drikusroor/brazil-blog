@@ -1,6 +1,5 @@
 from django import template
 from django.utils.html import format_html
-from blog.models import BlogPage
 from django.contrib.auth.models import User
 from easy_thumbnails.files import get_thumbnailer
 
@@ -20,7 +19,7 @@ def user_display_name(user: User):
 
 
 @register.simple_tag
-def post_user_display_name(post: BlogPage):
+def post_user_display_name(post):
     user = post.author
 
     # If the post doesn't have an author, we'll use the owner of the post as a fallback
@@ -81,9 +80,7 @@ def user_avatar(
 
 
 @register.simple_tag
-def post_user_avatar(
-    post: BlogPage, classes: str = "rounded-full w-16 h-16 object-cover"
-) -> str:
+def post_user_avatar(post, classes: str = "rounded-full w-16 h-16 object-cover") -> str:
     user = post.author
 
     # If the post doesn't have an author, we'll use the owner of the post as a fallback

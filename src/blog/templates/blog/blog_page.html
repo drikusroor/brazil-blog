@@ -20,7 +20,7 @@
                             id="like-button" 
                             data-post-id="{{ page.id }}"
                             data-is-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}"
-                            class="flex items-center space-x-2 px-2 py-1 rounded-full transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600
+                            class="group relative flex items-center space-x-2 px-2 py-1 rounded-full transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600
                             {% if user in page.likes.all %}
                                 bg-blue-500 text-white hover:bg-blue-700
                             {% else %}
@@ -29,7 +29,7 @@
                             disabled={% if not user.is_authenticated %}true{% endif %}
                         ">
                             <div class="text-xl rounded-full -translate-y-0.5">😻</div>
-                            <div class="group">
+                            <div>
                                 <div 
                                     id="like-count" 
                                     data-post-id="{{ page.id }}" 
@@ -40,7 +40,7 @@
                                 </div>
                                 <ul
                                 id="like-list"
-                                class="absolute top-10 right-4 min-w-24 w-max max-h-24 overflow-auto flex flex-col items-start z-30 px-4 py-2 bg-blue-500 rounded-3xl opacity-0 pointer-events-none hover:opacity-100 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">    
+                                class="absolute top-0 right-full mr-2 min-w-24 w-max overflow-auto flex flex-col items-start z-30 px-4 py-2 bg-blue-500 rounded-3xl opacity-0 pointer-events-none hover:opacity-100 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">    
                                     {% for user in page.likes.all %}
                                         <li id="{{user}}" class="text-sm">
                                             {% user_display_name user %}
@@ -198,6 +198,9 @@
         })
         .then(response => response.json())
         .then(data => {
+            // remove data-last-fetched attribute to force fetching the data again
+            likeButton.removeAttribute('data-last-fetched');
+            fetchLikes.call(likeButton);
             likeCount.textContent = data.like_count;
             if (data.liked) {
                 likeButton.classList.remove('bg-green-600', 'text-gray-700', 'hover:bg-green-700', 'bg-opacity-80');
@@ -214,7 +217,18 @@
         });
     });
 
-    likeCount.addEventListener('mouseover', function() {
+    function fetchLikes() {
+        // if last fetched was shorter than 5 seconds ago, don't fetch again
+        const lastFetched = this.getAttribute('data-last-fetched');
+        if (lastFetched) {
+            const lastFetchedDatetime = new Date(lastFetched);
+            const currentDatetime = new Date();
+            const diff = currentDatetime - lastFetchedDatetime;
+            if (diff < 5000) {
+                return;
+            }
+        }
+
         const postId = this.dataset.postId;
         fetch(`/blog/api/likes/${postId}/`, {
             method: 'GET',
@@ -225,22 +239,25 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.like_count > likeList.children.length) {
-                var newLi = document.createElement('li');
 
-                if (this.dataset.fullName) {
-                    newLi.appendChild(document.createTextNode(this.dataset.fullName))
-                } else {
-                    newLi.appendChild(document.createTextNode(this.dataset.user))
-                }
+            likeList.innerHTML = '';
 
-                newLi.className = 'text-sm'
-                newLi.id = this.dataset.user
-                likeList.appendChild(newLi)
-            } else if (data.like_count < likeList.children.length) {
-                li = document.getElementById(this.dataset.user)
-                likeList.removeChild(li);
+            const { like_count, liked_by = [] } = data;
+
+            if (likeCount.textContent !== like_count) {
+                likeCount.textContent = like_count;
             }
+
+            liked_by.forEach(user => {
+                const li = document.createElement('li');
+                li.classList.add('text-sm', 'text-white');
+                li.textContent = user;
+                likeList.appendChild(li);
+            });
+
+            // set last fetched attribute to prevent fetching the same data again
+            const currentDatetime = new Date();
+            likeButton.setAttribute('data-last-fetched', currentDatetime.toISOString());
 
             if (data.like_count > 0) {
                 likeList.classList.add('group-hover:opacity-100', 'hover:opacity-100');
@@ -248,7 +265,9 @@
                 likeList.classList.remove('group-hover:opacity-100', 'hover:opacity-100');
             }
         });
-    })
+    }
+
+    likeButton.addEventListener('mouseover', fetchLikes);
 
     function getCookie(name) {
         let cookieValue = null;

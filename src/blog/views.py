@@ -146,6 +146,17 @@ class CommentLikeViewSet(viewsets.ModelViewSet):
     serializer_class = CommentLikeSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        """
+        Optionally restricts the returned comments to a given blog post,
+        by filtering against a `post` query parameter in the URL.
+        """
+        queryset = super().get_queryset()
+        comment_id = self.request.query_params.get("comment")
+        if comment_id is not None:
+            queryset = queryset.filter(comment_id=comment_id)
+        return queryset
+
     @action(detail=True, methods=["post"])
     def toggle_like(self, request, pk=None):
         comment = self.get_object()

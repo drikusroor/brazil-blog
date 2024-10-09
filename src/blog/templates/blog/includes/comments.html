@@ -175,6 +175,8 @@
             "text-gray-600",
             "hover:text-gray-800",
             "transition-colors",
+            "group",
+            "relative",
         );
         if (comment.liked_by_user) {
             likeButton.classList.add("text-red-500");
@@ -182,10 +184,10 @@
         
         likeButton.innerHTML = `
                 <div class="text-xl">😻</div>
-                <div class="group">
+                <div>
                     <div id="comment-like-count" class="like-count">${comment.like_count}</div>
                     <ul id="comment-like-list-${comment.id}"                               
-                        class="absolute bottom-0 left-4 min-w-24 w-max max-h-24 overflow-auto flex flex-col items-start z-30 px-4 py-2 bg-blue-500 rounded-3xl opacity-0 pointer-events-none hover:opacity-100 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
+                        class="absolute top-full left-0 min-w-24 mt-2 w-max overflow-auto flex flex-col items-start z-30 px-4 py-2 bg-blue-500 rounded-3xl opacity-0 pointer-events-none hover:opacity-100 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
                     </ul>
                 </div>
         `;
@@ -194,12 +196,26 @@
             likeComment(comment.id).then((data) => {
                 likeButton.querySelector(".like-count").textContent = data.like_count;
                 likeButton.classList.toggle("text-red-500", data.liked);
+                // remove last fetched attribute to force fetching the data again
+                likeButton.removeAttribute('data-last-fetched');
+                fetchCommentLikes(comment.id);
             });
         });
         li.appendChild(likeButton);
 
-        likeButton.addEventListener("mouseover", function () {
-            const commentId = comment.id
+        function fetchCommentLikes(commentId) {
+
+            // if last fetched was shorter than 5 seconds ago, don't fetch again
+            const lastFetched = likeButton.getAttribute('data-last-fetched');
+            if (lastFetched) {
+                const lastFetchedDatetime = new Date(lastFetched);
+                const currentDatetime = new Date();
+                const diff = currentDatetime - lastFetchedDatetime;
+                if (diff < 5000) {
+                    return;
+                }
+            }
+
             fetch(`/blog/api/comment-likes/${commentId}/`, {
                 method: "GET",
                 headers: {
@@ -215,34 +231,23 @@
                 const loggedUser = document.getElementById("user-info");
                 const loggedInUser = loggedUser.attributes.user.textContent;
 
+                likeList.innerHTML = '';
+
                 function addListItem (like) {
                     var newLi = document.createElement('li');
-                    if (like.first_name && like.last_name) {
-                        newLi.appendChild(document.createTextNode(`${like.first_name} ${like.last_name}`))
-                    } else if (like.first_name) {
-                        newLi.appendChild(document.createTextNode(like.first_name))
-                    } else if (like.last_name) {
-                        newLi.appendChild(document.createTextNode(like.last_name))
-                    } else if (like.username) {
-                        newLi.appendChild(document.createTextNode(like.username))
-                    } else {
-                        newLi.appendChild(document.createTextNode(like))
-                    }
-                    newLi.className= 'text-sm'
+                    newLi.appendChild(document.createTextNode(like))
+                    newLi.classList.add('text-white', 'text-sm');
                     newLi.id = `comment-${commentId}-${like.username}`
                     likeList.appendChild(newLi);
                 }
 
-                if (likeList.children.length === 0) {
-                    for (like of data.liked_by) {
-                        addListItem(like)
-                    }
-                } else if (data.like_count > likeList.children.length) {
-                    addListItem(loggedUser.attributes.display.textContent);
-                } else if (data.like_count < likeList.children.length) {
-                    var li = document.getElementById(`comment-${commentId}-${loggedInUser}`)
-                    likeList.removeChild(li);
-                }
+                data.liked_by.forEach(like => {
+                    addListItem(like)
+                });
+
+                // set last fetched attribute to prevent fetching the same data again
+                const currentDatetime = new Date();
+                likeButton.setAttribute('data-last-fetched', currentDatetime.toISOString());
 
                 if (data.like_count > 0) {
                     likeList.classList.add('group-hover:opacity-100', 'hover:opacity-100');
@@ -250,7 +255,11 @@
                     likeList.classList.remove('group-hover:opacity-100', 'hover:opacity-100');
                 }
             });
-        })
+        }
+
+        likeButton.addEventListener("mouseover", function () {
+            fetchCommentLikes(comment.id);
+        });
 
         if (comment.is_author) {
 
@@ -298,7 +307,6 @@
             li.appendChild(deleteButton);
 
         }
-
 
         if (level < 4) {
             const replyButton = document.createElement("button");

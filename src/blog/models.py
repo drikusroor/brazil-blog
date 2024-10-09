@@ -34,6 +34,8 @@ from wagtail.search import index
 from locations.forms import MapPickerWidget
 from locations.models import Itinerary
 
+from .templatetags.user_tags import user_display_name
+
 logger = logging.getLogger(__name__)
 
 
@@ -243,16 +245,7 @@ class BlogPage(Page):
 
     @property
     def liked_by(self):
-        likesArray = []
-        for user in self.likes.all():
-            likesArray.append(
-                {
-                    "username": user.username,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                }
-            )
-        return likesArray
+        return [user_display_name(user) for user in self.likes.all()]
 
 
 @register_snippet
@@ -290,16 +283,7 @@ class Comment(models.Model):
 
     @property
     def liked_by(self):
-        likesArray = []
-        for user in self.likes.all():
-            likesArray.append(
-                {
-                    "username": user.username,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                }
-            )
-        return likesArray
+        return [user_display_name(user) for user in self.likes.all()]
 
 
 class BlogPageGalleryImage(Orderable):

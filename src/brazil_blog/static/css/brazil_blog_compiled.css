@@ -1431,10 +1431,6 @@ select {
   left: 50%;
 }
 
-.left-4 {
-  left: 1rem;
-}
-
 .left-8 {
   left: 2rem;
 }
@@ -1463,6 +1459,10 @@ select {
   right: 2.25rem;
 }
 
+.right-full {
+  right: 100%;
+}
+
 .top-0 {
   top: 0px;
 }
@@ -1473,10 +1473,6 @@ select {
 
 .top-1\/2 {
   top: 50%;
-}
-
-.top-10 {
-  top: 2.5rem;
 }
 
 .top-2 {
@@ -1710,10 +1706,6 @@ select {
 
 .h-screen {
   height: 100vh;
-}
-
-.max-h-24 {
-  max-height: 6rem;
 }
 
 .max-h-96 {
