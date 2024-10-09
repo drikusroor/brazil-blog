@@ -51,7 +51,9 @@ def get_user_avatar_url(user: User, max_size: int = 128) -> str:
 
 @register.simple_tag
 def user_avatar(
-    user: User, classes: str = "rounded-full w-16 h-16 object-cover"
+    user: User,
+    classes: str = "rounded-full w-16 h-16 object-cover",
+    max_size: int = 128,
 ) -> str:
     name = user_display_name(user)
 

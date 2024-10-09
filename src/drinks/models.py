@@ -44,7 +44,9 @@ class DrinkConsumption(ClusterableModel):
 
     description = models.TextField(blank=True)
 
-    drink_type = models.ForeignKey(DrinkType, on_delete=models.CASCADE)
+    drink_type = models.ForeignKey(
+        DrinkType, on_delete=models.CASCADE, related_name="drink_consumptions"
+    )
     # default amount is 1
     amount = models.PositiveIntegerField(default=1)
     # default is the current date

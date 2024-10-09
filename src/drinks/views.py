@@ -1,14 +1,22 @@
+import json
 from rest_framework import viewsets
 from rest_framework import serializers
 from django.utils import timezone
-from .models import DrinkConsumption
+from .models import DrinkConsumption, DrinkType
 from locations.models import ItineraryStop
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes, action
 from rest_framework.response import Response
 from django.db.models import Sum
+from django.views.generic import TemplateView
+from django.db.models import Count, Avg
+from django.db.models.functions import TruncDate
+from django.core.serializers.json import DjangoJSONEncoder
+
+from django.contrib.auth.models import User
 
 from blog.templatetags.user_tags import user_display_name
+from blog.serializers import UserSerializer
 
 
 class DrinkSerializer(serializers.ModelSerializer):
@@ -21,6 +29,13 @@ class DrinkSerializer(serializers.ModelSerializer):
         data["user"] = user_display_name(instance.consumer)
 
         return data
+
+
+class CustomJSONEncoder(DjangoJSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, timezone.datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        return super().default(obj)
 
 
 # Create your views here.
@@ -97,3 +112,59 @@ class DrinkViewSet(viewsets.ModelViewSet):
                 location = stop.location
 
         return Response({"status": "success"})
+
+
+class DrinkStatisticsView(TemplateView):
+    template_name = "statistics.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Drinks per user with complete user data
+        drinks_per_user = (
+            User.objects.filter(drink_consumptions__gt=0)
+            .annotate(
+                total_drinks=Sum("drink_consumptions__amount"),
+                total_days=Count("drink_consumptions__date", distinct=True),
+            )
+            .order_by("-total_drinks")
+        )
+
+        context["drinks_per_user"] = drinks_per_user
+
+        # Drinks per drink type
+        context["drinks_per_type"] = DrinkType.objects.annotate(
+            total=Sum("drink_consumptions__amount")
+        ).order_by("-total")
+
+        # Drinks per day (for the chart)
+        drinks_per_day = (
+            DrinkConsumption.objects.annotate(date_day=TruncDate("date"))
+            .values("date_day", "drink_type__name")
+            .annotate(total=Sum("amount"))
+            .order_by("date_day")
+        )
+        context["drinks_per_day"] = json.dumps(
+            list(drinks_per_day), cls=CustomJSONEncoder
+        )
+
+        # Drinks with location for the map
+        drinks_with_location = list(
+            DrinkConsumption.objects.exclude(location="").values(
+                "location", "amount", "drink_type__name"
+            )
+        )
+        context["drinks_with_location"] = json.dumps(
+            drinks_with_location, cls=CustomJSONEncoder
+        )
+
+        # Average drinks per day per type
+        avg_drinks = (
+            DrinkConsumption.objects.values("drink_type__name")
+            .annotate(avg_amount=Avg("amount"), total_days=Count("date", distinct=True))
+            .annotate(avg_per_day=Sum("amount") / Count("date", distinct=True))
+            .order_by("-avg_per_day")
+        )
+        context["avg_drinks_per_day"] = list(avg_drinks)
+
+        return context

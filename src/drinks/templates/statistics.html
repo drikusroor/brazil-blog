@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static wagtailimages_tags user_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="bg-green-700">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-white">Caipirinha Counter 🍹</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Drinks per User -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Drinks per User</h2>
+                <ul class="space-y-2">
+                    {% for item in drinks_per_user %}
+                        {% if forloop.first %}
+                            <li class="flex justify-between bg-amber-300 py-1 px-2 rounded-lg">
+                        {% else %}
+                            <li class="flex justify-between p-2">
+                        {% endif %}
+                                {% user_avatar item "rounded-full w-8 h-8 object-cover overflow-hidden" 32 %}
+                                <span>{% user_display_name item %}</span>
+                                <span class="font-bold">{{ item.total_drinks }}</span>
+                            </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Drinks per Type -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Drinks per Type</h2>
+                <ul class="space-y-2">
+                    {% for item in drinks_per_type %}
+                        {% if forloop.first %}
+                            <li class="flex justify-between bg-amber-300 py-1 px-2 rounded-lg">
+                        {% else %}
+                            <li class="flex justify-between p-2">
+                        {% endif %}
+                                {% image item.image fill-32x32-c100 alt=item.name %}
+                                <span>{{ item.name }}</span>
+                                <span class="font-bold">{{ item.total }}</span>
+                            </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Drinks per Day Chart -->
+            <div class="bg-white p-6 rounded-lg shadow-md col-span-full">
+                <h2 class="text-xl font-semibold mb-4">Drinks per Day</h2>
+                <canvas id="drinksPerDayChart"></canvas>
+            </div>
+
+            <!-- Drinks Map -->
+            <div class="bg-white p-6 rounded-lg shadow-md col-span-full">
+                <h2 class="text-xl font-semibold mb-4">Drink Locations</h2>
+                <div id="drinkMap" style="height: 400px;"></div>
+            </div>
+
+            <!-- Average Drinks per Day -->
+            <div class="bg-white p-6 rounded-lg shadow-md col-span-full">
+                <h2 class="text-xl font-semibold mb-4">Average Drinks per Day</h2>
+                <ul class="space-y-2">
+                    {% for item in avg_drinks_per_day %}
+                        <li class="flex justify-between">
+                            <span>{{ item.drink_type__name }}</span>
+                            <span class="font-bold">{{ item.avg_per_day|floatformat:2 }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Drinks per Day Chart
+    const ctx = document.getElementById('drinksPerDayChart').getContext('2d');
+    const drinksPerDay = JSON.parse('{{ drinks_per_day|safe }}');
+
+    const drinkTypes = [...new Set(drinksPerDay.map(item => item.drink_type__name))];
+    const dates = [...new Set(drinksPerDay.map(item => item.date_day.split(' ')[0]))];  // Extract only the date part
+
+    const datasets = drinkTypes.map(type => ({
+        label: type,
+        data: dates.map(date => {
+            const entry = drinksPerDay.find(item => item.date_day.startsWith(date) && item.drink_type__name === type);
+            return entry ? entry.total : 0;
+        }),
+        backgroundColor: `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`,
+    }));
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dates,
+            datasets: datasets
+        },
+        options: {
+            scales: {
+                x: { stacked: true },
+                y: { stacked: true }
+            }
+        }
+    });
+
+    // Drinks Map
+    const map = L.map('drinkMap').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const drinksWithLocation = JSON.parse('{{ drinks_with_location|safe }}');
+    drinksWithLocation.forEach(drink => {
+        const [lat, lng] = drink.location.split(',').map(parseFloat);
+        if (!isNaN(lat) && !isNaN(lng)) {
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup(`${drink.amount} ${drink.drink_type__name}(s)`);
+        }
+    });
+
+    if (drinksWithLocation.length > 0) {
+        const bounds = drinksWithLocation.map(drink => {
+            const [lat, lng] = drink.location.split(',').map(parseFloat);
+            return [lat, lng];
+        }).filter(coord => !isNaN(coord[0]) && !isNaN(coord[1]));
+        
+        if (bounds.length > 0) {
+            map.fitBounds(bounds);
+        }
+    }
+</script>
+{% endblock %}

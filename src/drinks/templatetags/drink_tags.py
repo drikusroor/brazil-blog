@@ -2,6 +2,7 @@ from django import template
 from django.utils.safestring import mark_safe
 from django.db.models import Sum
 from ..models import DrinkType, DrinkConsumption
+from django.urls import reverse
 
 register = template.Library()
 
@@ -28,8 +29,10 @@ def quick_drink_add_buttons():
 def show_total_drinks_consumed():
     total = DrinkConsumption.objects.aggregate(total=Sum("amount"))["total"]
 
+    statistics_url = reverse("drink_statistics")
+
     html = f"""
-        <a class="text-center text-xs flex items-center bg-gray-50 p-1 gap-1 rounded" href="#" title="Total drinks consumed: 🍹 {total}">
+        <a class="text-center text-xs flex items-center bg-gray-50 p-1 gap-1 rounded" href="{statistics_url}" title="Total drinks consumed: 🍹 {total}">
             🍹
             <span class="">{total}</span>
         </a>
