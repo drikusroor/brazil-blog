@@ -1,7 +1,11 @@
+{% load i18n static wagtailcore_tags wagtailimages_tags user_tags %}
+
 <div class="p-8 flex-grow">
     <h2 class="text-2xl">Comments</h2>
 
-    <ul id="commentsList" class="mt-4 rounded-lg">
+    <ul id="commentsList" 
+        class="mt-4 rounded-lg" 
+        data-user="{{ user }}">
         <li class="bg-slate-300 p-4 rounded-lg h-12 mt-4 animate-pulse"></li>
         <li class="bg-slate-300 p-4 rounded-lg h-12 mt-4 animate-pulse"></li>
         <li class="bg-slate-300 p-4 rounded-lg h-12 mt-4 animate-pulse"></li>
@@ -11,6 +15,8 @@
 
     <form id="commentForm" class="mt-8">
 
+
+        <div id="user-info" class="hidden" user="{{ user }}" display="{% user_display_name user %}" ></div>
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
         <input type="hidden" name="post" value="{{ page.id }}" />
         <input type="hidden" name="id" value="" />
@@ -68,7 +74,6 @@
     }
 
     function renderSingleComment(comment, parent) {
-
         const li = document.createElement("li");
         li.id = `comment-${comment.id}`;
 
@@ -163,6 +168,8 @@
 
         const likeButton = document.createElement("button");
         likeButton.classList.add(
+            "flex",
+            "items-center",
             "mt-2",
             "text-sm",
             "text-gray-600",
@@ -172,7 +179,17 @@
         if (comment.liked_by_user) {
             likeButton.classList.add("text-red-500");
         }
-        likeButton.innerHTML = `<span class="text-xl">😻</span> <span class="like-count">${comment.like_count}</span>`;
+        
+        likeButton.innerHTML = `
+                <div class="text-xl">😻</div>
+                <div class="group">
+                    <div id="comment-like-count" class="like-count">${comment.like_count}</div>
+                    <ul id="comment-like-list-${comment.id}"                               
+                        class="absolute bottom-0 left-4 min-w-24 w-max max-h-24 overflow-auto flex flex-col items-start z-30 px-4 py-2 bg-blue-500 rounded-3xl opacity-0 pointer-events-none hover:opacity-100 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:drop-shadow transition">
+                    </ul>
+                </div>
+        `;
+        
         likeButton.addEventListener("click", function () {
             likeComment(comment.id).then((data) => {
                 likeButton.querySelector(".like-count").textContent = data.like_count;
@@ -180,6 +197,60 @@
             });
         });
         li.appendChild(likeButton);
+
+        likeButton.addEventListener("mouseover", function () {
+            const commentId = comment.id
+            fetch(`/blog/api/comment-likes/${commentId}/`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector(
+                        'input[name="csrfmiddlewaretoken"]',
+                    ).value,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const likeList = document.getElementById(`comment-like-list-${commentId}`);
+                const loggedUser = document.getElementById("user-info");
+                const loggedInUser = loggedUser.attributes.user.textContent;
+
+                function addListItem (like) {
+                    var newLi = document.createElement('li');
+                    if (like.first_name && like.last_name) {
+                        newLi.appendChild(document.createTextNode(`${like.first_name} ${like.last_name}`))
+                    } else if (like.first_name) {
+                        newLi.appendChild(document.createTextNode(like.first_name))
+                    } else if (like.last_name) {
+                        newLi.appendChild(document.createTextNode(like.last_name))
+                    } else if (like.username) {
+                        newLi.appendChild(document.createTextNode(like.username))
+                    } else {
+                        newLi.appendChild(document.createTextNode(like))
+                    }
+                    newLi.className= 'text-sm'
+                    newLi.id = `comment-${commentId}-${like.username}`
+                    likeList.appendChild(newLi);
+                }
+
+                if (likeList.children.length === 0) {
+                    for (like of data.liked_by) {
+                        addListItem(like)
+                    }
+                } else if (data.like_count > likeList.children.length) {
+                    addListItem(loggedUser.attributes.display.textContent);
+                } else if (data.like_count < likeList.children.length) {
+                    var li = document.getElementById(`comment-${commentId}-${loggedInUser}`)
+                    likeList.removeChild(li);
+                }
+
+                if (data.like_count > 0) {
+                    likeList.classList.add('group-hover:opacity-100', 'hover:opacity-100');
+                } else {
+                    likeList.classList.remove('group-hover:opacity-100', 'hover:opacity-100');
+                }
+            });
+        })
 
         if (comment.is_author) {
 
