@@ -16,7 +16,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth.models import User
 
 from blog.templatetags.user_tags import user_display_name
-from blog.serializers import UserSerializer
 
 
 class DrinkSerializer(serializers.ModelSerializer):
