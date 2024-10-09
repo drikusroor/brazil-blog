@@ -32,7 +32,7 @@ def show_total_drinks_consumed():
     statistics_url = reverse("drink_statistics")
 
     html = f"""
-        <a class="text-center text-xs flex items-center bg-gray-50 p-1 gap-1 rounded" href="{statistics_url}" title="Total drinks consumed: 🍹 {total}">
+        <a class="text-center text-xs flex items-center bg-green-700 text-white p-1 gap-1 rounded" href="{statistics_url}" title="Total drinks consumed: 🍹 {total}">
             🍹
             <span class="">{total}</span>
         </a>
