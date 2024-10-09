@@ -1,6 +1,7 @@
 from django import template
 from django.utils.safestring import mark_safe
-from ..models import DrinkType
+from django.db.models import Sum
+from ..models import DrinkType, DrinkConsumption
 
 register = template.Library()
 
@@ -21,3 +22,17 @@ def quick_drink_add_buttons():
         """
     buttons_html += "</div>"
     return mark_safe(buttons_html)
+
+
+@register.simple_tag
+def show_total_drinks_consumed():
+    total = DrinkConsumption.objects.aggregate(total=Sum("amount"))["total"]
+
+    html = f"""
+        <a class="text-center text-xs flex items-center bg-gray-50 p-1 gap-1 rounded" href="#" title="Total drinks consumed: 🍹 {total}">
+            🍹
+            <span class="">{total}</span>
+        </a>
+    """
+
+    return mark_safe(html)
