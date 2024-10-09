@@ -95,10 +95,6 @@ class DrinkViewSet(viewsets.ModelViewSet):
         amount = request.data.get("amount", 1)
         location = request.data.get("location", "")
 
-        DrinkConsumption.objects.create(
-            consumer=request.user, drink_type_id=drink_type_id, amount=amount
-        )
-
         # find ItineraryStop whose start_date is less than or equal to current date
         # and end_date is greater than or equal to current date
         if not location:
@@ -109,6 +105,13 @@ class DrinkViewSet(viewsets.ModelViewSet):
             ).first()
             if stop:
                 location = stop.location
+
+        DrinkConsumption.objects.create(
+            consumer=request.user,
+            drink_type_id=drink_type_id,
+            amount=amount,
+            location=location,
+        )
 
         return Response({"status": "success"})
 

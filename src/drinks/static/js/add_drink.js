@@ -85,7 +85,7 @@ function getCookie(name) {
 // Simple toast notification function
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
-    toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded-md text-white ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} transition-opacity duration-300`;
+    toast.className = `fixed z-[10000] bottom-4 right-4 px-4 py-2 rounded-md text-white ${type === 'success' ? 'bg-green-700' : 'bg-red-700'} transition-opacity duration-300 drop-shadow-lg`;
     toast.textContent = message;
     document.body.appendChild(toast);
     setTimeout(() => {
