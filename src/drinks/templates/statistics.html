@@ -30,7 +30,7 @@
                                 <ul class="space-y-1 absolute right-1 p-2 bg-blue-700 text-white rounded-lg drop-shadow hidden group-hover:block">
                                     <li class="font-semibold">Drinks Breakdown</li>
                                     {% for drink in item.drink_breakdown %}
-                                    <li class="flex items-center gap-2">
+                                    <li class="flex items-center gap-2 z-10">
                                         {% if drink.image %}
                                             {% image drink.image fill-32x32-c100 alt=drink.name class="rounded-full" %}
                                         {% else %}
