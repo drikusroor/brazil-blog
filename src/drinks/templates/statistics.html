@@ -111,9 +111,14 @@
                         {% else %}
                             <li class="flex justify-between p-2">
                         {% endif %}
-                                <span>{{ item.drink_type__name }}</span>
-                                <span class="font-bold">{{ item.avg_per_day|floatformat:2 }}</span>
-                            </li>
+                        {% if item.image %}
+                            {% image item.image fill-32x32-c100 alt=item.name class="rounded-full" %}
+                        {% else %}
+                            <div class="w-8 h-8"></div>
+                        {% endif %}
+                            <span>{{ item.name }}</span>
+                            <span class="font-bold">{{ item.avg_per_day|floatformat:2 }}</span>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>

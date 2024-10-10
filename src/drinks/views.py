@@ -214,9 +214,11 @@ class DrinkStatisticsView(TemplateView):
 
         # Average drinks per day per type
         avg_drinks = (
-            DrinkConsumption.objects.values("drink_type__name")
-            .annotate(avg_amount=Avg("amount"), total_days=Count("date", distinct=True))
-            .annotate(avg_per_day=Sum("amount") / Count("date", distinct=True))
+            DrinkType.objects.all()
+            .annotate(
+                avg_per_day=Sum("drink_consumptions__amount")
+                / Count(TruncDate("drink_consumptions__date"), distinct=True)
+            )
             .order_by("-avg_per_day")
         )
         context["avg_drinks_per_day"] = list(avg_drinks)
