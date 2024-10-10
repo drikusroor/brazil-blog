@@ -122,15 +122,33 @@ class DrinkStatisticsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Drinks per user with complete user data
+        # Drinks per user with complete user data and drink type breakdown
         drinks_per_user = (
-            User.objects.filter(drink_consumptions__gt=0)
+            User.objects.filter(drink_consumptions__isnull=False)
+            .distinct()
             .annotate(
                 total_drinks=Sum("drink_consumptions__amount"),
                 total_days=Count("drink_consumptions__date", distinct=True),
             )
             .order_by("-total_drinks")
         )
+
+        # Get drink type breakdown for each user
+        drink_types = DrinkType.objects.all()
+        for user in drinks_per_user:
+            user.drink_breakdown = []
+            for drink_type in drink_types:
+                amount = (
+                    DrinkConsumption.objects.filter(
+                        consumer=user, drink_type=drink_type
+                    ).aggregate(total=Sum("amount"))["total"]
+                    or 0
+                )
+                if amount > 0:
+                    user.drink_breakdown.append(
+                        {"name": drink_type.name, "amount": amount}
+                    )
+            user.drink_breakdown.sort(key=lambda x: x["amount"], reverse=True)
 
         context["drinks_per_user"] = drinks_per_user
 

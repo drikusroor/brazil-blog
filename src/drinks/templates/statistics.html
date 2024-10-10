@@ -19,13 +19,22 @@
                 <ul class="space-y-2">
                     {% for item in drinks_per_user %}
                         {% if forloop.first %}
-                            <li class="flex justify-between bg-amber-300 py-1 px-2 rounded-lg">
+                            <li class="flex justify-between bg-amber-300 py-1 px-2 rounded-lg relative group">
                         {% else %}
-                            <li class="flex justify-between p-2">
+                            <li class="flex justify-between p-2 relative group">
                         {% endif %}
                                 {% user_avatar item "rounded-full w-8 h-8 object-cover overflow-hidden" 32 %}
                                 <span>{% user_display_name item %}</span>
                                 <span class="font-bold">{{ item.total_drinks }}</span>
+
+                                <ul class="space-y-1 absolute right-2 p-2 bg-blue-700 text-white rounded drop-shadow hidden group-hover:block">
+                                    <li class="font-semibold">Drinks Breakdown</li>
+                                    {% for drink in item.drink_breakdown %}
+                                    <li>
+                                        {{ drink.name }}: {{ drink.amount }}<br>
+                                    </li>
+                                {% endfor %}
+                                </ul>
                             </li>
                     {% endfor %}
                 </ul>
