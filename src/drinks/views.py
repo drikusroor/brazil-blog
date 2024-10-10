@@ -146,9 +146,14 @@ class DrinkStatisticsView(TemplateView):
                 )
                 if amount > 0:
                     user.drink_breakdown.append(
-                        {"name": drink_type.name, "amount": amount}
+                        {
+                            "name": drink_type.name,
+                            "amount": amount,
+                            "image": drink_type.image,
+                        }
                     )
             user.drink_breakdown.sort(key=lambda x: x["amount"], reverse=True)
+            print(user.drink_breakdown)
 
         context["drinks_per_user"] = drinks_per_user
 

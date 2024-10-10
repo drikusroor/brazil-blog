@@ -27,11 +27,19 @@
                                 <span>{% user_display_name item %}</span>
                                 <span class="font-bold">{{ item.total_drinks }}</span>
 
-                                <ul class="space-y-1 absolute right-2 p-2 bg-blue-700 text-white rounded drop-shadow hidden group-hover:block">
+                                <ul class="space-y-1 absolute right-1 p-2 bg-blue-700 text-white rounded-lg drop-shadow hidden group-hover:block">
                                     <li class="font-semibold">Drinks Breakdown</li>
                                     {% for drink in item.drink_breakdown %}
-                                    <li>
-                                        {{ drink.name }}: {{ drink.amount }}<br>
+                                    <li class="flex items-center gap-2">
+                                        {% if drink.image %}
+                                            {% image drink.image fill-32x32-c100 alt=drink.name class="rounded-full" %}
+                                        {% else %}
+                                            <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
+                                        {% endif %}
+                                        {{ drink.name }}: 
+                                        <span class="font-bold bg-blue-300 px-2 rounded-lg ml-auto text-gray-900">
+                                            {{ drink.amount }}
+                                        </span>
                                     </li>
                                 {% endfor %}
                                 </ul>
