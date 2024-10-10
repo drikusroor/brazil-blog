@@ -54,13 +54,30 @@
                 <ul class="space-y-2">
                     {% for item in drinks_per_type %}
                         {% if forloop.first %}
-                            <li class="flex justify-between bg-amber-300 py-1 px-2 rounded-lg">
+                            <li class="flex justify-between bg-amber-300 py-1 px-2 rounded-lg group relative">
                         {% else %}
-                            <li class="flex justify-between p-2">
+                            <li class="flex justify-between p-2 group relative">
                         {% endif %}
-                                {% image item.image fill-32x32-c100 alt=item.name %}
+                                {% if item.image %}
+                                    {% image item.image fill-32x32-c100 alt=item.name class="rounded-full" %}
+                                {% else %}
+                                    <div class="w-8 h-8"></div>
+                                {% endif %}
                                 <span>{{ item.name }}</span>
-                                <span class="font-bold">{{ item.total }}</span>
+                                <span class="font-bold">{{ item.total_drinks }}</span>
+
+                                <ul class="space-y-1 absolute z-10 right-1 p-2 bg-blue-700 text-white rounded-lg drop-shadow hidden group-hover:block">
+                                    <li class="font-semibold">User Breakdown</li>
+                                    {% for user in item.drink_breakdown %}
+                                    <li class="flex items-center gap-2">
+                                        {% user_avatar user.user "rounded-full w-8 h-8 object-cover overflow-hidden" 32 %}
+                                        {{ user.name }}: 
+                                        <span class="font-bold bg-blue-300 px-2 rounded-lg ml-auto text-gray-900">
+                                            {{ user.amount }}
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                                </ul>
                             </li>
                     {% endfor %}
                 </ul>

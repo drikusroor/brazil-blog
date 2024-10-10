@@ -153,14 +153,42 @@ class DrinkStatisticsView(TemplateView):
                         }
                     )
             user.drink_breakdown.sort(key=lambda x: x["amount"], reverse=True)
-            print(user.drink_breakdown)
 
         context["drinks_per_user"] = drinks_per_user
 
         # Drinks per drink type
-        context["drinks_per_type"] = DrinkType.objects.annotate(
-            total=Sum("drink_consumptions__amount")
-        ).order_by("-total")
+        drinks_per_type = (
+            DrinkType.objects.filter(drink_consumptions__isnull=False)
+            .distinct()
+            .annotate(
+                total_drinks=Sum("drink_consumptions__amount"),
+                total_days=Count("drink_consumptions__date", distinct=True),
+            )
+            .order_by("-total_drinks")
+        )
+
+        # Get user breakdown for each drink type
+        users = User.objects.all()
+        for drink_type in drinks_per_type:
+            drink_type.drink_breakdown = []
+            for user in users:
+                amount = (
+                    DrinkConsumption.objects.filter(
+                        consumer=user, drink_type=drink_type
+                    ).aggregate(total=Sum("amount"))["total"]
+                    or 0
+                )
+                if amount > 0:
+                    drink_type.drink_breakdown.append(
+                        {
+                            "name": user_display_name(user),
+                            "amount": amount,
+                            "user": user,
+                        }
+                    )
+            drink_type.drink_breakdown.sort(key=lambda x: x["amount"], reverse=True)
+
+        context["drinks_per_type"] = drinks_per_type
 
         # Drinks per day (for the chart)
         drinks_per_day = (
