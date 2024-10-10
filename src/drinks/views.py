@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from rest_framework import viewsets
 from rest_framework import serializers
 from django.utils import timezone
@@ -9,7 +10,7 @@ from rest_framework.decorators import permission_classes, action
 from rest_framework.response import Response
 from django.db.models import Sum
 from django.views.generic import TemplateView
-from django.db.models import Count, Avg
+from django.db.models import Count
 from django.db.models.functions import TruncDate
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -212,13 +213,23 @@ class DrinkStatisticsView(TemplateView):
             drinks_with_location, cls=CustomJSONEncoder
         )
 
+        # TODO: Improve this by basing the amount of days on the first consumption's day
+        # old_start_date = ItineraryStop.objects.order_by("start_date").first().start_date
+        start_date = (
+            DrinkConsumption.objects.order_by("date")
+            .annotate(date_day=TruncDate("date"))
+            .first()
+            .date_day
+        )
+        today_date = date.today()
+        total_days_amount = (today_date - start_date).days + 1
+
+        print(total_days_amount)
+
         # Average drinks per day per type
         avg_drinks = (
             DrinkType.objects.all()
-            .annotate(
-                avg_per_day=Sum("drink_consumptions__amount")
-                / Count(TruncDate("drink_consumptions__date"), distinct=True)
-            )
+            .annotate(avg_per_day=Sum("drink_consumptions__amount") / total_days_amount)
             .order_by("-avg_per_day")
         )
         context["avg_drinks_per_day"] = list(avg_drinks)
