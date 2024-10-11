@@ -39,7 +39,15 @@
 
     // Close modal if the user clicks anywhere outside of the modals content
     modal.addEventListener('click', (e) => {
-        if(e.target.className === 'image-modal') {
+        const className = e.target.className;
+
+        if(className.includes('image-modal')) {
+            modal.style.display = "none";
+        } else if (className.includes('image-modal-content')) {
+            modal.style.display = "none";
+        } else if (className.includes('image-modal-image')) {
+            modal.style.display = "none";
+        } else if (className.includes('image-modal-caption')) {
             modal.style.display = "none";
         }
     })
