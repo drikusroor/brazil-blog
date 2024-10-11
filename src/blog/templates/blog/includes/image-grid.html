@@ -4,7 +4,7 @@
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
     {% for picture in page.gallery_images.all %}
         <div id="{{forloop.counter0}}" class="open-image-modal bg-white rounded-xl overflow-hidden drop-shadow group hover:rotate-3 transition-transform relative cursor-pointer" >
-            {% image picture.image fill-1920x1080-c100 %}
+            {% image picture.image fill-960x540-c100 class="h-full w-full object-cover my-0" %}
             <div class="image-caption text-lg md:text-sm p-2 font-semibold header-text-color w-full h-full absolute hidden top-0 flex-col justify-end bg-gradient-to-t to-transparent from-yellow-500" id="{{forloop.counter0}}">
                 {{picture.caption}}
             </div>
