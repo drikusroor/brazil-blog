@@ -43,7 +43,7 @@
             modal.style.display = "none";
         }
     })
-    
+
     // Function triggerd by pressing the next button, to see the next picture in the gallery
     next.addEventListener('click', () => {
         const nextIndex = currentImageID == openModals.length - 1 ? 0 : currentImageID + 1;
@@ -58,6 +58,17 @@
         const modalinfo = searchForClass(openModals[previousIndex], 'image-modal-info');
         setModalContent(modalinfo);
         setCurrentImageID(modalinfo);
+    })
+
+    // Add event listeners for the arrow keys to navigate through the gallery
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+            next.click();
+        } else if (e.key === 'ArrowLeft') {
+            prev.click();
+        } else if (e.key === 'Escape') {
+            modal.style.display = "none";
+        }
     })
 
     // Return the item from an array with the correct class
