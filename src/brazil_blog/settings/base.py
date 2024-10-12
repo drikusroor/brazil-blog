@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "locations",
     "notifications",
     "drinks",
+    "animals",
     "rest_framework",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",

@@ -170,13 +170,10 @@
     const scatterDatasets = scatterDrinkTypes.map(type => ({
         label: type,
         data: scatterData.filter(item => item.drink_type__name === type).map(item => {
-
-            console.log(new Date(item.date));
-
             return {
                 x: new Date(item.date),
                 y: item.location_coeff,
-                r: Math.sqrt(item.amount) * 5,  // Adjust the scaling factor as needed
+                r: Math.sqrt(item.amount) * 10,  // Adjust the scaling factor as needed
                 amount: item.amount,
                 image: item.drink_type__image__file
             }
