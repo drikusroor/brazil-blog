@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Animal added:', data);
                 // You can add some feedback here, like a toast notification
                 showToast('Animal added successfully!');
             })

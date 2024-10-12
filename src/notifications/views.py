@@ -13,7 +13,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         logger.debug("NotificationViewSet.list() called")
-        queryset = self.get_queryset()
+        queryset = self.get_unread_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -23,6 +23,10 @@ class NotificationViewSet(viewsets.ModelViewSet):
             "-created_at"
         )
 
+    def get_unread_queryset(self):
+        logger.debug(f"get_unread_queryset called for user: {self.request.user}")
+        return self.get_queryset().filter(read=False)
+
     @action(detail=True, methods=["post"])
     def mark_as_read(self, request, pk=None):
         logger.debug(f"mark_as_read called for notification {pk}")
@@ -31,9 +35,15 @@ class NotificationViewSet(viewsets.ModelViewSet):
         notification.save()
         return Response({"status": "notification marked as read"})
 
-    # mark all as read for the current user
     @action(detail=False, methods=["post"])
     def mark_all_as_read(self, request):
         logger.debug("mark_all_as_read called")
         Notification.objects.filter(user=request.user).update(read=True)
         return Response({"status": "all notifications marked as read"})
+
+    @action(detail=False, methods=["get"])
+    def all(self, request):
+        logger.debug("all_notifications called")
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

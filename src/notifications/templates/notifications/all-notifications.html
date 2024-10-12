@@ -1,0 +1,103 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="bg-green-700">
+  <div class="container mx-auto px-4 py-8 min-h-96">
+    <h1 class="text-3xl font-bold mb-6">All Notifications</h1>
+
+    <div id="all-notifications" class="space-y-4">
+      <!-- Notifications will be dynamically inserted here -->
+    </div>
+
+    <button
+      id="mark-all-read"
+      class="mt-6 bg-blue-500 text-white rounded-md py-2 px-4 hover:bg-blue-600 transition duration-200"
+    >
+      Mark all as read
+    </button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const allNotifications = document.getElementById("all-notifications");
+    const markAllReadButton = document.getElementById("mark-all-read");
+
+    function fetchAllNotifications() {
+      fetch("/notifications/api/notifications/all/")
+        .then((response) => response.json())
+        .then((data) => {
+          allNotifications.innerHTML = "";
+
+          data.forEach((notification) => {
+            const item = document.createElement("div");
+            item.className = "p-4 bg-white shadow rounded-lg";
+            item.innerHTML = `
+                            <a 
+                            data-notification-link
+                            href="${
+                              notification.url
+                            }" class="block font-semibold mb-1 hover:underline ${
+              notification.read ? "text-gray-500" : ""
+            }">${notification.title}</a>
+                            <p class="text-sm text-gray-600">${
+                              notification.message
+                            }</p>
+                            <p class="text-xs text-gray-400 mt-2">${new Date(
+                              notification.created_at
+                            ).toLocaleString()}</p>
+                            ${
+                              !notification.read
+                                ? `<button class="mt-2 text-sm text-blue-500 hover:underline mark-read" data-id="${notification.id}">Mark as read</button>`
+                                : ""
+                            }
+                        `;
+            allNotifications.appendChild(item);
+          });
+        });
+    }
+
+    allNotifications.addEventListener("click", (e) => {
+      if (e.target.attributes.getNamedItem("data-notification-link")) {
+        e.preventDefault();
+        const link = e.target;
+        const href = link.getAttribute("href");
+        const notificationId = link.parentElement.querySelector("button").dataset.id;
+
+        fetch(
+          `/notifications/api/notifications/${notificationId}/mark_as_read/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+          }
+        ).finally(() => (document.location.href = href));
+      }
+
+      if (e.target.classList.contains("mark-read")) {
+        const id = e.target.dataset.id;
+        fetch(`/notifications/api/notifications/${id}/mark_as_read/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken"),
+          },
+        }).then(() => fetchAllNotifications());
+      }
+    });
+
+    markAllReadButton.addEventListener("click", () => {
+      fetch("/notifications/api/notifications/mark_all_as_read/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+      }).then(() => fetchAllNotifications());
+    });
+
+    // Initial fetch
+    fetchAllNotifications();
+  });
+</script>
+{% endblock %}
