@@ -10,6 +10,7 @@ from .views import profile, edit_profile, robots_txt
 from search import views as search_views
 from blog import urls as blog_urls
 from drinks import urls as drinks_urls
+from animals import urls as animals_urls
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
@@ -24,6 +25,7 @@ urlpatterns = [
     path("games/", include("games.urls")),
     path("locations/", include("locations.urls")),
     path("drinks/", include(drinks_urls)),
+    path("animals/", include(animals_urls)),
 ]
 
 

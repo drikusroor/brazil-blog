@@ -105,7 +105,7 @@ class AnimalViewSet(viewsets.ModelViewSet):
 
 
 class AnimalStatisticsView(TemplateView):
-    template_name = "animal_statistics.html"
+    template_name = "animals-statistics.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
