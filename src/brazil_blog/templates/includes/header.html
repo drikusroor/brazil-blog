@@ -1,5 +1,5 @@
 {% load i18n static cache %}
-{% load wagtailcore_tags wagtailimages_tags navigation_tags brazil_time user_tags drink_tags %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags brazil_time user_tags drink_tags animal_tags %}
 
 {% get_site_root as site_root %}
 {% with site_name=settings.base.NavigationSettings.site_name site_logo=settings.base.NavigationSettings.site_logo %}
@@ -18,6 +18,7 @@
                 <div class="flex items-center gap-2">
                     {% include "blog/includes/brazil-time.html" %}
                     {% show_total_drinks_consumed %}
+                    {% show_total_animals_spotted %}
                 </div>
             </div>
         </div>

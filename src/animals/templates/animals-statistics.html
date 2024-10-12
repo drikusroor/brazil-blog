@@ -11,7 +11,10 @@
 {% block content %}
 <div class="bg-green-700">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8 text-white">Caipirinha Counter 🍹</h1>
+        <h1 class="text-3xl font-bold mb-8 text-white">Capybara Counter 
+            <!-- {% static "capybara.jpg" max-64x64 alt="Capybara" class="w-12 h-12 inline-block" %} -->
+            <img src="{% static "/images/capybara.png" %}" alt="Capybara" class="w-8 h-8 inline-block" />
+        </h1>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <!-- Animals per User -->
             <div class="bg-white p-6 rounded-lg shadow-md">
