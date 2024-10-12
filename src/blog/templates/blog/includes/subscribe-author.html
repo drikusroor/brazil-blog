@@ -33,7 +33,8 @@
             .then(response => response.json())
             .then(data => {
                 this.textContent = data.subscribed ? '🔕' : '🔔';
-                this.title = data.subscribed ? 'Unsubscribe' : 'Subscribe';
+                this.title = data.subscribed ? 'Abonnement opzeggen' : 'Abonneren';
+                showToast(data.message);
             })
             .finally(() => {
                 this.disabled = false;
