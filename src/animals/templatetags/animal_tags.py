@@ -34,7 +34,7 @@ def show_total_animals_spotted():
     statistics_url = reverse("animal_statistics")
 
     html = f"""
-        <a class="text-center text-xs flex items-center bg-green-700 text-white p-1 gap-1 rounded" href="{statistics_url}" title="Total animals spotted: 🍹 {total}">
+        <a class="text-center text-xs flex items-center bg-green-700 text-white p-1 gap-1 rounded" href="{statistics_url}" title="Total animals spotted: 🦛 {total}">
             <img src="/static/images/capybara.png" alt="Animal" class="w-4 h-4">
             <span class="">{total}</span>
         </a>
