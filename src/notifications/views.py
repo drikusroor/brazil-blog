@@ -13,7 +13,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         logger.debug("NotificationViewSet.list() called")
-        queryset = self.get_queryset()
+        queryset = self.get_unread_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -22,6 +22,10 @@ class NotificationViewSet(viewsets.ModelViewSet):
         return Notification.objects.filter(user=self.request.user).order_by(
             "-created_at"
         )
+
+    def get_unread_queryset(self):
+        logger.debug(f"get_unread_queryset called for user: {self.request.user}")
+        return self.get_queryset().filter(read=False)
 
     @action(detail=True, methods=["post"])
     def mark_as_read(self, request, pk=None):
