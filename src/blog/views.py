@@ -18,7 +18,6 @@ from rest_framework.decorators import permission_classes, action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
-from blog.templatetags.user_tags import user_display_name
 
 from notifications.models import Notification
 
