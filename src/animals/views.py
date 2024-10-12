@@ -194,7 +194,7 @@ class AnimalStatisticsView(TemplateView):
         )
 
         start_date = (
-            AnimalSpotting.objects.order_by("date")
+            ItineraryStop.objects.order_by("date")
             .annotate(date_day=TruncDate("date"))
             .first()
             .date_day
