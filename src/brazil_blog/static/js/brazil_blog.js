@@ -1,7 +1,6 @@
 // Simple toast notification function
 function showToast(message, type = 'success') {
     const toasts = document.querySelectorAll('[role="alert"]');
-    console.log(toasts);
     toasts.forEach(toast => {
         const currentY = toast.style.transform.match(/translateY\(-(\d+)px\)/);
         toast.style.transform = `translateY(-${toast.offsetHeight + 10 + (currentY ? parseInt(currentY[1]) : 0)}px)`;
