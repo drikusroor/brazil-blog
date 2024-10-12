@@ -224,8 +224,6 @@ class DrinkStatisticsView(TemplateView):
         today_date = date.today()
         total_days_amount = (today_date - start_date).days + 1
 
-        print(total_days_amount)
-
         # Average drinks per day per type
         avg_drinks = (
             DrinkType.objects.all()

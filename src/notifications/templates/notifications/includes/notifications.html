@@ -12,7 +12,7 @@
         </svg>
         <span id="notification-count" class="absolute top-1 right-1 inline-flex items-center justify-center p-1 w-6 h-6 flex-0 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full"></span>
     </button>
-    <div id="notification-list" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-3xl shadow-lg overflow-hidden z-30 max-h-96 overflow-y-auto">
+    <div id="notification-list" class="hidden absolute right-0 mt-2 pb-8 w-80 bg-white rounded-3xl shadow-lg overflow-hidden z-30 max-h-96 overflow-y-auto">
         <div class="py-2">
             <!-- Notifications will be inserted here -->
         </div>
@@ -26,7 +26,7 @@
         const list = document.getElementById('notification-list');
 
         function fetchNotifications() {
-            fetch('/blog/api/notifications/')
+            fetch('/notifications/api/notifications/')
                 .then(response => response.json())
                 .then(data => {
                     const unreadCount = data.filter(n => !n.read).length;
@@ -35,7 +35,7 @@
 
                     list.innerHTML = data.map(notification => `
                         <div class="px-4 py-2 hover:bg-gray-100 ${notification.read ? 'bg-gray-50' : ''}">
-                            <a href="${notification.url}" class="block text-sm mb-1 ${notification.read ? 'text-gray-500' : ''}">${notification.title}</a>
+                            <a data-notification-link href="${notification.url}" class="block text-sm mb-1 hover:underline ${notification.read ? 'text-gray-500' : ''}">${notification.title}</a>
                             <p class="text-xs text-gray-500">${new Date(notification.created_at).toLocaleString()}</p>
                             ${!notification.read ? `
                                 <button id="markAsRead" data-notification-id="${notification.id}" class="mt-1 text-xs text-indigo-600 hover:text-indigo-900">
@@ -47,16 +47,23 @@
 
                     // Add mark all as read button
                     list.innerHTML += `
-                        <div class="px-4 py-2 bg-gray-100">
+                        <div class="flex items-center justify-between px-4 py-2 bg-gray-100 absolute w-full left-0 bottom-0">
                             <button id="markAllAsRead" class="text-xs text-indigo-600 hover:text-indigo-900">
-                                Mark all as read
+                                Mark all as read (${unreadCount})
                             </button>
+                            <a href="/notifications/" class="text-xs text-indigo-600 hover:text-indigo-900">
+                                View all notifications &rarr;
+                                </a>
                         </div>
                     `;
 
+                    list.querySelectorAll('[data-notification-link]').forEach((link) => {
+                        link.addEventListener('click', onNotificationLinkClick);
+                    });
+
                     list.querySelectorAll('#markAsRead').forEach(button => {
                         button.addEventListener('click', function() {
-                            markAsRead(button.dataset.notificationId);
+                            markAsReadAndFetch(button.dataset.notificationId);
                         });
                     });
 
@@ -64,19 +71,38 @@
                 });
         }
 
+        function onNotificationLinkClick(event) {
+            event.preventDefault();
+
+            const link = event.target;
+            const url = link.href;
+            const button = link.parentElement.querySelector('button');
+            const id = button.dataset.notificationId;
+
+            markAsRead(id)
+            .then(() => { document.location.href = url; })
+            .catch(() => { document.location.href = url; });
+        }
+
         function markAsRead(id) {
-            fetch(`/blog/api/notifications/${id}/mark_as_read/`, {
+            return fetch(`/notifications/api/notifications/${id}/mark_as_read/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken')
                 }
-            })
-            .then(() => fetchNotifications());
+            });
+        }
+            
+
+        function markAsReadAndFetch(id) {
+            return markAsRead(id)
+                .then(() => fetchNotifications())
+                .catch(() => fetchNotifications());
         }
 
         function markAllAsRead() {
-            fetch(`/blog/api/notifications/mark_all_as_read/`, {
+            fetch(`/notifications/api/notifications/mark_all_as_read/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
