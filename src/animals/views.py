@@ -193,12 +193,7 @@ class AnimalStatisticsView(TemplateView):
             animals_with_location, cls=CustomJSONEncoder
         )
 
-        start_date = (
-            ItineraryStop.objects.order_by("date")
-            .annotate(date_day=TruncDate("date"))
-            .first()
-            .date_day
-        )
+        start_date = ItineraryStop.objects.order_by("start_date").first().start_date
         today_date = date.today()
         total_days_amount = (today_date - start_date).days + 1
 
