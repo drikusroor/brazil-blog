@@ -239,7 +239,7 @@
 
             if (!animal.animal_type__image__file) {
                 L.marker([lat, lng]).addTo(map)
-                    .bindPopup(`${animal.amount} ${animal.animal_type__name}(s)`);
+                    .bindPopup(`${animal.count} ${animal.animal_type__name}(s)`);
                 return;
             }
 
@@ -251,7 +251,7 @@
             });
 
             L.marker([lat, lng], { icon }).addTo(map)
-                .bindPopup(`${animal.amount} ${animal.animal_type__name}(s)`)
+                .bindPopup(`${animal.count} ${animal.animal_type__name}(s)`)
         }
     });
 
