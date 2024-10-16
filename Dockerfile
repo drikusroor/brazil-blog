@@ -10,7 +10,7 @@ WORKDIR /code
 
 # Install dependencies
 COPY requirements.txt /code/
-RUN apt-get update && apt-get install -y gcc
+RUN apt-get update && apt-get install -y gcc gettext
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt

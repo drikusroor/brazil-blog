@@ -319,7 +319,7 @@
                 "hover:underline",
                 "transition-colors",
             );
-            replyButton.textContent = "Reply";
+            replyButton.textContent = "{% trans 'Reply' %}";
             replyButton.addEventListener("click", function () {
                 document.getElementById("commentBody").focus();
                 document.getElementById("parentCommentId").value = comment.id;
