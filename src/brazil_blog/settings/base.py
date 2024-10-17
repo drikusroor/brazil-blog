@@ -72,6 +72,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = "brazil_blog.urls"
@@ -139,7 +140,17 @@ LOGIN_REDIRECT_URL = "/"
 
 LANGUAGE_CODE = "en-us"
 
+LANGUAGES = [
+    ("en", "English"),
+    ("nl", "Dutch"),
+]
+
 USE_I18N = True
+USE_L10N = True
+
+LOCALE_PATHS = [
+    os.path.join(PROJECT_DIR, "locale"),
+]
 
 USE_TZ = True
 

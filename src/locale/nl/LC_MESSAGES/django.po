@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 #: blog/templates/blog/blog_page.html:134
 msgid "Return to blog"
-msgstr ""
+msgstr "Terug naar blog"
 
 #: blog/templates/blog/includes/comments.html:322
 msgid "Reply"
