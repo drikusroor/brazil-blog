@@ -2,6 +2,7 @@
 
 import logging
 from itertools import groupby
+from django.utils import translation
 
 from django.contrib.auth import get_user_model
 from django.utils.html import format_html
