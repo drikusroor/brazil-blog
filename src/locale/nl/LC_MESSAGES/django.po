@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-16 16:34-0500\n"
+"POT-Creation-Date: 2024-10-17 06:42-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,64 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: blog/templates/blog/blog_page.html:134
-msgid "Return to blog"
-msgstr "Terug naar blog"
-
-#: blog/templates/blog/includes/comments.html:322
-msgid "Reply"
-msgstr "Beantwoord"
-
-#: blog/templates/wagtailadmin/base.html:7
-msgid "Sidebar"
-msgstr ""
-
-#: brazil_blog/templates/allauth/layouts/base.html:22
-msgid "Messages:"
-msgstr "Berichten"
-
-#: brazil_blog/templates/allauth/layouts/base.html:29
-msgid "Menu:"
-msgstr ""
-
-#: brazil_blog/templates/allauth/layouts/base.html:33
-msgid "Change Email"
-msgstr "Verander e-mail"
-
-#: brazil_blog/templates/allauth/layouts/base.html:36
-msgid "Edit Profile"
-msgstr "Profiel bewerken"
-
-#: brazil_blog/templates/allauth/layouts/base.html:39
-#: brazil_blog/templates/includes/header.html:75
-msgid "Sign Out"
-msgstr "Uitloggen"
-
-#: brazil_blog/templates/allauth/layouts/base.html:43
-#: brazil_blog/templates/includes/header.html:80
-msgid "Sign In"
-msgstr "Inloggen"
-
-#: brazil_blog/templates/allauth/layouts/base.html:46
-#: brazil_blog/templates/includes/header.html:84
-msgid "Sign Up"
-msgstr "Registreren"
-
-#: brazil_blog/templates/includes/header.html:55
-msgid "Hello"
-msgstr "Hallo"
-
-#: brazil_blog/templates/includes/header.html:60
-msgid "Admin"
-msgstr ""
-
-#: brazil_blog/templates/includes/header.html:67
-msgid "Account"
-msgstr ""
-
-#: brazil_blog/templates/includes/header.html:71
-msgid "Profile"
-msgstr "Profiel"
 
 #: home/templates/home/welcome_page.html:6
 msgid "Visit the Wagtail website"
@@ -118,3 +60,33 @@ msgstr ""
 #: home/templates/home/welcome_page.html:50
 msgid "Create your superuser first!"
 msgstr ""
+
+#~ msgid "Return to blog"
+#~ msgstr "Terug naar blog"
+
+#~ msgid "Reply"
+#~ msgstr "Beantwoord"
+
+#~ msgid "Messages:"
+#~ msgstr "Berichten"
+
+#~ msgid "Change Email"
+#~ msgstr "Verander e-mail"
+
+#~ msgid "Edit Profile"
+#~ msgstr "Profiel bewerken"
+
+#~ msgid "Sign Out"
+#~ msgstr "Uitloggen"
+
+#~ msgid "Sign In"
+#~ msgstr "Inloggen"
+
+#~ msgid "Sign Up"
+#~ msgstr "Registreren"
+
+#~ msgid "Hello"
+#~ msgstr "Hallo"
+
+#~ msgid "Profile"
+#~ msgstr "Profiel"

@@ -1,7 +1,9 @@
 {% load i18n static wagtailcore_tags wagtailimages_tags user_tags %}
 
 <div class="p-8 flex-grow">
-    <h2 class="text-2xl">Comments</h2>
+    <h2 class="text-2xl">
+        {% trans "Comments" %}
+    </h2>
 
     <ul id="commentsList" 
         class="mt-4 rounded-lg" 
@@ -22,20 +24,20 @@
         <input type="hidden" name="id" value="" />
         <input type="hidden" id="parentCommentId" name="parent_comment" value="" />
 
-        <small class="text-gray-500">You are commenting as
+        <small class="text-gray-500">{% trans "You are commenting as" %}
             <strong>{{ user.first_name|default:user.username }}</strong></small>
 
-        <small id="replyingToContainer" class="hidden bg-gray-50 border border-gray-300 mt-1 px-2 py-1 rounded text-gray-500 font-semibold">You are replying to: <br> <span class="text-black font-normal" id="replyingTo"></span></small>
+        <small id="replyingToContainer" class="hidden bg-gray-50 border border-gray-300 mt-1 px-2 py-1 rounded text-gray-500 font-semibold">{% trans "You are replying to:" %} <br> <span class="text-black font-normal" id="replyingTo"></span></small>
 
         <div class="flex flex-col gap-4">
-            <label for="body" class="text-lg">Comment</label>
+            <label for="body" class="text-lg">{% trans "Comment" %}</label>
             <textarea name="body" id="commentBody" class="p-4 bg-gray-100 rounded-lg" rows="4" required></textarea>
         </div>
 
         <div class="flex flex-col gap-4">
             <button type="submit"
                 class="bg-blue-700 text-white px-4 py-2 mt-4 rounded-lg no-underline hover:text-amber-300 transition-colors drop-shadow">
-                Submit
+                {% trans "Submit" %}
             </button>
         </div>
     </form>
@@ -43,11 +45,11 @@
     {% else %}
 
     <div class="mt-8" id="commentFormLogin">
-        <p class="text-lg">You need to be logged in to comment.</p>
+        <p class="text-lg">{% trans "You need to be logged in to comment." %}</p>
         <a href="{% url 'account_login' %}?next={{request.path}}"
-            class="text-blue-800 hover:text-blue-900 transition-colors hover:underline">Login</a>
+            class="text-blue-800 hover:text-blue-900 transition-colors hover:underline">{% trans "Login" %}</a>
         <a href="{% url 'account_signup' %}?next={{request.path}}"
-            class="text-blue-800 hover:text-blue-900 transition-colors hover:underline ml-2">Register</a>
+            class="text-blue-800 hover:text-blue-900 transition-colors hover:underline ml-2">{% trans "Register" %}</a>
     </div>
 
     {% endif %}
@@ -261,19 +263,19 @@
             fetchCommentLikes(comment.id);
         });
 
+        const buttonGroup = document.createElement("div");
+        buttonGroup.classList.add("absolute", "top-2", "right-2", "flex", "items-center", "gap-2");
+
         if (comment.is_author) {
 
             const editButton = document.createElement("button");
             editButton.classList.add(
-                "absolute",
-                "top-2",
-                "right-16",
                 "text-blue-500",
                 "hover:text-blue-700",
                 "hover:underline",
                 "transition-colors",
             );
-            editButton.textContent = "Edit";
+            editButton.textContent = "{% trans 'Edit' %}";
             editButton.addEventListener("click", function () {
                 document.getElementById("commentBody").value = comment.body;
                 document.getElementById("commentForm").querySelector('input[name="id"]').value = comment.id;
@@ -287,15 +289,12 @@
 
             const deleteButton = document.createElement("button");
             deleteButton.classList.add(
-                "absolute",
-                "top-2",
-                "right-2",
                 "text-red-500",
                 "hover:text-red-700",
                 "hover:underline",
                 "transition-colors",
             );
-            deleteButton.textContent = "Delete";
+            deleteButton.textContent = "{% trans 'Delete' %}";
             deleteButton.addEventListener("click", function () {
                 if (confirm("Are you sure you want to delete this comment?")) {
                     deleteComment(comment.id).then(() => {
