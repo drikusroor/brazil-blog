@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-17 06:42-0500\n"
+"POT-Creation-Date: 2024-10-18 07:23-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,50 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: animals/templates/animals-statistics.html:14
+msgid "Capybara Counter"
+msgstr "Toekan Teller"
+
+#: animals/templates/animals-statistics.html:21
+msgid "Animals per User"
+msgstr "Beesten per Gebruiker"
+
+#: animals/templates/animals-statistics.html:34
+msgid "Animals Breakdown"
+msgstr "Beesten Verdeling"
+
+#: animals/templates/animals-statistics.html:56
+msgid "Animals per Type"
+msgstr "Beesten per Type"
+
+#: animals/templates/animals-statistics.html:73
+msgid "User Breakdown"
+msgstr "Gebruiker Verdeling"
+
+#: animals/templates/animals-statistics.html:91
+msgid "Animals per Day"
+msgstr "Beesten per Dag"
+
+#: animals/templates/animals-statistics.html:97
+msgid "Animal Locations"
+msgstr "Beest Locaties"
+
+#: animals/templates/animals-statistics.html:103
+msgid "Animal"
+msgstr "Beest"
+
+#: animals/templates/animals-statistics.html:103
+msgid "Consumption"
+msgstr "Consumptie"
+
+#: animals/templates/animals-statistics.html:103
+msgid "Spottings Over Time and Location"
+msgstr "Waarnemingen Over Tijd en Locatie"
+
+#: animals/templates/animals-statistics.html:109
+msgid "Average Animals per Day"
+msgstr "Gemiddelde Beesten per Dag"
 
 #: home/templates/home/welcome_page.html:6
 msgid "Visit the Wagtail website"

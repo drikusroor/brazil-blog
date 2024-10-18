@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailimages_tags user_tags %}
+{% load i18n static wagtailimages_tags user_tags %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -11,14 +11,14 @@
 {% block content %}
 <div class="bg-green-700">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8 text-white">Capybara Counter 
+        <h1 class="text-3xl font-bold mb-8 text-white">{% trans "Capybara Counter" %} 
             <!-- {% static "capybara.jpg" max-64x64 alt="Capybara" class="w-12 h-12 inline-block" %} -->
             <img src="{% static "/images/capybara.png" %}" alt="Capybara" class="w-8 h-8 inline-block" />
         </h1>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <!-- Animals per User -->
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4">Animals per User</h2>
+                <h2 class="text-xl font-semibold mb-4">{% trans "Animals per User" %}</h2>
                 <ul class="space-y-2">
                     {% for item in animals_per_user %}
                         {% if forloop.first %}
@@ -31,7 +31,7 @@
                                 <span class="font-bold">{{ item.total_animals }}</span>
 
                                 <ul class="space-y-1 absolute z-10 right-1 p-2 bg-blue-700 text-white rounded-lg drop-shadow hidden group-hover:block">
-                                    <li class="font-semibold">Animals Breakdown</li>
+                                    <li class="font-semibold">{% trans "Animals Breakdown" %}</li>
                                     {% for animal in item.animal_breakdown %}
                                     <li class="flex items-center gap-2">
                                         {% if animal.image %}
@@ -53,7 +53,7 @@
 
             <!-- Animals per Type -->
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4">Animals per Type</h2>
+                <h2 class="text-xl font-semibold mb-4">{% trans "Animals per Type" %}</h2>
                 <ul class="space-y-2">
                     {% for item in animals_per_type %}
                         {% if forloop.first %}
@@ -70,7 +70,7 @@
                                 <span class="font-bold">{{ item.total_animals }}</span>
 
                                 <ul class="space-y-1 absolute z-10 right-1 p-2 bg-blue-700 text-white rounded-lg drop-shadow hidden group-hover:block">
-                                    <li class="font-semibold">User Breakdown</li>
+                                    <li class="font-semibold">{% trans "User Breakdown" %}</li>
                                     {% for user in item.animal_breakdown %}
                                     <li class="flex items-center gap-2">
                                         {% user_avatar user.user "rounded-full w-8 h-8 object-cover overflow-hidden" 32 %}
@@ -88,25 +88,25 @@
 
             <!-- Animals per Day Chart -->
             <div class="bg-white p-6 rounded-lg shadow-md col-span-full">
-                <h2 class="text-xl font-semibold mb-4">Animals per Day</h2>
+                <h2 class="text-xl font-semibold mb-4">{% trans "Animals per Day" %}</h2>
                 <canvas id="animalsPerDayChart"></canvas>
             </div>
 
             <!-- Animals Map -->
             <div class="bg-white p-6 rounded-lg shadow-md col-span-full">
-                <h2 class="text-xl font-semibold mb-4">Animal Locations</h2>
+                <h2 class="text-xl font-semibold mb-4">{% trans "Animal Locations" %}</h2>
                 <div id="animalMap" style="height: 400px;"></div>
             </div>
 
-            <!-- Animal Consumption Over Time and Location -->
+            <!-- Animal Spotting Over Time and Location -->
             <div class="bg-white p-6 rounded-lg shadow-md col-span-full">
-                <h2 class="text-xl font-semibold mb-4">Animal Consumption Over Time and Location</h2>
+                <h2 class="text-xl font-semibold mb-4">{% trans "Animal" %} <s>{% trans "Consumption" %}</s> {% trans "Spottings Over Time and Location" %}</h2>
                 <canvas id="scatterChart"></canvas>
             </div>
 
             <!-- Average Animals per Day -->
             <div class="bg-white p-6 rounded-lg shadow-md col-span-full">
-                <h2 class="text-xl font-semibold mb-4">Average Animals per Day</h2>
+                <h2 class="text-xl font-semibold mb-4">{% trans "Average Animals per Day" %}</h2>
                 <ul class="space-y-2">
                     {% for item in avg_animals_per_day %}
                         {% if forloop.first %}
