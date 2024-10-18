@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-17 07:57-0500\n"
+"POT-Creation-Date: 2024-10-18 06:34-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,6 +65,50 @@ msgstr "Verwijderen"
 #: blog/templates/blog/includes/comments.html:321
 msgid "Reply"
 msgstr "Beantwoorden"
+
+#: blog/templates/blog/includes/filter-bar.html:9
+msgid "Filter by Author"
+msgstr "Filteren op auteur"
+
+#: blog/templates/blog/includes/filter-bar.html:10
+msgid "Author:"
+msgstr "Auteur:"
+
+#: blog/templates/blog/includes/filter-bar.html:29
+msgid "Filter by Date"
+msgstr "Filteren op datum"
+
+#: blog/templates/blog/includes/filter-bar.html:32
+msgid "From:"
+msgstr "Van:"
+
+#: blog/templates/blog/includes/filter-bar.html:36
+msgid "To:"
+msgstr "Tot:"
+
+#: blog/templates/blog/includes/filter-bar.html:43
+msgid "Search term"
+msgstr "Zoekterm"
+
+#: blog/templates/blog/includes/filter-bar.html:44
+msgid "Search:"
+msgstr "Zoeken:"
+
+#: blog/templates/blog/includes/filter-bar.html:45
+msgid "Search for blog post..."
+msgstr "Zoek naar artikel..."
+
+#: blog/templates/blog/includes/filter-bar.html:50
+msgid "Search"
+msgstr "Zoeken"
+
+#: blog/templates/blog/includes/filter-bar.html:54
+msgid "Reset"
+msgstr ""
+
+#: blog/templates/blog/includes/filter-bar.html:60
+msgid "Active filters exist"
+msgstr "Er zijn actieve filters"
 
 #: blog/templates/wagtailadmin/base.html:7
 msgid "Sidebar"
