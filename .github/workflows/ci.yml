@@ -53,6 +53,8 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Add server to known hosts
+        run: ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Deploy to the server
         env:
           DJANGO_SUPERUSER_USERNAME: ${{ secrets.DJANGO_SUPERUSER_USERNAME }}
@@ -63,7 +65,7 @@ jobs:
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
           EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
         run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
           "export DJANGO_SUPERUSER_USERNAME='$DJANGO_SUPERUSER_USERNAME' && \
           export DJANGO_SUPERUSER_PASSWORD='$DJANGO_SUPERUSER_PASSWORD' && \
           export DJANGO_SUPERUSER_EMAIL='$DJANGO_SUPERUSER_EMAIL' && \
@@ -77,7 +79,7 @@ jobs:
           docker system prune -f"
       - name: Clear cache
         run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd brazil-blog && bin/manage clearcache"
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd brazil-blog && bin/manage clearcache"
   
 
   smoketests:
